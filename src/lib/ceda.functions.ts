@@ -15,7 +15,10 @@ export const cedaQuery=createServerFn({method:'POST'}).middleware([requireSupaba
  if('from_date' in body&&(body.from_date>body.to_date||Date.parse(body.to_date)-Date.parse(body.from_date)>366*86400000))throw new Error('Choose a valid date range of at most one year.');
  try{
   const response=await fetch('https://connector-gateway.lovable.dev/udc_ceda_agricultural_data/agmarknet/'+action,{method:action==='commodities'||action==='geographies'?'GET':'POST',headers:{Authorization:`Bearer ${auth}`,'X-Connection-Api-Key':key,'Content-Type':'application/json'},...((action==='commodities'||action==='geographies')?{}:{body:JSON.stringify(body)}),signal:AbortSignal.timeout(25000)});
+  if(!response.ok){const text=await response.text();console.error(`CEDA [${response.status}]: ${text}`);return {ok:false,status:response.status,message:`CEDA [${response.status}]: ${text}`,records:[] as Record<string,string|number>[]};}
   const result=await response.json() as {output?:{type?:string;message?:string;data?:Record<string,string|number>[]};message?:string;data?:Record<string,string|number>[]};
-  return {ok:response.ok&&result.output?.type!=='error',status:response.status,message:result.output?.message||result.message||response.statusText,records:result.output?.data||result.data||[]};
- }catch{return {ok:false,status:504,message:'CEDA request timed out. No records have been substituted.',records:[] as Record<string,string|number>[]};}
+  const records=result.output?.data??result.data;
+  if(!Array.isArray(records))return {ok:false,status:502,message:'CEDA response does not contain the documented data array.',records:[] as Record<string,string|number>[]};
+  return {ok:result.output?.type!=='error',status:response.status,message:result.output?.message||result.message||response.statusText,records};
+ }catch{return {ok:false,status:504,message:'CEDA request failed, timed out or returned invalid JSON. No records have been substituted.',records:[] as Record<string,string|number>[]};}
 });

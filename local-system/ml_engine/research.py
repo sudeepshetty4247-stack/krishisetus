@@ -9,6 +9,7 @@ import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from statsmodels.tsa.arima.model import ARIMA
+from statsmodels.tsa.statespace.sarimax import SARIMAX
 from xgboost import XGBRegressor
 from data_engine.storage import utcnow
 
@@ -59,10 +60,14 @@ def baseline(series,origins,horizon):
     # Last-observation naive is suitable even when seasonality is not established.
     return np.asarray([series.iloc[int(i)-1] for i in origins])
 
-def arima_predictions(series,origins,horizon):
+def seasonal_baseline(series,origins,horizon):
+    return np.asarray([series.iloc[int(i)-7+((horizon-1)%7)] for i in origins])
+
+def arima_predictions(series,origins,horizon,seasonal=False):
     result=[]
     for origin in origins:
-        fit=ARIMA(np.asarray(series.iloc[max(0,int(origin)-180):int(origin)],dtype=float),order=(1,1,0)).fit()
+        past=np.asarray(series.iloc[max(0,int(origin)-180):int(origin)],dtype=float)
+        fit=SARIMAX(past,order=(1,1,0),seasonal_order=(1,0,0,7)).fit(disp=False) if seasonal else ARIMA(past,order=(1,1,0)).fit()
         prediction=float(fit.forecast(horizon)[-1])
         if not np.isfinite(prediction) or prediction<=0: raise ValueError('ARIMA produced an invalid price')
         result.append(prediction)
@@ -83,7 +88,7 @@ def train(store,group,horizons=(7,14,30)):
         test_mask=origins>=test_start
         if min(int(train_mask.sum()),int(val_mask.sum()),int(test_mask.sum()))<30:
             report['horizons'][str(h)]={'status':'unsupported','reason':'At least 30 forecast origins per split are required; overlapping targets are dependent.'}; continue
-        val_predictions={'Naive baseline':baseline(series,origins[val_mask],h)}; failures={}
+        val_predictions={'Naive baseline':baseline(series,origins[val_mask],h),'Seasonal naive':seasonal_baseline(series,origins[val_mask],h)}; failures={}
         models=estimators()
         for name,model in models.items():
             try:
@@ -93,11 +98,13 @@ def train(store,group,horizons=(7,14,30)):
             except Exception as exc: failures[name]=type(exc).__name__
         try: val_predictions['ARIMA']=arima_predictions(series,origins[val_mask],h)
         except Exception as exc: failures['ARIMA']=type(exc).__name__
+        try: val_predictions['SARIMA']=arima_predictions(series,origins[val_mask],h,seasonal=True)
+        except Exception as exc: failures['SARIMA']=type(exc).__name__
         validation={name:metrics(y[val_mask],pred) for name,pred in val_predictions.items()}
         selected=min(validation,key=lambda name:(validation[name]['MAE'],validation[name]['RMSE']))
         # Selection is frozen BEFORE final test predictions are generated.
         pretest=targets<test_start
-        test_predictions={'Naive baseline':baseline(series,origins[test_mask],h)}
+        test_predictions={'Naive baseline':baseline(series,origins[test_mask],h),'Seasonal naive':seasonal_baseline(series,origins[test_mask],h)}
         for name in models:
             if name in validation:
                 try:
@@ -106,6 +113,9 @@ def train(store,group,horizons=(7,14,30)):
         if 'ARIMA' in validation:
             try: test_predictions['ARIMA']=arima_predictions(series,origins[test_mask],h)
             except Exception as exc: failures['ARIMA final test']=type(exc).__name__
+        if 'SARIMA' in validation:
+            try: test_predictions['SARIMA']=arima_predictions(series,origins[test_mask],h,seasonal=True)
+            except Exception as exc: failures['SARIMA final test']=type(exc).__name__
         test_metrics={name:metrics(y[test_mask],pred) for name,pred in test_predictions.items()}
         if selected not in test_predictions:
             report['horizons'][str(h)]={'status':'unsupported','reason':'Validation winner failed final evaluation','failures':failures};continue
@@ -115,6 +125,7 @@ def train(store,group,horizons=(7,14,30)):
         if selected in models:
             winner=estimators()[selected];winner.fit(x,y)
         elif selected=='ARIMA': winner=ARIMA(np.asarray(series.iloc[-180:]),order=(1,1,0)).fit()
+        elif selected=='SARIMA': winner=SARIMAX(np.asarray(series.iloc[-180:]),order=(1,1,0),seasonal_order=(1,0,0,7)).fit(disp=False)
         predictions=[{'origin':series.index[int(i)].date().isoformat(),'date':series.index[int(i)+h-1].date().isoformat(),'actual':float(a),'predicted':float(p),'residual':float(a-p)} for i,a,p in zip(origins[test_mask],y[test_mask],test_predictions[selected])]
         settings={'random_seed':42,'RF':{'n_estimators':100,'max_depth':8,'min_samples_leaf':3},'XGBoost':{'n_estimators':100,'max_depth':3,'learning_rate':.05},'ARIMA':{'order':[1,1,0],'history_window':180}}
         report['horizons'][str(h)]={'status':'validated','selected':selected,'selection_reason':'Lowest validation MAE, then RMSE; final test never used for selection.','validation':validation,'test':test_metrics,'baseline_beaten_on_final_test':test_metrics[selected]['MAE']<test_metrics['Naive baseline']['MAE'],'training_end':series.index[validation_start-1].date().isoformat(),'validation_period':[series.index[validation_start].date().isoformat(),series.index[test_start-1].date().isoformat()],'test_period':[series.index[test_start].date().isoformat(),series.index[-1].date().isoformat()],'interval_radius':radius,'interval_method':'95th percentile absolute validation residual; empirical, dependent errors; not a formal coverage guarantee','failures':failures,'hyperparameters':settings,'predictions':predictions}
@@ -134,11 +145,14 @@ def forecast(store,run_id,horizon):
     if not info: raise ValueError('This horizon is not validated')
     series=artifact['series']; selected=info['selected']
     if selected=='Naive baseline': estimate=float(series.iloc[-1])
-    elif selected=='ARIMA': estimate=float(info['model'].forecast(horizon)[-1])
+    elif selected=='Seasonal naive': estimate=float(seasonal_baseline(series,[len(series)],horizon)[0])
+    elif selected in ('ARIMA','SARIMA'): estimate=float(info['model'].forecast(horizon)[-1])
     else: estimate=float(info['model'].predict(features(series,len(series)).reshape(1,-1))[0])
     if not np.isfinite(estimate) or estimate<=0: raise ValueError('Forecast failed numeric validation')
     radius=info['interval_radius'];report=json.loads(rows[0]['result_json'])
     result={'group':artifact['group'],'horizon_days':horizon,'date':(series.index[-1]+timedelta(days=horizon)).date().isoformat(),'forecast':estimate,'lower':max(0,estimate-radius),'upper':estimate+radius,'interval_method':report['horizons'][str(horizon)]['interval_method'],'selected':selected,'latest_observation':series.index[-1].date().isoformat(),'latest_price':float(series.iloc[-1]),'trained_at':rows[0]['created_at'],'dataset_version':rows[0]['dataset_version'],'evaluation':report['horizons'][str(horizon)]['test'][selected],'disclaimer':'Estimate, not a guaranteed market price. Data may be stale. Endpoint forecast only; intermediate daily points were not validated.'}
+    result['baseline_beaten_on_final_test']=report['horizons'][str(horizon)]['baseline_beaten_on_final_test']
+    result['model_id']=run_id
     return result
 
 def explain(store,run_id,horizon):

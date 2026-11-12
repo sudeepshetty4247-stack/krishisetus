@@ -5,6 +5,8 @@ import Papa from 'papaparse';
 import type {Json} from '@/integrations/supabase/types';
 
 export const importReports=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).inputValidator((input:unknown)=>z.object({text:z.string().max(5*1024*1024),source:z.string().trim().min(1).max(200),url:z.string().url().max(1000),filename:z.string().max(200)}).parse(input)).handler(async({data,context})=>{
+ const {data:roles,error:roleError}=await context.supabase.from('user_roles').select('role').eq('user_id',context.userId);
+ if(roleError||!roles?.some(r=>r.role==='admin'||r.role==='researcher'))throw new Error('Authorized research or administrator access is required for uploads.');
  const parsed=Papa.parse<Record<string,string>>(data.text,{header:true,skipEmptyLines:true,transformHeader:h=>h.trim().toLowerCase().replace(/[\s-]+/g,'_')});
  if(parsed.errors.length)throw new Error('Invalid CSV format');
  if(parsed.data.length>10000)throw new Error('Split files into at most 10,000 records per import');
@@ -23,9 +25,10 @@ export const importReports=createServerFn({method:'POST'}).middleware([requireSu
  return {id:imp.id,accepted:reports.length,rejected:errors.length,duplicates,errors:errors.slice(0,50)};
 });
 
-export const sourceCheck=createServerFn({method:'POST'}).inputValidator((input:unknown)=>z.enum(['ceda','data_gov','python','enam','rems']).parse(input)).handler(async({data})=>{
+export const sourceCheck=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).inputValidator((input:unknown)=>z.enum(['ceda','agmarknet','data_gov','python','enam','rems']).parse(input)).handler(async({data})=>{
  let status='not_configured',message='';let url='';
  if(data==='ceda'){url='https://api.ceda.ashoka.edu.in/v1/agmarknet/commodities';message='CEDA production base verified: /v1. Authorized API key required; no data is retrieved without it.';}
+ else if(data==='agmarknet'){url='https://api.agmarknet.gov.in/v1/daily-price-arrival/filters';message='Public AGMARKNET 2.0 contract. Catalogue access does not prove historical report coverage.';}
  else if(data==='data_gov'){url='https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070?format=json&limit=1';message='Authorized data.gov.in API key required for retrieval.';}
  else if(data==='python'){url=process.env['KRISHI_PYTHON_URL']?new URL('/service/health',process.env['KRISHI_PYTHON_URL']).toString():'';message='No reachable Python service configured. Python training does not run inside the browser.';}
  else message='No officially documented programmatic connector has been verified. Authorized exports can be imported.';
@@ -34,6 +37,10 @@ export const sourceCheck=createServerFn({method:'POST'}).inputValidator((input:u
 });
 
 export const pythonAction=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).inputValidator((input:unknown)=>z.object({action:z.enum(['train','analytics','compare','backtest','forecast','models','job','explain']),payload:z.record(z.unknown())}).parse(input)).handler(async({data,context})=>{
+ if(data.action==='train'){
+  const {data:roles,error}=await context.supabase.from('user_roles').select('role').eq('user_id',context.userId);
+  if(error||!roles?.some(r=>r.role==='admin'||r.role==='researcher'))throw new Error('Authorized research access is required to start training.');
+ }
  const origin=process.env['KRISHI_PYTHON_URL'];const token=process.env['KRISHI_PYTHON_TOKEN'];
  if(!origin||!token)return {available:false,error:'Python service is not configured. A reachable Python service is required for training, forecasts and analytical calculations.'};
  const target=new URL('/service/'+data.action,origin);if(target.protocol!=='https:'&&target.hostname!=='127.0.0.1')throw new Error('Python service requires HTTPS');
@@ -43,5 +50,5 @@ export const pythonAction=createServerFn({method:'POST'}).middleware([requireSup
   let query=context.supabase.from('agri_reports').select('*');for(const [k,v]of Object.entries(filters)){if(!v)continue;if(k==='source')query=query.eq('source_name',v);else if(k==='start')query=query.gte('date',v);else if(k==='end')query=query.lte('date',v);else query=query.eq(k as 'state'|'district'|'market'|'commodity'|'variety',v);}
   const all:Record<string,Json>[]=[];for(let offset=0;offset<10000;offset+=1000){const {data:reports,error}=await query.order('date').order('id').range(offset,offset+999);if(error)throw new Error(error.message);all.push(...(reports||[]));if((reports?.length||0)<1000)break;if(offset===9000)throw new Error('Narrow the date range to fewer than 10,000 reports; analysis must not silently truncate input.');}rows=all;
  }
- try{const response=await fetch(target,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},body:JSON.stringify({...data.payload,records:rows,owner:context.userId}),signal:AbortSignal.timeout(25000)});const result=await response.json() as {[key:string]:Json};if(!response.ok)return {available:false,error:String(result['error']||'Python request failed')};return {available:true,result};}catch{return {available:false,error:'Python service did not respond. No successful calculation or training run is claimed.'};}
+ try{const response=await fetch(target,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},body:JSON.stringify({...data.payload,records:rows,owner:context.userId}),signal:AbortSignal.timeout(25000)});if(!response.ok){const text=await response.text();console.error(`Python [${response.status}]: ${text}`);let message=text;try{message=String((JSON.parse(text) as {error?:string}).error||text);}catch{/* retain error */}return {available:false,error:`Python [${response.status}]: ${message}`};}const result=await response.json() as {[key:string]:Json};return {available:true,result};}catch{return {available:false,error:'Python service did not respond. No successful calculation or training run is claimed.'};}
 });

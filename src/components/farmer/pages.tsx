@@ -11,6 +11,7 @@ import {useCatalog,useCoverageAll,useLatest,useCropReports,useMarketReports,useS
 import {latestByMarket,marketKey,rankOptions,sameDayOpportunity,priceStats,winDays,freshnessDays,zeroCosts,type Costs,type Option} from '@/lib/selling';
 import type {Report} from '@/lib/agri-types';
 import {pythonAction} from '@/lib/agri.functions';
+import {NearbyMarkets} from './nearby';
 type C=ReturnType<typeof useCopy>;
 export const rupee=(n:number)=>`₹${Math.round(n).toLocaleString('en-IN')}`;
 const lineColors=['var(--primary)','var(--harvest)','var(--leaf)','var(--chart-4)','var(--chart-5)'];
@@ -37,6 +38,7 @@ export function FarmerHome(){const c=useCopy();const nav=useNavigate();const cat
     {!crops.length&&!cat.isLoading&&<small className="ks-quick-note">{c.noCrops}</small>}
    </form></div></section>
   <div className="ks-wrap">
+   <NearbyMarkets/>
    <Section title={c.latestTitle} eyebrow={c.freshNote} action={<Link to="/markets" className="ks-link">{c.prices}<ArrowRight/></Link>}>
     {latest.isLoading?<Loading c={c}/>:latest.error?<Notice tone="error">{c.error}</Notice>:cards.length?<div className="ks-card-grid">{cards.map(r=><PriceCard key={r.id} r={r} c={c}/>)}</div>:<Notice tone="warn">{c.latestNone}</Notice>}
    </Section>
@@ -63,7 +65,8 @@ export function FindMarketPage({initial}:{initial:{crop?:string|undefined;qty?:n
  const sources=[...new Set(rows.filter(r=>r.variety===v).map(r=>r.source_name))];
  const latest=useMemo(()=>latestByMarket(rows.filter(r=>r.variety===v&&(!state||r.state===state)&&r.source_name===sources[0])),[rows,v,state,sources[0]]);
  const states=[...new Set(rows.map(r=>r.state))].sort();
- const startKey=start||(initial.market?latest.find(r=>r.market===initial.market)&&marketKey(latest.find(r=>r.market===initial.market)!):'')||'';
+ const initialReport=initial.market?latest.find(r=>r.market===initial.market):undefined;
+ const startKey=start||(initialReport?marketKey(initialReport):'');
  const q=Number(qty);const {options,start:startOpt}=rankOptions(latest,startKey,q,costs);
  const bestNet=options[0];const bestPrice=[...options].sort((a,b)=>b.report.modal_price-a.report.modal_price)[0];
  const setCost=(k:string,f:keyof Costs,val:string)=>setCosts(o=>({...o,[k]:{...(o[k]||zeroCosts),[f]:Math.max(0,Number(val)||0)}}));
@@ -71,6 +74,7 @@ export function FindMarketPage({initial}:{initial:{crop?:string|undefined;qty?:n
  const crops=cat.data?.commodities||[];
  return <div className="ks-wrap ks-flow">
   <div className="ks-page-head"><h1>{c.find}</h1><p>{c.promise}</p></div>
+  <NearbyMarkets/>
   <Step n={1} title={c.sCrop} c={c}>{cat.isLoading?<Loading c={c}/>:crops.length?<div className="ks-crop-grid">{crops.map(x=><button key={x} type="button" className={`ks-crop ${crop===x?'on':''}`} onClick={()=>{setCrop(x);setStart('');setVariety('');}}><Wheat/>{x}</button>)}</div>:<Notice tone="warn">{c.noCrops}</Notice>}</Step>
   <Step n={2} title={c.sQty} c={c}><label className="ks-qty big"><input aria-label={c.qQty} type="number" min="0.1" step="0.1" inputMode="decimal" value={qty} onChange={e=>setQty(e.target.value)}/><span>{c.quintals}</span></label><small className="ks-hint">{c.quintalHint}</small>{!(q>0)&&<Notice tone="error">{c.qQty}</Notice>}</Step>
   {crop&&<Step n={3} title={c.sLoc} c={c}>{reports.isLoading?<Loading c={c}/>:!latest.length&&!rows.length?<Notice tone="warn">{c.noMarkets}</Notice>:<div className="ks-form-row">
@@ -142,7 +146,7 @@ export function TrendsPage(){const c=useCopy();const {user}=useKrishi();const ca
   {!crop?<Notice>{c.chooseFirst}</Notice>:q.isLoading?<Loading c={c}/>:!series.length?<Notice tone="warn">{c.noMarkets}</Notice>:<>
    {dir&&<div className={`ks-trend ${dir}`}>{dir==='up'?<TrendingUp/>:dir==='down'?<TrendingDown/>:<Minus/>}<div><b>{c[dir]}</b><small>{c.actual}: {rupee(oa!)} → {rupee(ra!)} ({series.at(-1)?.date})</small></div></div>}
    <Section title={`${c.history} — ${m}`}><HistoryChart rows={series} keyOf={()=>c.actual} c={c}/></Section>
-   <Section title={`${c.estimate} · ${h} ${c.days}`}>{!user?<Notice>{c.fcUnavailable} {c.fcSignIn}</Notice>:fc.state==='idle'?<Button size="lg" onClick={()=>void forecast()}><TrendingUp/>{c.trends}</Button>:fc.state==='busy'?<Loading c={c}/>:fc.state==='service'?<Notice tone="warn">{c.fcService}</Notice>:fc.state==='none'?<Notice tone="warn">{c.fcUnavailable}</Notice>:<pre className="ks-pre">{JSON.stringify(fc.data,null,2).slice(0,3000)}</pre>}<p className="ks-fine">{c.noGuarantee}</p></Section>
+   <Section title={`${c.estimate} · ${h} ${c.days}`}>{!user?<Notice>{c.fcUnavailable} {c.fcSignIn}</Notice>:fc.state==='idle'?<Button size="lg" onClick={()=>void forecast()}><TrendingUp/>{c.trends}</Button>:fc.state==='busy'?<Loading c={c}/>:fc.state==='service'?<Notice tone="warn">{c.fcService}</Notice>:fc.state==='none'?<Notice tone="warn">{c.fcUnavailable}</Notice>:fc.data&&typeof fc.data['forecast']==='number'?<div className="ks-result"><TrendingUp/><div><h3>{rupee(fc.data['forecast'])} · {String(fc.data['date'])}</h3><p>{typeof fc.data['lower']==='number'&&typeof fc.data['upper']==='number'?`${rupee(fc.data['lower'])} – ${rupee(fc.data['upper'])}`:''}</p><p>{String(fc.data['selected'])} · {c.reportedOn}: {String(fc.data['latest_observation'])}</p><p className="ks-fine">{c.fcText}</p></div></div>:<Notice>{c.fcUnavailable}</Notice>}<p className="ks-fine">{c.noGuarantee}</p></Section>
   </>}</div>;}
 
 /* ---------------- PLAN ---------------- */

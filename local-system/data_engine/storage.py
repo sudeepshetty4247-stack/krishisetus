@@ -36,7 +36,7 @@ class Store:
         self.db = self.root / 'metadata.sqlite'
         with self.connect() as con:
             con.executescript(SCHEMA)
-            for sid, name, url in [('data_gov','data.gov.in / AGMARKNET','https://data.gov.in/'),('ceda','CEDA Agri Market Data','https://api.ceda.ashoka.edu.in/'),('enam','e-NAM','https://enam.gov.in/'),('rems','ReMS Karnataka','https://www.remsl.in/')]:
+            for sid, name, url in [('agmarknet','AGMARKNET','https://agmarknet.gov.in/'),('data_gov','data.gov.in / AGMARKNET','https://data.gov.in/'),('ceda','CEDA Agri Market Data','https://api.ceda.ashoka.edu.in/'),('enam','e-NAM','https://enam.gov.in/'),('rems','ReMS Karnataka','https://www.remsl.in/')]:
                 con.execute('INSERT OR IGNORE INTO sources(id,name,url) VALUES(?,?,?)',(sid,name,url))
 
     @contextmanager

@@ -193,6 +193,51 @@ export type Database = {
         }
         Relationships: []
       }
+      agri_sync_state: {
+        Row: {
+          last_success: string | null
+          message: string | null
+          next_offset: number
+          source: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          last_success?: string | null
+          message?: string | null
+          next_offset?: number
+          source: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          last_success?: string | null
+          message?: string | null
+          next_offset?: number
+          source?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -200,6 +245,15 @@ export type Database = {
     Functions: {
       agri_catalog: { Args: { f?: Json }; Returns: Json }
       agri_coverage: { Args: { f?: Json }; Returns: Json }
+      publish_agmarknet_batch: {
+        Args: {
+          expected_offset: number
+          finished: boolean
+          next_offset: number
+          records: Json
+        }
+        Returns: number
+      }
     }
     Enums: {
       [_ in never]: never

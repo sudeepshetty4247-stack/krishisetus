@@ -88,7 +88,7 @@ def test_training_and_registry_on_explicit_unit_fixture(store):
     group={'state':'Karnataka','district':'Dharwad','market':'Dharwad','commodity':'Maize','variety':'Local','source':'test'}
     report=train(store,group,(7,));h=report['horizons']['7']
     assert h['status']=='validated'
-    assert set(h['validation'])=={'Naive baseline','ARIMA','Random Forest','XGBoost'}
+    assert set(h['validation'])=={'Naive baseline','Seasonal naive','ARIMA','SARIMA','Random Forest','XGBoost'}
     expected=min(h['validation'],key=lambda name:(h['validation'][name]['MAE'],h['validation'][name]['RMSE']))
     assert h['selected']==expected
     assert h['test_period'][0]>h['validation_period'][1]

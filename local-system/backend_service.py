@@ -13,6 +13,7 @@ from data_engine.storage import Store,stable_id,utcnow
 from data_engine.cleaning import ingest_rows
 from intelligence_engine.decisions import analytics,net_value,break_even_transport
 from ml_engine.research import train,forecast,explain
+from operations import atomic_json,official_export
 
 def install_service(app,root):
     service=Blueprint('python_service',__name__)
@@ -28,7 +29,12 @@ def install_service(app,root):
         if not token or not secrets.compare_digest(header,'Bearer '+token):return jsonify(error='Service authorization required'),401
 
     @service.get('/service/health')
-    def health():return jsonify(status='ready',python=True,authorized=bool(token))
+    def health():return jsonify(status='ready',python=True,authorized=bool(token),contract_version=1)
+
+    @service.post('/service/official-reports')
+    def source_reports():
+        body=request.get_json(silent=True) or {}
+        return jsonify(official_export(Store(root),int(body.get('offset',0)),int(body.get('limit',1000))))
 
     @service.post('/service/<action>')
     def operation(action):
@@ -77,12 +83,12 @@ def install_service(app,root):
             return jsonify(periods=periods,message='Historical same-day report simulation, no future records. Fixed user-entered costs; not evidence of actual farmer income improvement.')
         if action=='train':
             horizons=body.get('horizons',[7]);jid=uuid.uuid4().hex;path=store.root/'models'/f'job-{jid}.json'
-            path.write_text(json.dumps({'job_id':jid,'status':'queued'}))
+            atomic_json(path,{'job_id':jid,'status':'queued'})
             def worker():
-                path.write_text(json.dumps({'job_id':jid,'status':'running','message':'Python chronological model comparison running'}))
+                atomic_json(path,{'job_id':jid,'status':'running','message':'Python chronological model comparison running'})
                 try:
-                    report=train(store,filters,tuple(horizons));path.write_text(json.dumps({'job_id':jid,'status':'completed','model_id':report['id'],'report':report}))
-                except Exception as exc:path.write_text(json.dumps({'job_id':jid,'status':'failed','error':str(exc)}))
+                    report=train(store,filters,tuple(horizons));atomic_json(path,{'job_id':jid,'status':'completed','model_id':report['id'],'report':report})
+                except Exception as exc:atomic_json(path,{'job_id':jid,'status':'failed','error':str(exc)})
             threading.Thread(target=worker,daemon=False).start()
             return jsonify(job_id=jid,status='queued')
         if action=='job':
@@ -96,7 +102,20 @@ def install_service(app,root):
                 result['predictions']=h.get('predictions',[]);result['comparison']=[{'model':name,**values} for name,values in h.get('test',{}).items()]
             return jsonify(result)
         if action=='models':return jsonify(records=[{'id':r['id'],'created_at':r['created_at'],'group':json.loads(r['group_json'])} for r in store.query('SELECT id,created_at,group_json FROM model_registry ORDER BY created_at DESC')])
-        if action=='forecast':return jsonify(forecast(store,body.get('model_id',''),int(body.get('horizon',7))))
+        if action=='forecast':
+            model_id=body.get('model_id','')
+            if not model_id:
+                required=('state','district','market','commodity','variety','source')
+                if not all(filters.get(k) for k in required):raise ValueError('Choose one source, commodity, variety and full market identity')
+                models=store.query('SELECT id,group_json FROM model_registry ORDER BY created_at DESC')
+                model_id=next((r['id'] for r in models if all(json.loads(r['group_json']).get(k)==filters[k] for k in required)),None)
+                if not model_id:raise ValueError('No validated model exists for this source and market')
+            result=forecast(store,model_id,int(body.get('horizon',7)))
+            from ml_engine.reliability import assess_forecast
+            result['reliability']=assess_forecast(result)
+            if not result['reliability']['supported']:
+                return jsonify(error=result['reliability']['reason'],reliability=result['reliability']),422
+            return jsonify(result)
         if action=='explain':return jsonify(explain(store,body.get('model_id',''),int(body.get('horizon',7))))
         raise ValueError('Unknown service action')
     app.register_blueprint(service)

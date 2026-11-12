@@ -15,6 +15,20 @@
       "when": 1794494368346,
       "tag": "0001_coverage_all_filters",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794498717685,
+      "tag": "0002_official_sync_and_research_permissions",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1794498889823,
+      "tag": "0003_restrict_research_imports",
+      "breakpoints": true
     }
   ]
 }

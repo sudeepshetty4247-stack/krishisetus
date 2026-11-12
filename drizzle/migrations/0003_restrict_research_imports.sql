@@ -1,0 +1,2 @@
+CREATE POLICY authorized_research_import_insert ON public.agri_imports AS RESTRICTIVE FOR INSERT TO authenticated WITH CHECK(EXISTS(SELECT 1 FROM public.user_roles r WHERE r.user_id=auth.uid() AND r.role IN ('admin','researcher')));
+CREATE POLICY authorized_research_report_insert ON public.agri_reports AS RESTRICTIVE FOR INSERT TO authenticated WITH CHECK(EXISTS(SELECT 1 FROM public.user_roles r WHERE r.user_id=auth.uid() AND r.role IN ('admin','researcher')));

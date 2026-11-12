@@ -14,6 +14,8 @@ def main():
     parser.add_argument('--data-dir',default=str(DATA_DIR))
     commands=parser.add_subparsers(dest='command',required=True)
     commands.add_parser('init');commands.add_parser('audit');commands.add_parser('export-parquet');commands.add_parser('source-check')
+    historical=commands.add_parser('ingest-history');historical.add_argument('--start',required=True);historical.add_argument('--end',required=True);historical.add_argument('--filters',default='{}');historical.add_argument('--max-pages',type=int,default=10);historical.add_argument('--reset',action='store_true')
+    back=commands.add_parser('backup');back.add_argument('--directory',required=True)
     imp=commands.add_parser('import');imp.add_argument('file');imp.add_argument('--source-name',required=True);imp.add_argument('--source-url',required=True);imp.add_argument('--price-unit')
     for name in ('ingest','schedule'):
         p=commands.add_parser(name);p.add_argument('--filters',default='{}');p.add_argument('--max-pages',type=int,default=MAX_PAGES);p.add_argument('--reset',action='store_true')
@@ -26,13 +28,22 @@ def main():
         elif args.command=='audit': result=store.coverage()
         elif args.command=='export-parquet': result={'parquet':store.export_parquet(),'note':'Snapshots are append-only; DuckDB consumers must deduplicate by observation id when combining repeated exports.'}
         elif args.command=='ingest': result=DataGovConnector().ingest(store,json.loads(args.filters),max_pages=args.max_pages,reset=args.reset)
+        elif args.command=='ingest-history':
+            from data_engine.agmarknet import AgmarknetConnector
+            result=AgmarknetConnector().ingest(store,args.start,args.end,json.loads(args.filters),args.max_pages,args.reset)
+        elif args.command=='backup':
+            from operations import backup
+            result={'backup':backup(store,args.directory)}
         elif args.command=='source-check':
             result={}
             try:
                 response=DataGovConnector().page(limit=1);result['data_gov']={'records_returned':len(response['records']),'status':'reachable'}
             except SourceUnavailable as exc: result['data_gov']={'status':'unavailable','reason':str(exc)}
-            try: CedaConnector().discover()
-            except SourceUnavailable as exc: result['ceda']={'status':'unsupported_contract','reason':str(exc)}
+            try: CedaConnector().discover();result['ceda']={'status':'catalogue_reachable','note':'Price download not verified by this catalogue check'}
+            except SourceUnavailable as exc: result['ceda']={'status':'unavailable','reason':str(exc)}
+            from data_engine.agmarknet import AgmarknetConnector
+            try: AgmarknetConnector().discover();result['agmarknet']={'status':'catalogue_reachable'}
+            except SourceUnavailable as exc: result['agmarknet']={'status':'unavailable','reason':str(exc)}
             result['enam']={'status':'not_integrated','reason':'No verified officially supported endpoint supplied'}
             result['rems']={'status':'not_integrated','reason':'No verified officially supported endpoint supplied'}
         elif args.command=='train': result=train(store,json.loads(args.group),tuple(int(h) for h in args.horizons.split(',')))
