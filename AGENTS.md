@@ -56,7 +56,7 @@ use the editor.
 - Long history comes from the GODL variety-wise compilation via `local-system/data_engine/history_import.py`; commodity names are canonicalised (no space before "(") identically in both pipelines.
 - Nationwide historical preparation uses state-partitioned DuckDB aggregation and checksum manifests in `data_engine/nationwide_prepare.py` to keep memory bounded and provenance reproducible.
 - Nationwide catalogue/coverage/ticker are precomputed into agri_summary after each sync because live aggregates exceed the statement timeout.
-- Model comparison preserves stored runs and independent metric winners; registry file presence never proves deployed inference. Python alone computes evaluations.
+- Model comparison uses preserved experiments and Python-computed direction scores on aligned test origins; validation selects, test describes. Bundled verified research is not deployed inference.
 - Market coordinates in market_locations are geocoded official market names with a match-quality label; distances are straight-line unless a road route is requested.
 - Crop discovery (`src/lib/crop-catalogue.ts`) classifies official catalogue names by keyword rules and marks entries official / alias / custom; custom crops can be saved in plans with no reports and never receive a price.
 - Private plans and alerts use authenticated owner-scoped Cloud records; legacy browser records remain guest-only and are never silently assigned to an account.

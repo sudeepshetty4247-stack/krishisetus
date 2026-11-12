@@ -18,6 +18,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 from xgboost import XGBRegressor
+from ml_engine.direction import direction_metrics
 warnings.filterwarnings('ignore')
 HORIZONS=(1,2,4)
 FEATURES=['lag_1','lag_2','lag_3','lag_4','lag_8','lag_13','lag_52','mean_4','mean_8','mean_13','std_4','std_8','std_13','change_1','change_4','week_sin','week_cos','month','lag_52_missing']
@@ -123,11 +124,21 @@ def train_group(frame,group,source):
                 try: fit=arima_fit(weekly,test_start,seasonal); test[name]=arima_predict(fit,weekly,o[te],h)
                 except Exception as e: fails[name+' test']=str(e)[:200]
         tm={k:metrics(y[te],p) for k,p in test.items()}
+        direction = {split: {name: direction_metrics(y[mask], p, weekly.iloc[o[mask]].to_numpy())
+                     for name, p in predictions.items()} for split, mask, predictions in
+                     (('validation', va, val), ('test', te, test))}
+        all_predictions = {name: [{'origin': wk(int(a)), 'week': wk(int(b)),
+                            'current': float(weekly.iloc[int(a)]), 'actual': float(ya), 'predicted': float(p)}
+                            for a, b, ya, p in zip(o[te], t[te], y[te], predictions)]
+                           for name, predictions in test.items()}
         recent=te&(o>=n-26); rm={k:metrics(y[recent],test[k][recent[te]]) for k in test} if recent.sum()>=5 else {}
         sel_test=test.get(selected); residuals=(y[te]-sel_test) if sel_test is not None else np.array([])
         radius=float(np.quantile(np.abs(y[va]-val[selected]),.9))
         entry={'status':'trained','horizon_weeks':h,'horizon_days':h*7,'selected':selected,'selection_reason':'Lowest validation MAE (RMSE tie-break). Final walk-forward test never used for selection.',
                'validation':vm,'test':tm,'recent_26_weeks':rm,'samples':{'train':int(tr.sum()),'validation':int(va.sum()),'test':int(te.sum())},'failures':fails,
+               'direction': direction, 'all_predictions': all_predictions,
+               'evaluation_periods': {'test_origins': [wk(int(o[te][0])), wk(int(o[te][-1]))],
+                                     'test_targets': [wk(int(t[te][0])), wk(int(t[te][-1]))]},
                'deterioration_ratio':(rm.get(selected,{}).get('MAE',np.nan)/tm[selected]['MAE']) if rm and selected in tm and tm[selected]['MAE'] else None,
                'baseline_beaten':bool(selected in tm and tm[selected]['MAE']<tm['Naive']['MAE']),
                'interval':{'radius':radius,'method':'90th percentile of absolute validation errors; empirical, not a coverage guarantee'},

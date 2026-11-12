@@ -1,5 +1,11 @@
 # KRISHISETU
 
+## Academic model comparison dashboard
+- [x] Re-evaluate six algorithms on 758 genuine Hubli Local maize reports, preserving previous experiments and recording directional metrics and full-precision aligned predictions.
+- [x] Replace only the comparison page with readable metric charts, results, independent winners, dataset context and optional technical details.
+- [x] Test 4 regression / 5 direction charts for both splits and 7/14/28 historical weekly horizons, six-row tables and desktop/mobile; 70 website + 59 Python tests pass.
+- [ ] Live production forecasts and 30-day evaluation remain blocked by persistent Python hosting and recent eligible daily history; not claimed by this historical dashboard.
+
 ## Location-first homepage and separate comparison lab
 - [x] Restore prominent guest GPS/manual nationwide location, crop/variety, genuine nearby/district price preview and farmer actions; preserve existing pages.
 - [x] Add separate Model Performance & Comparison with stored runs, eight filters, genuine charts, independent winners and honest registry status.
