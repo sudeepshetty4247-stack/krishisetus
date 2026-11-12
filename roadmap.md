@@ -7,4 +7,10 @@
 - [ ] Validated Python forecasting, model registry, SHAP and historical backtesting — requires sufficient verified historical data.
 - [ ] Verified market coordinates and map — requires verified APMC coordinates.
 - [ ] Full seven-language editorial review and translation coverage — regional language dictionaries currently fall back to English for untranslated details; professional translation review remains outstanding.
-- [ ] Independent Windows Flask/SQLite product and packaging — deferred by user until preview development is complete.
+- [x] Technical audit and unauthenticated source-access verification for nationwide implementation: supplied CEDA endpoints 404; data.gov.in connection failed; credentials absent.
+- [x] Local Flask/SQLite/Parquet foundation, CSV/XLSX import, dynamic nationwide catalogues, net-value/break-even APIs and automated tests; tested on Linux, Windows launcher not executed.
+- [x] Python baseline/ARIMA/Random Forest/XGBoost training and registry code with purged chronological evaluation, forecast endpoint and SHAP support; no official-data-trained models bundled.
+- [ ] Complete production nationwide ingestion and data retrieval — CEDA current documentation/key and data.gov.in authorized access or genuine historical exports required.
+- [ ] Complete local feature parity, charts, full translations, maps, alerts, automatic retraining and historical strategy backtesting — source-dependent analytics and review remain unfinished; this delivery is a foundation, not the complete requested platform.
+- [ ] Connect the existing preview to an available Python service without changing its design — hosted Lovable cannot execute Python; requires an externally reachable Python deployment or local execution.
+- [ ] Retrieve genuine source observations, execute model comparison and publish a reproducible research evaluation — requires authorized source access or a verified historical file.

@@ -1,0 +1,24 @@
+[
+  {
+    "source": "ceda_commodities",
+    "url": "https://api.ceda.ashoka.edu.in/agmarknet/commodities",
+    "status": 404,
+    "content_type": "text/html; charset=utf-8",
+    "excerpt": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /agmarknet/commodities</pre>\n</body>\n</html>\n",
+    "retrieved": "2026-11-12T14:03:33.542366+00:00"
+  },
+  {
+    "source": "ceda_geographies",
+    "url": "https://api.ceda.ashoka.edu.in/agmarknet/geographies",
+    "status": 404,
+    "content_type": "text/html; charset=utf-8",
+    "excerpt": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /agmarknet/geographies</pre>\n</body>\n</html>\n",
+    "retrieved": "2026-11-12T14:03:34.009416+00:00"
+  },
+  {
+    "source": "data_gov",
+    "url": "https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070?format=json&limit=2",
+    "error": "ConnectionError",
+    "retrieved": "2026-11-12T14:03:34.618035+00:00"
+  }
+]

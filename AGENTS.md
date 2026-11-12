@@ -34,3 +34,5 @@ use the editor.
 - Keep market ingestion and selling calculations in browser-safe pure modules with concrete tests; use these contracts for the eventual Python implementation.
 - Share crop, language and imported reports through a root provider so each content route uses the same session dataset.
 - Never seed agricultural prices or render evaluation metrics without a verified input dataset and an executed validation pipeline.
+- Keep the independent Flask/SQLite/Parquet source in `local-system`, outside the hosted application import graph; Python cannot execute in the Lovable hosted runtime.
+- Local research groups are source/market/commodity/variety-specific, with direct calendar-horizon targets and purged chronological validation; this prevents source mixing and future-target leakage.
