@@ -60,3 +60,10 @@ export const pythonHistory=createServerFn({method:'POST'}).middleware([requireSu
  for(const [key,value]of Object.entries(data))url.searchParams.set(key,String(value));
  try{const res=await fetch(url,{headers:{Authorization:`Bearer ${token}`,'X-Owner-ID':context.userId},signal:AbortSignal.timeout(25000)});if(!res.ok)return {available:false,error:`Historical service unavailable (${res.status}); no replacement records generated.`};const result=await res.json() as Record<string,Json>;return {available:true,result};}catch{return {available:false,error:'Historical service timed out or is unavailable.'};}
 });
+
+export const pythonRegistry=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).handler(async({context})=>{
+ const origin=process.env['KRISHI_PYTHON_URL'],token=process.env['KRISHI_PYTHON_TOKEN'];
+ if(!origin||!token)return {available:false,records:[],error:'Inference service not connected. Deployment and loading are not verified.'};
+ const url=new URL('/v1/models',origin);if(url.protocol!=='https:')return {available:false,records:[],error:'Secure inference service unavailable.'};url.searchParams.set('owner',context.userId);
+ try{const res=await fetch(url,{headers:{Authorization:`Bearer ${token}`,'X-Owner-ID':context.userId},signal:AbortSignal.timeout(12000)});if(!res.ok)return {available:false,records:[],error:'Model registry unavailable.'};const result=await res.json() as {records?:{id:string;dataset_version:string;artifact_available:boolean;group:Record<string,string>}[]};return {available:true,records:result.records||[],error:''};}catch{return {available:false,records:[],error:'Model registry did not respond.'};}
+});

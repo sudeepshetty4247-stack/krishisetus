@@ -46,7 +46,7 @@ use the editor.
 - Farmer-facing copy is centralized in `src/lib/farmer-copy.ts` (English fallback for missing keys).
 - Keep farmer source/history detail disclosures separate from the primary crop, costs and net result so technical provenance stays accessible without obstructing selling decisions.
 - Official publication runs through an authenticated scheduled callback and a service-role-only transactional batch RPC; only fixed official connector observations qualify, never uploaded source assertions.
-- Nearby discovery uses authenticated bounded Google Places searches and explicit on-demand Routes calls; provider places remain separate from price market identities until verified matching exists.
+- Homepage guest locations use bounded public geocoding; Google Places/Routes remain authenticated. Join prices by exact market identity and show distance only for verified yards.
 - Python deployment uses one persistent-volume service process with atomic job files and SQLite online backups; local loopback pages remain isolated from its authenticated service endpoints.
 - Python container entrypoint is FastAPI with authenticated versioned endpoints and the compatible mounted Flask service; preserve the independent local Flask UI to avoid breaking Windows workflows.
 - Analytical history is activated through checksum/count/business-key validation on a persistent Parquet volume and queried with bounded DuckDB pagination; sandbox files alone never establish hosted availability.
@@ -56,7 +56,7 @@ use the editor.
 - Long history comes from the GODL variety-wise compilation via `local-system/data_engine/history_import.py`; commodity names are canonicalised (no space before "(") identically in both pipelines.
 - Nationwide historical preparation uses state-partitioned DuckDB aggregation and checksum manifests in `data_engine/nationwide_prepare.py` to keep memory bounded and provenance reproducible.
 - Nationwide catalogue/coverage/ticker are precomputed into agri_summary after each sync because live aggregates exceed the statement timeout.
-- Model results are executed by `local-system/ml_engine/run_lab.py` (weekly series, purged chronological split, walk-forward test) and published to ml_runs; the website only displays them and never computes metrics.
+- Model comparison preserves stored runs and independent metric winners; registry file presence never proves deployed inference. Python alone computes evaluations.
 - Market coordinates in market_locations are geocoded official market names with a match-quality label; distances are straight-line unless a road route is requested.
 - Crop discovery (`src/lib/crop-catalogue.ts`) classifies official catalogue names by keyword rules and marks entries official / alias / custom; custom crops can be saved in plans with no reports and never receive a price.
 - Private plans and alerts use authenticated owner-scoped Cloud records; legacy browser records remain guest-only and are never silently assigned to an account.

@@ -1,5 +1,11 @@
 # KRISHISETU
 
+## Location-first homepage and separate comparison lab
+- [x] Restore prominent guest GPS/manual nationwide location, crop/variety, genuine nearby/district price preview and farmer actions; preserve existing pages.
+- [x] Add separate Model Performance & Comparison with stored runs, eight filters, genuine charts, independent winners and honest registry status.
+- [x] Verify GPS and denial/manual fallback, Dharwad/Pune suggestions, same-date comparison, Hubballi20q/₹1,900/₹58,460, real Hubli winner distinctions and desktop/mobile. 66 website tests pass; limitations in LOCATION_MODEL_STATUS.md.
+- [ ] External completion: authoritative nationwide yards and persistent Python/current eligible model service remain unavailable; no production deployment claimed.
+
 ## Remaining critical completion — 13 November IST
 - [x] 1–4 access/local checks: no host connection or URL/token; verified 24,656,469-row checksum, two real history pages, historical artifact reload and isolated local restoration. Online integration/current forecasts blocked by persistent host and recent eligible series.
 - [ ] 5 nationwide yards: blocked by a verified national yard directory/matching evidence; retained 317 Karnataka positions and uncertain-distance restrictions.

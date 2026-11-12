@@ -1,5 +1,5 @@
 import {createFileRoute} from '@tanstack/react-router';
 import {pageHead} from '@/components/krishisetu';
 import {AppShell} from '@/components/farmer/shell';
-import {FarmerHome} from '@/components/farmer/pages';
-export const Route=createFileRoute('/')({head:()=>pageHead('Find a better market for your crop','Compare official mandi prices, add your transport costs and see your potential net value at each market.'),component:()=><AppShell><FarmerHome/></AppShell>});
+import {LocationHome} from '@/components/farmer/location-home';
+export const Route=createFileRoute('/')({head:()=>pageHead('Nearby markets and crop prices','Choose your village or current location, explore genuine reported crop prices and calculate selling returns with KRISHISETU.'),component:()=><AppShell><LocationHome/></AppShell>});

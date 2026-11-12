@@ -63,17 +63,18 @@ type Saved={id:string;savedAt:string;crop:string;variety:string;qty:number;start
 export const loadPlans=():Saved[]=>{try{return JSON.parse(localStorage.getItem('krishisetu-plans')||'[]');}catch{return [];}};
 function reportText(s:Saved,c:C){return [`KRISHISETU — ${s.crop} (${s.variety}), ${s.qty} ${c.quintals}`,`${c.yourMarket}: ${s.start}`,'',...s.rows.map(r=>`${r.market} | ${r.date} | ${rupee(r.price)}${c.perQuintal} | ${c.gross} ${rupee(r.gross)} | ${c.expenses} ${rupee(r.expenses)} | ${c.net} ${rupee(r.net)}`),'',c.noGuarantee].join('\n');}
 function downloadText(s:Saved,c:C){const blob=new Blob([reportText(s,c)],{type:'text/plain;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`krishisetu-${s.crop}-${s.savedAt.slice(0,10)}.txt`;a.click();URL.revokeObjectURL(a.href);}
-export function FindMarketPage({initial}:{initial:{crop?:string|undefined;qty?:number|undefined;market?:string|undefined}}){const c=useCopy();const cat=useCatalog();const records=usePrivateRecords('plan');
+export function FindMarketPage({initial}:{initial:{crop?:string|undefined;qty?:number|undefined;market?:string|undefined;reportId?:string|undefined}}){const c=useCopy();const cat=useCatalog();const records=usePrivateRecords('plan');
  const [crop,setCrop]=useState(initial.crop||'');const [qty,setQty]=useState(String(initial.qty||20));const [variety,setVariety]=useState('');const [state,setState]=useState('');const [start,setStart]=useState('');const [costs,setCosts]=useState<Record<string,Costs>>({});const [msg,setMsg]=useState('');const [selectedReport,setSelectedReport]=useState<Report|null>(null);
  const reports=useCropReports(crop);const rows=selectedReport?.commodity===crop?[selectedReport,...(reports.data||[]).filter(r=>r.id!==selectedReport.id)]:reports.data||[];
- const varieties=[...new Set(rows.map(r=>r.variety))];const v=variety&&varieties.includes(variety)?variety:varieties[0]||'';
+ const linkedReport=initial.reportId?rows.find(r=>r.id===initial.reportId):rows.find(r=>marketKey(r)===initial.market||r.market===initial.market);
+ const varieties=[...new Set(rows.map(r=>r.variety))];const v=variety&&varieties.includes(variety)?variety:linkedReport?.variety||varieties[0]||'';
  const sources=[...new Set(rows.filter(r=>r.variety===v).map(r=>r.source_name))];
- const source=selectedReport?.commodity===crop&&selectedReport.variety===v?selectedReport.source_name:sources[0];
+ const source=selectedReport?.commodity===crop&&selectedReport.variety===v?selectedReport.source_name:linkedReport?.variety===v?linkedReport.source_name:sources[0];
  const allLatest=useMemo(()=>latestByMarket(rows.filter(r=>r.variety===v&&r.source_name===source&&comparableReport(r))),[rows,v,source]);
  // Default comparison stays within the starting market's state; farmers can widen it with the state selector.
  const effState=state||(start?start.split('|')[0]:'')||'';const latest=useMemo(()=>allLatest.filter(r=>!effState||r.state===effState),[allLatest,effState]);
  const states=[...new Set(rows.map(r=>r.state))].sort();
- const initialReport=initial.market?latest.find(r=>r.market===initial.market):undefined;
+ const initialReport=initial.market?latest.find(r=>marketKey(r)===initial.market||r.market===initial.market):undefined;
  const startKey=start||(initialReport?marketKey(initialReport):'');
  const reference=latest.find(r=>marketKey(r)===startKey);
  const comparisonRows=reference?latestByMarket(rows.filter(r=>comparableReport(r)&&comparisonKey(r)===comparisonKey(reference)&&(!effState||r.state===effState))):latest;

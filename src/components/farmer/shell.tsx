@@ -22,11 +22,12 @@ export function AppShell({children,research:isResearch=false}:{children:ReactNod
     <details className="ks-more"><summary aria-label={c.more}><Menu/><span>{c.more}</span></summary><div className="ks-menu">
      <Link to="/comparison"><Scale/>{c.compare}</Link><Link to="/selling-assistant"><ClipboardList/>{c.plan}</Link><Link to="/help"><CircleHelp/>{c.how}</Link><Link to="/about"><Info/>{c.about}</Link>
      <Link to={isResearch?'/':'/research'}>{isResearch?<Sprout/>:<FlaskConical/>}{isResearch?c.farmerMode:c.research}</Link>
+     <Link to="/model-comparison"><FlaskConical/>Model Performance &amp; Comparison</Link>
      {user&&<button onClick={()=>void supabase.auth.signOut()}><LogOut/>Sign out</button>}
     </div></details>
    </div></div></header>
   {home&&<MarketTicker/>}
-  {isResearch&&<div className="ks-research-bar"><div className="ks-wrap"><span className="ks-research-tag"><FlaskConical/>{c.research}</span>{research.map(([to,k])=><Link key={to} to={to} activeProps={{className:'active'}}>{c[k]}</Link>)}<span className="ks-research-sub">{c.researchSub}</span></div></div>}
+  {isResearch&&<div className="ks-research-bar"><div className="ks-wrap"><span className="ks-research-tag"><FlaskConical/>{c.research}</span><Link to="/model-comparison" activeProps={{className:'active'}}>Model Performance &amp; Comparison</Link>{research.map(([to,k])=><Link key={to} to={to} activeProps={{className:'active'}}>{c[k]}</Link>)}<span className="ks-research-sub">{c.researchSub}</span></div></div>}
   <main className={isResearch?'ks-wrap ks-main ks-research-main':'ks-main'}>{children}</main>
   <footer className="ks-footer"><div className="ks-wrap"><b>KRISHISETU</b><span>{c.freshNote}</span><Link to="/help">{c.how}</Link><Link to="/about">{c.about}</Link></div></footer>
   <nav className="ks-bottomnav" aria-label="Mobile">{main.map(([to,Icon,k])=><Link key={to} to={to} activeOptions={{exact:to==='/'}} activeProps={{className:'active'}}><Icon/><span>{c[k]}</span></Link>)}</nav>

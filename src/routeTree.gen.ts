@@ -18,6 +18,7 @@ import { Route as FindMarketRouteImport } from './routes/find-market'
 import { Route as ForecastRouteImport } from './routes/forecast'
 import { Route as HelpRouteImport } from './routes/help'
 import { Route as MarketsRouteImport } from './routes/markets'
+import { Route as ModelComparisonRouteImport } from './routes/model-comparison'
 import { Route as OpportunitiesRouteImport } from './routes/opportunities'
 import { Route as ResearchRouteImport } from './routes/research'
 import { Route as SellingAssistantRouteImport } from './routes/selling-assistant'
@@ -70,6 +71,11 @@ const MarketsRoute = MarketsRouteImport.update({
   path: '/markets',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ModelComparisonRoute = ModelComparisonRouteImport.update({
+  id: '/model-comparison',
+  path: '/model-comparison',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OpportunitiesRoute = OpportunitiesRouteImport.update({
   id: '/opportunities',
   path: '/opportunities',
@@ -112,6 +118,7 @@ export interface FileRoutesByFullPath {
   '/forecast': typeof ForecastRoute
   '/help': typeof HelpRoute
   '/markets': typeof MarketsRoute
+  '/model-comparison': typeof ModelComparisonRoute
   '/opportunities': typeof OpportunitiesRoute
   '/research': typeof ResearchRoute
   '/selling-assistant': typeof SellingAssistantRoute
@@ -129,6 +136,7 @@ export interface FileRoutesByTo {
   '/forecast': typeof ForecastRoute
   '/help': typeof HelpRoute
   '/markets': typeof MarketsRoute
+  '/model-comparison': typeof ModelComparisonRoute
   '/opportunities': typeof OpportunitiesRoute
   '/research': typeof ResearchRoute
   '/selling-assistant': typeof SellingAssistantRoute
@@ -147,6 +155,7 @@ export interface FileRoutesById {
   '/forecast': typeof ForecastRoute
   '/help': typeof HelpRoute
   '/markets': typeof MarketsRoute
+  '/model-comparison': typeof ModelComparisonRoute
   '/opportunities': typeof OpportunitiesRoute
   '/research': typeof ResearchRoute
   '/selling-assistant': typeof SellingAssistantRoute
@@ -166,6 +175,7 @@ export interface FileRouteTypes {
     | '/forecast'
     | '/help'
     | '/markets'
+    | '/model-comparison'
     | '/opportunities'
     | '/research'
     | '/selling-assistant'
@@ -183,6 +193,7 @@ export interface FileRouteTypes {
     | '/forecast'
     | '/help'
     | '/markets'
+    | '/model-comparison'
     | '/opportunities'
     | '/research'
     | '/selling-assistant'
@@ -200,6 +211,7 @@ export interface FileRouteTypes {
     | '/forecast'
     | '/help'
     | '/markets'
+    | '/model-comparison'
     | '/opportunities'
     | '/research'
     | '/selling-assistant'
@@ -218,6 +230,7 @@ export interface RootRouteChildren {
   ForecastRoute: typeof ForecastRoute
   HelpRoute: typeof HelpRoute
   MarketsRoute: typeof MarketsRoute
+  ModelComparisonRoute: typeof ModelComparisonRoute
   OpportunitiesRoute: typeof OpportunitiesRoute
   ResearchRoute: typeof ResearchRoute
   SellingAssistantRoute: typeof SellingAssistantRoute
@@ -291,6 +304,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MarketsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/model-comparison': {
+      id: '/model-comparison'
+      path: '/model-comparison'
+      fullPath: '/model-comparison'
+      preLoaderRoute: typeof ModelComparisonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/opportunities': {
       id: '/opportunities'
       path: '/opportunities'
@@ -346,6 +366,7 @@ const rootRouteChildren: RootRouteChildren = {
   ForecastRoute: ForecastRoute,
   HelpRoute: HelpRoute,
   MarketsRoute: MarketsRoute,
+  ModelComparisonRoute: ModelComparisonRoute,
   OpportunitiesRoute: OpportunitiesRoute,
   ResearchRoute: ResearchRoute,
   SellingAssistantRoute: SellingAssistantRoute,
