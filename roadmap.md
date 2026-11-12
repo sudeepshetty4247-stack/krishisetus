@@ -1,11 +1,14 @@
 # KRISHISETU
 
 ## Final master implementation audit
-- [ ] Recheck genuine coverage, retrieval logs, schedules and saved model artifacts.
-- [ ] Execute nationwide historical preparation and reproducible Python evaluation on accessible data.
-- [ ] Fix source ingestion completeness, comparison compatibility and disconnected nearby-market selection.
-- [ ] Verify farmer workflows, source failure/recovery and desktop/mobile layouts.
-- [ ] Deliver evidence-based data/model/test report and name deployment, credential and data blockers.
+- [x] Rechecked hosted coverage/retrieval logs; existing artifact paths were absent in this sandbox, so re-executed genuine Hubli maize training and saved artifacts.
+- [x] Prepared 24,656,469 nationwide historical records (32 state/territory labels; 2021–21 Apr 2026) in bounded-memory state partitions; not published to the website.
+- [x] Fixed concurrent relay row removal and explicit truncation diagnostics; nearby selection now feeds the crop-specific selling workflow.
+- [x] Verified maize 20q → Dharwad suggestions → nearby selection → net calculations → saved comparison; 13 pages and mobile checked; 41 frontend and 39 Python tests passed.
+- [ ] Full acceptance: arbitrary village/GPS/road routing, uncommon/custom crops, entered transport costs, source failure/recovery and current forecast remain not verified in this pass.
+- [ ] Nationwide coordinates and comparable source/date/grade filtering remain incomplete.
+- [ ] Deploy Python and publish nationwide history — requires an external persistent HTTPS Python hosting account and secure service connection; current continuous history is also missing.
+- [x] Produced evidence-based final report distinguishing hosted data from sandbox history and historical estimates from current forecasts.
 
 ## Final farmer completion request
 - [x] Retrieved four genuine CEDA historical maize reports, persisted and read back publicly; missing units/varieties explicitly exclude them from comparable selling reports. Added authenticated bounded ingestion with retry and failure logs.

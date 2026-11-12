@@ -85,7 +85,7 @@ export function FindMarketPage({initial}:{initial:{crop?:string|undefined;qty?:n
  const crops=cat.data?.commodities||[];
  return <div className="ks-wrap ks-flow">
   <div className="ks-page-head"><h1>{c.find}</h1><p>{c.promise}</p></div>
-  <NearbyMarkets/>
+  <NearbyMarkets crop={crop||undefined} onPick={l=>{setState(l.state);setStart(marketKey(l));}}/>
   <Step n={1} title={c.sCrop} c={c}>{cat.isLoading?<Loading c={c}/>:crops.length?<CropPicker crops={crops} value={crop} onChange={x=>{setCrop(x);setStart('');setVariety('');}} placeholder={c.searchCrop}/>:<Notice tone="warn">{c.noCrops}</Notice>}</Step>
   {crop&&!cat.isLoading&&crops.length>0&&!crops.includes(crop)&&<CustomCropPlan crop={crop} qty={Number(qty)} c={c}/>}
   <Step n={2} title={c.sQty} c={c}><label className="ks-qty big"><input aria-label={c.qQty} type="number" min="0.1" step="0.1" inputMode="decimal" value={qty} onChange={e=>setQty(e.target.value)}/><span>{c.quintals}</span></label><small className="ks-hint">{c.quintalHint}</small>{!(q>0)&&<Notice tone="error">{c.qQty}</Notice>}</Step>

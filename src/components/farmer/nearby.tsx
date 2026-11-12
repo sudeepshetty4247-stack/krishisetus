@@ -17,7 +17,7 @@ type Suggestion={key:string;label:string;detail:string;point:Coordinates;kind:'m
 const kmLabel=(q:string)=>q==='market_yard'?'APMC yard':q==='town_centre'?'town centre':'approximate';
 // Market positions come from geocoded official market names (market_locations). Distances are straight-line
 // unless the farmer requests a road route. Prices are joined only on the exact reported market identity.
-export function NearbyMarkets({crop,onPick}:{crop?:string;onPick?:(m:MarketLocation&{km:number})=>void}){
+export function NearbyMarkets({crop,onPick}:{crop?:string|undefined;onPick?:(m:MarketLocation&{km:number})=>void}){
  const {lang,user}=useKrishi();const c=nearbyCopy(lang);const kn=lang==='kn';const call=useServerFn(discoverMarkets);const locs=useMarketLocations();
  const [origin,setOrigin]=useState<{point:Coordinates;label:string}|null>(null);const [radius,setRadius]=useState<25|50|100|200>(50);const [text,setText]=useState('');
  const [places,setPlaces]=useState<Suggestion[]>([]);const [error,setError]=useState('');const [busy,setBusy]=useState(false);const [roads,setRoads]=useState<Record<string,{km:number;min:number}>>({});const [open,setOpen]=useState(false);

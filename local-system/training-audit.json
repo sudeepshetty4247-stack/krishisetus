@@ -1,0 +1,254 @@
+{
+  "nationwide_manifest": {
+    "records": 24656469,
+    "states": 32,
+    "districts": 614,
+    "reported_markets": 6592,
+    "commodities": 370,
+    "earliest": "2021-01-01",
+    "latest": "2026-04-21",
+    "source": "data.gov.in variety-wise history",
+    "source_url": "https://www.data.gov.in/resource/variety-wise-daily-market-prices-data-commodity",
+    "dataset": "Khandelwal AGMARKNET compilation via Hugging Face DHIVAKARNAIDUSUNKARI/mandi-india-daily-prices-2001-2026",
+    "received": 24656472,
+    "rejected": 3,
+    "duplicate_rows": 0,
+    "unit": "INR/quintal",
+    "arrivals_available": false,
+    "duplicate_policy": "Median modal within identical date/source/geography/commodity/variety/grade; extrema retained",
+    "created_at": "2026-11-12T18:06:14.779004+00:00",
+    "files": {
+      "mandi_daily_2021.parquet": "5eae40f34178db1777860723ebe7d6aa34aaafd2f504b43324958dd3acd5df4f",
+      "mandi_daily_2022.parquet": "5b20a545407c919683105f094813e69ed78fa87aec71ba0390338dbf9bef675a",
+      "mandi_daily_2023.parquet": "0b76d03b08f2d3b21bc38e2829a4a5a6c5c58e71cc4aeba4ea1d03b0dd88998f",
+      "mandi_daily_2024.parquet": "74430fe70839da147fc316563a48a68b477516ce770a1d5c2597d8d13b3e281c",
+      "mandi_daily_2025.parquet": "65a848dfc4be3f84a911e5375abfa5d67481cf547c6a9ae382932d9166bb5e93",
+      "mandi_daily_2026.parquet": "3f768db13bf083749611bc12d4766cf04ab4b307e30429f05794552ad6ea8fe2"
+    }
+  },
+  "training": {
+    "group": {
+      "state": "Karnataka",
+      "district": "Dharwad",
+      "market": "Hubli (Amaragol)",
+      "commodity": "Maize",
+      "variety": "Local"
+    },
+    "source": "data.gov.in variety-wise history",
+    "frequency": "weekly mean of daily median modal price (INR/quintal)",
+    "observed_weeks": 218,
+    "daily_reports": 758,
+    "raw_rows": 758,
+    "period": [
+      "2021-01-01",
+      "2026-04-16"
+    ],
+    "train_period": [
+      "2020-12-28",
+      "2024-01-08"
+    ],
+    "validation_period": [
+      "2024-01-15",
+      "2024-09-30"
+    ],
+    "test_period": [
+      "2024-10-07",
+      "2026-04-13"
+    ],
+    "dataset_version": "69f1ad1d241cd24c",
+    "features": [
+      "lag_1",
+      "lag_2",
+      "lag_3",
+      "lag_4",
+      "lag_8",
+      "lag_13",
+      "lag_52",
+      "mean_4",
+      "mean_8",
+      "mean_13",
+      "std_4",
+      "std_8",
+      "std_13",
+      "change_1",
+      "change_4",
+      "week_sin",
+      "week_cos",
+      "month",
+      "lag_52_missing"
+    ],
+    "training_seconds": 44.06
+  },
+  "seven_day_evaluation": {
+    "status": "trained",
+    "horizon_weeks": 1,
+    "horizon_days": 7,
+    "selected": "SARIMA",
+    "selection_reason": "Lowest validation MAE (RMSE tie-break). Final walk-forward test never used for selection.",
+    "validation": {
+      "Naive": {
+        "MAE": 135.00215053763438,
+        "RMSE": 178.94810309737997,
+        "sMAPE": 5.94211362564991,
+        "R2": 0.3104359355329407,
+        "n": 31
+      },
+      "Seasonal naive": {
+        "MAE": 207.69193548387094,
+        "RMSE": 272.44974359822464,
+        "sMAPE": 9.736476653991987,
+        "R2": -0.5984285561869052,
+        "n": 31
+      },
+      "Random Forest": {
+        "MAE": 155.13321271072053,
+        "RMSE": 195.26351810015885,
+        "sMAPE": 7.057441327226987,
+        "R2": 0.17896316402119483,
+        "n": 31
+      },
+      "XGBoost": {
+        "MAE": 159.7647298177083,
+        "RMSE": 202.11766570636433,
+        "sMAPE": 7.254887250272252,
+        "R2": 0.1203113870166369,
+        "n": 31
+      },
+      "ARIMA": {
+        "MAE": 132.01832066523926,
+        "RMSE": 163.61600119947374,
+        "sMAPE": 5.832813759607497,
+        "R2": 0.42353629178038144,
+        "n": 31
+      },
+      "SARIMA": {
+        "MAE": 130.74760888532685,
+        "RMSE": 164.41379614407853,
+        "sMAPE": 5.7686655464053755,
+        "R2": 0.4179008885282951,
+        "n": 31
+      }
+    },
+    "test": {
+      "Naive": {
+        "MAE": 94.29797979797979,
+        "RMSE": 136.3962802621841,
+        "sMAPE": 4.833778069866336,
+        "R2": 0.46950365393823135,
+        "n": 33
+      },
+      "Seasonal naive": {
+        "MAE": 150.2808080808081,
+        "RMSE": 191.9299687710544,
+        "sMAPE": 7.680718487963408,
+        "R2": -0.05041987151554905,
+        "n": 33
+      },
+      "Random Forest": {
+        "MAE": 118.42478352884979,
+        "RMSE": 151.0128079996519,
+        "sMAPE": 6.12388780843682,
+        "R2": 0.34971324271723536,
+        "n": 33
+      },
+      "XGBoost": {
+        "MAE": 110.93865411931819,
+        "RMSE": 144.404165302664,
+        "sMAPE": 5.701465218930205,
+        "R2": 0.4053837347714313,
+        "n": 33
+      },
+      "ARIMA": {
+        "MAE": 98.54538318231744,
+        "RMSE": 135.63365934392596,
+        "sMAPE": 5.048626446081961,
+        "R2": 0.475419307907079,
+        "n": 33
+      },
+      "SARIMA": {
+        "MAE": 97.28787495845019,
+        "RMSE": 134.64078936284014,
+        "sMAPE": 4.980128710300477,
+        "R2": 0.4830713035509311,
+        "n": 33
+      }
+    },
+    "recent_26_weeks": {
+      "Naive": {
+        "MAE": 89.57692307692308,
+        "RMSE": 119.51911301573642,
+        "sMAPE": 4.9398233085401415,
+        "R2": 0.17712987840655126,
+        "n": 13
+      },
+      "Seasonal naive": {
+        "MAE": 219.1051282051282,
+        "RMSE": 263.411202946281,
+        "sMAPE": 11.551507069496967,
+        "R2": -2.996916300649775,
+        "n": 13
+      },
+      "Random Forest": {
+        "MAE": 147.4172083990172,
+        "RMSE": 161.3999842615128,
+        "sMAPE": 8.089633135612432,
+        "R2": -0.5005951778932267,
+        "n": 13
+      },
+      "XGBoost": {
+        "MAE": 122.31514485677083,
+        "RMSE": 147.6336527305463,
+        "sMAPE": 6.684495937708686,
+        "R2": -0.25553059668816225,
+        "n": 13
+      },
+      "ARIMA": {
+        "MAE": 93.40930239008948,
+        "RMSE": 113.86847074135498,
+        "sMAPE": 5.168894461414206,
+        "R2": 0.2530981302231171,
+        "n": 13
+      },
+      "SARIMA": {
+        "MAE": 90.18546828613647,
+        "RMSE": 113.10870120665003,
+        "sMAPE": 4.98394630658226,
+        "R2": 0.26303204949123626,
+        "n": 13
+      }
+    },
+    "samples": {
+      "train": 95,
+      "validation": 31,
+      "test": 33
+    },
+    "failures": {},
+    "deterioration_ratio": 0.9269959727731023,
+    "baseline_beaten": false,
+    "interval": {
+      "radius": 271.2587701803186,
+      "method": "90th percentile of absolute validation errors; empirical, not a coverage guarantee"
+    },
+    "residuals": {
+      "mean": -30.345009070141693,
+      "std": 131.17668460813343,
+      "lag1_autocorrelation": 0.0049114689258301855
+    },
+    "parameters": {
+      "ar.L1": 0.2899120773670326,
+      "ma.L1": -0.5821930661899201,
+      "ar.S.L52": -0.00012486282150853624,
+      "sigma2": 0.004274524935644387
+    },
+    "forecast": {
+      "origin_week": "2026-04-13",
+      "target_week": "2026-04-20",
+      "price": 1700.4,
+      "lower": 1429.14,
+      "upper": 1971.65,
+      "latest_actual": 1700.0,
+      "latest_report_date": "2026-04-16",
+      "note": "Generated from the last observed historical week. It is NOT a current forecast when that week is old."
+    }
+  }
+}
