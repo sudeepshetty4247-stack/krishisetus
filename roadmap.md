@@ -1,11 +1,17 @@
 # KRISHISETU
 
 ## Production implementation (current request)
-- [ ] Recheck linked CEDA and public official downloads; record actual access and licensing limitations.
-- [ ] Implement resumable historical source ingestion and persistent hosted publication of verified rows.
-- [ ] Add permission-based nearby discovery with verified locations and manual fallback.
-- [ ] Strengthen Python validation, forecast lookup, reliability gates and deployment/recovery.
-- [ ] Verify real-data flows where accessible; explicitly distinguish external deployment and source blockers.
+- [x] Rechecked linked CEDA (catalogue 200, market timeout), exact public AGMARKNET (403), data.gov.in (connection failure), e-NAM (404 page), ReMS (TLS failure); retained access controls and licensing caveats.
+- [x] Implemented monthly resumable AGMARKNET ingestion, explicit unit mapping, audited export, transactional official-only hosted publication and hourly managed callback.
+- [x] Added permission-based location control, manual town search, bounded authenticated Google Places discovery and on-demand road routing; existing farmer design preserved.
+- [x] Added seasonal naive/SARIMA, full-market forecast lookup, publication freshness/baseline/error gates, atomic job files, online backups, container deployment and bounded retraining scheduler.
+- [x] Verified 39 Python tests and 17 frontend tests; signed-in Kannada denied-location fallback, protected callback (401), research navigation and mobile no-overflow; no runtime errors.
+- [ ] Execute official historical retrieval/publication and real-data model evaluation — external source access failures; no official price observations retrieved.
+- [ ] Verify permitted-location Google Maps, road routing and price-directory matching — Maps live checks unsupported in sandbox; requires authorized deployed origin and source-backed market identity matching.
+- [ ] Deploy persistent HTTPS Python service and verify refresh/retraining — no external hosting target or Python URL/token configured; container supplied but not deployed.
+- [ ] Complete real-data maize 20-quintal journey including trained forecasts and saved comparisons — waits on official reports and Python deployment, not substituted fixtures.
+- [ ] Distributed jobs, sparse-calendar/arrivals ML, real-time drift monitoring, configurable alerts, directory matching and full local/research translation parity — require deployment/data contracts and editorial review; not production-complete.
+- [ ] Hosted request rate limiting — no standard platform primitive; a custom limiter requires explicit trade-off confirmation.
 
 ## Current website completion
 - [x] Persistent hosted schema, owner-private CSV/XLSX imports, source checks and import history implemented.
@@ -13,7 +19,7 @@
 - [x] Authenticated isolated Python service, training jobs, comparison and same-day historical strategy simulation; 33 Python tests pass.
 - [x] Correct CEDA versioned contract, secure authorized connector, live commodity/geography discovery and website retrieval controls.
 - [x] Public eleven-page navigation, empty states, source check and mobile overflow verified; eight preview tests pass.
-- [ ] Authenticated create/read/delete verification — requires an account signed in through the preview; no auth users existed during checks.
+- [ ] Authorized research import create/read/delete verification — a signed-in account is now available, but no research/admin role has been granted; no automatic promotion.
 - [ ] Genuine reports and executed research evaluation — CEDA catalogue reads succeed but markets/prices calls currently return upstream timeout.
 - [ ] Hosted Python execution — requires a reachable HTTPS Python service; hosted runtime cannot run Python.
 - [ ] Finish full seven-language text coverage, advanced opportunity analytics and complete local website feature parity.
@@ -39,6 +45,6 @@
 - [x] Market Prices with detail sheet, Compare (2–5 markets), Price Trends, My Selling Plan, How It Works, About.
 - [x] CSV/Excel import moved to Research → Data quality only.
 - [x] Farmer pages translated in all 7 languages (research pages still en/kn only).
-- [ ] Real official prices — blocked: CEDA API key not provided; data.gov.in unreachable from sandbox.
+- [ ] Real official prices — CEDA is connected, but report requests time out; public AGMARKNET returns 403 and data.gov.in cannot connect.
 - [ ] Python forecasts/model metrics — blocked: no hosted Python service URL configured.
-- [ ] Market map / road distance — blocked: no verified market coordinates or routing source.
+- [ ] Market map / road distance — Google Maps connected and discovery/routing code implemented; deployed-origin verification and price-market matching remain outstanding.

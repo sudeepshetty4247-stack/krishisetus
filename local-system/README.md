@@ -2,7 +2,7 @@
 
 ## Honest delivery status
 
-This is an independently runnable **local foundation**, not a claim that nationwide data has been retrieved or models have been trained on official records. The Lovable preview remains a separate TanStack application; this delivery uses Flask/Jinja, HTML, CSS and vanilla JavaScript. No cloud account, GitHub publishing or paid hosting is required.
+This is the independent Python service and local application, not a claim that nationwide data has been retrieved or models have been trained on official records. The Lovable preview connects over authenticated HTTPS; Python does not run inside the hosted frontend. The local application uses Flask/Jinja, HTML, CSS and vanilla JavaScript.
 
 Implemented: SQLite relationships and indexed source-specific observations; original file preservation; CSV/XLSX imports; audited normalization and deduplication; dynamic observed nationwide catalogues; paginated APIs; basic coverage; bounded resumable data.gov.in current-report ingestion; partitioned Parquet exports; configurable daily ingestion process; chronological baseline/ARIMA/Random Forest/XGBoost comparison code; versioned artifacts; endpoint forecasts; empirical uncertainty; selected-tree SHAP endpoint; same-day/variety/source net ranking and break-even transport; basic volatility, seasonality, common-day competitiveness and arrival correlation; local frontend; automated tests.
 
@@ -28,7 +28,8 @@ py -3 -m venv .venv
 
 See `source-access-audit.json` for actual sandbox checks and UTC timestamps.
 
-- CEDA registration page was accessible and requires an API key. The supplied `/agmarknet/commodities` and `/agmarknet/geographies` URLs returned **404 Cannot GET**. The documentation URL could not be retrieved. No guessed headers, pagination or endpoints were implemented. Supply current provider documentation and authorized access before enabling CEDA.
+- CEDA's documented base is `/v1/agmarknet/`. The hosted linked connector successfully returns commodity catalogues; the Dharwad maize market request returned an upstream timeout on 12 November 2026. Earlier unversioned 404 findings are superseded, not evidence that CEDA is unsupported.
+- Public AGMARKNET 2.0 uses `https://api.agmarknet.gov.in/v1/daily-price-arrival/filters` and POST `report`. The exact filters endpoint returned HTTP 403 in this environment. The monthly paginated connector preserves raw responses, rejects unknown units and checkpoints successful pages. Its live report schema and earliest historical coverage remain unverified; it does not bypass access controls.
 - data.gov.in resource `9ef84268-d588-465a-a308-a864a43d0070` request failed with a connection error from this environment. Neither key was configured. The implemented documented resource connector uses `api-key`, `format`, `offset`, `limit` and explicit filters. **Its authenticated live behavior remains unverified**.
 - Daily data.gov.in reports are not a complete historical archive. Offsets can shift while the source changes; resume belongs to a bounded snapshot, not guaranteed historical completeness. Use explicit new snapshots and deduplication. Large nationwide historical ingestion needs a verified CEDA contract or official historical exports.
 - e-NAM and ReMS are **not integrated**: no verified supported machine-readable interface was established. AGMARKNET observations are supported through authorized official data.gov.in retrieval or provenance-labelled exports, not unauthorized scraping.
@@ -96,3 +97,19 @@ Net = modal price × quintals − transport − loading/unloading − other cost
 Test numeric rows are clearly marked fixtures and never seeded into the operational database or used as official model results. Tests cover calculations, coverage, units, duplicate audit, source separation, import, SQL binding, CSRF, bounded pagination, feature leakage and unsupported models. No Windows host was available here: Python local execution was tested on Linux; Windows launcher execution remains unverified.
 
 Built-in translations inherit the preview dictionaries; some regional-language details still fall back to English. Fonts use local system fonts offline. Keep professional translation completion and full farmer usability review on the roadmap.
+
+## Production service deployment and recovery
+
+Build the included Dockerfile from this directory. Attach a persistent volume at `/data`, supply `KRISHI_PYTHON_TOKEN` securely, and expose port 8000 through HTTPS. Configure that same token and the HTTPS origin as `KRISHI_PYTHON_TOKEN` and `KRISHI_PYTHON_URL` in hosted project secrets. Do not expose local page endpoints: their loopback Host enforcement is intentional. `/service/health` is public and contains no credentials; all other service operations require the shared bearer token.
+
+Run a single service process as configured; threaded jobs persist atomic status files but are not a distributed job queue. An interrupted running job must be resubmitted after inspecting logs. Multi-replica job orchestration remains unimplemented. Hosted publication is hourly at minute 17 (delivery can be spread roughly 30 seconds), fetches at most 1,000 audited official observations per call and commits rows plus cursor transactionally. It cannot succeed before the Python deployment and official ingestion are available. No source rows are bundled.
+
+```text
+python manage.py ingest-history --start 2001-01-01 --end 2026-11-12 --max-pages 10
+python manage.py schedule --max-pages 10
+python manage.py backup --directory /data/backups
+```
+
+The historical date range is a requested search range, not a coverage assertion. Repeat identical ingest commands to resume. Numeric filters follow the source catalogue. Do not mix AGMARKNET numeric-ID filters with data.gov.in text filters. For recovery, stop service and scheduler, restore a verified SQLite backup as `metadata.sqlite`, restore matching raw/model/Parquet directories, then resume. Copy the entire persistent volume to encrypted off-host storage; the backup command verifies SQLite integrity but is not an off-site backup solution.
+
+Seasonal naive and weekly SARIMA join the original four candidates. Hosted forecast responses withhold stale history, excessive final-test sMAPE, baseline winners, or models failing to beat the naive final-test MAE. Thresholds are configurable, not scientific guarantees. Saved residual diagnostics are not live forecast-error monitoring. Scheduler retraining is bounded to ten registered groups per run and requires the configured number of new observations; execution on real data and external supervision remain unverified.

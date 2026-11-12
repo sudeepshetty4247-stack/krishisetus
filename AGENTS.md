@@ -40,3 +40,7 @@ use the editor.
 - Farmer pages live in `src/components/farmer/*` inside `AppShell`; research/admin pages reuse legacy `krishisetu.tsx` via `Layout` → `AppShell research`. Keeps farmer UX free of dataset/upload tooling.
 - Selling math lives in `src/lib/selling.ts` (mirrors `local-system/intelligence_engine/decisions.py`) and is covered by `src/test/selling.test.ts`; keep both formulas identical.
 - Farmer-facing copy is centralized in `src/lib/farmer-copy.ts` (English fallback for missing keys).
+- Official publication runs through an authenticated scheduled callback and a service-role-only transactional batch RPC; only fixed official connector observations qualify, never uploaded source assertions.
+- Nearby discovery uses authenticated bounded Google Places searches and explicit on-demand Routes calls; provider places remain separate from price market identities until verified matching exists.
+- Python deployment uses one persistent-volume service process with atomic job files and SQLite online backups; local loopback pages remain isolated from its authenticated service endpoints.
+- Research imports and training require server-verified roles plus restrictive import policies; no account is promoted automatically.

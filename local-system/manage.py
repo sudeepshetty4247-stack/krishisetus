@@ -55,11 +55,13 @@ def main():
             # Explicit long-running process; survives local offline failures, no background claim.
             hour=int(os.environ.get('DAILY_REFRESH_HOUR_UTC','3'));last_day=None
             if hour not in range(24): raise ValueError('Refresh hour must be 0–23 UTC')
-            print('Scheduler running; Ctrl+C stops. Training remains an explicit audited command.')
+            print('Scheduler running; Ctrl+C stops. Only registered groups with sufficient new observations are retrained.')
             while True:
                 now=datetime.now(timezone.utc)
                 if now.hour==hour and last_day!=now.date():
-                    try: print(json.dumps(DataGovConnector().ingest(store,json.loads(args.filters),max_pages=args.max_pages,reset=True)))
+                    try:
+                        from scheduler import daily_update
+                        print(json.dumps(daily_update(store,json.loads(args.filters),args.max_pages)))
                     except SourceUnavailable as exc: print(str(exc))
                     last_day=now.date()
                 time.sleep(60)

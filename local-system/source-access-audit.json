@@ -1,4 +1,10 @@
 [
+  {"source":"ceda_versioned_catalogue","url":"https://api.ceda.ashoka.edu.in/v1/agmarknet/commodities","status":200,"retrieved":"2026-11-12T15:41:54Z","note":"Linked authorized connector; real commodity catalogue, not price observations."},
+  {"source":"ceda_maize_dharwad_markets","url":"https://api.ceda.ashoka.edu.in/v1/agmarknet/markets","status":502,"retrieved":"2026-11-12T15:43:08Z","note":"POST commodity 4/state 29/district 562 returned upstream timeout."},
+  {"source":"agmarknet_public_filters","url":"https://api.agmarknet.gov.in/v1/daily-price-arrival/filters","status":403,"retrieved":"2026-11-12T15:46:00Z","note":"Exact public contract endpoint denied access; no bypass attempted."},
+  {"source":"data_gov_recheck","url":"https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070","error":"ConnectionError","retrieved":"2026-11-12T15:46:00Z"},
+  {"source":"rems_recheck","url":"https://www.remsl.in/","error":"TLS certificate validation failed","retrieved":"2026-11-12T15:46:00Z","note":"TLS verification retained."},
+  {"source":"enam_trade_page","url":"https://enam.gov.in/web/dashboard/trade-data","retrieved":"2026-11-12T15:45:00Z","note":"Website fetch returned a 404 image, no machine-readable observations."},
   {
     "source": "ceda_commodities",
     "url": "https://api.ceda.ashoka.edu.in/agmarknet/commodities",
