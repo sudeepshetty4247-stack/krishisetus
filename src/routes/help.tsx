@@ -1,3 +1,5 @@
 import {createFileRoute} from '@tanstack/react-router';
-import {HelpPage,pageHead} from '@/components/krishisetu';
-export const Route=createFileRoute('/help')({head:()=>pageHead('About and farmer help','Understand modal prices, market comparisons, expense calculations and product limitations.'),component:HelpPage});
+import {pageHead} from '@/components/krishisetu';
+import {AppShell} from '@/components/farmer/shell';
+import {HowPage} from '@/components/farmer/pages';
+export const Route=createFileRoute('/help')({head:()=>pageHead('How KRISHISETU works','How prices, net values, break-even transport and forecasts are calculated.'),component:()=><AppShell><HowPage/></AppShell>});

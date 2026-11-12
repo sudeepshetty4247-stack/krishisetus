@@ -10,9 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as ComparisonRouteImport } from './routes/comparison'
 import { Route as CropIntelligenceRouteImport } from './routes/crop-intelligence'
 import { Route as DataQualityRouteImport } from './routes/data-quality'
+import { Route as FindMarketRouteImport } from './routes/find-market'
 import { Route as ForecastRouteImport } from './routes/forecast'
 import { Route as HelpRouteImport } from './routes/help'
 import { Route as MarketsRouteImport } from './routes/markets'
@@ -24,6 +26,11 @@ import { Route as SourcesRouteImport } from './routes/sources'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ComparisonRoute = ComparisonRouteImport.update({
@@ -39,6 +46,11 @@ const CropIntelligenceRoute = CropIntelligenceRouteImport.update({
 const DataQualityRoute = DataQualityRouteImport.update({
   id: '/data-quality',
   path: '/data-quality',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FindMarketRoute = FindMarketRouteImport.update({
+  id: '/find-market',
+  path: '/find-market',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ForecastRoute = ForecastRouteImport.update({
@@ -79,9 +91,11 @@ const SourcesRoute = SourcesRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/comparison': typeof ComparisonRoute
   '/crop-intelligence': typeof CropIntelligenceRoute
   '/data-quality': typeof DataQualityRoute
+  '/find-market': typeof FindMarketRoute
   '/forecast': typeof ForecastRoute
   '/help': typeof HelpRoute
   '/markets': typeof MarketsRoute
@@ -92,9 +106,11 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/comparison': typeof ComparisonRoute
   '/crop-intelligence': typeof CropIntelligenceRoute
   '/data-quality': typeof DataQualityRoute
+  '/find-market': typeof FindMarketRoute
   '/forecast': typeof ForecastRoute
   '/help': typeof HelpRoute
   '/markets': typeof MarketsRoute
@@ -106,9 +122,11 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/comparison': typeof ComparisonRoute
   '/crop-intelligence': typeof CropIntelligenceRoute
   '/data-quality': typeof DataQualityRoute
+  '/find-market': typeof FindMarketRoute
   '/forecast': typeof ForecastRoute
   '/help': typeof HelpRoute
   '/markets': typeof MarketsRoute
@@ -121,9 +139,11 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
     | '/comparison'
     | '/crop-intelligence'
     | '/data-quality'
+    | '/find-market'
     | '/forecast'
     | '/help'
     | '/markets'
@@ -134,9 +154,11 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
     | '/comparison'
     | '/crop-intelligence'
     | '/data-quality'
+    | '/find-market'
     | '/forecast'
     | '/help'
     | '/markets'
@@ -147,9 +169,11 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/about'
     | '/comparison'
     | '/crop-intelligence'
     | '/data-quality'
+    | '/find-market'
     | '/forecast'
     | '/help'
     | '/markets'
@@ -161,9 +185,11 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
   ComparisonRoute: typeof ComparisonRoute
   CropIntelligenceRoute: typeof CropIntelligenceRoute
   DataQualityRoute: typeof DataQualityRoute
+  FindMarketRoute: typeof FindMarketRoute
   ForecastRoute: typeof ForecastRoute
   HelpRoute: typeof HelpRoute
   MarketsRoute: typeof MarketsRoute
@@ -180,6 +206,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/comparison': {
@@ -201,6 +234,13 @@ declare module '@tanstack/react-router' {
       path: '/data-quality'
       fullPath: '/data-quality'
       preLoaderRoute: typeof DataQualityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/find-market': {
+      id: '/find-market'
+      path: '/find-market'
+      fullPath: '/find-market'
+      preLoaderRoute: typeof FindMarketRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/forecast': {
@@ -257,9 +297,11 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
   ComparisonRoute: ComparisonRoute,
   CropIntelligenceRoute: CropIntelligenceRoute,
   DataQualityRoute: DataQualityRoute,
+  FindMarketRoute: FindMarketRoute,
   ForecastRoute: ForecastRoute,
   HelpRoute: HelpRoute,
   MarketsRoute: MarketsRoute,

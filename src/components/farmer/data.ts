@@ -1,0 +1,10 @@
+import {useQuery} from '@tanstack/react-query';
+import {supabase} from '@/integrations/supabase/client';
+import {emptyFilters,type Catalog,type Coverage,type Report} from '@/lib/agri-types';
+import {useKrishi} from '../krishisetu-provider';
+export function useCatalog(){const {user}=useKrishi();return useQuery({queryKey:['f-catalog',user],queryFn:async()=>{const {data,error}=await supabase.rpc('agri_catalog',{f:emptyFilters});if(error)throw error;return data as unknown as Catalog;}});}
+export function useCoverageAll(){const {user}=useKrishi();return useQuery({queryKey:['f-coverage',user],queryFn:async()=>{const {data,error}=await supabase.rpc('agri_coverage',{f:emptyFilters});if(error)throw error;return data as unknown as Coverage;}});}
+export function useLatest(limit=200){const {user}=useKrishi();return useQuery({queryKey:['f-latest',user,limit],queryFn:async()=>{const {data,error}=await supabase.from('agri_reports').select('*').order('date',{ascending:false}).limit(limit);if(error)throw error;return (data||[]) as unknown as Report[];}});}
+export function useCropReports(crop:string){const {user}=useKrishi();return useQuery({enabled:!!crop,queryKey:['f-crop',user,crop],queryFn:async()=>{const {data,error}=await supabase.from('agri_reports').select('*').eq('commodity',crop).order('date',{ascending:false}).limit(5000);if(error)throw error;return (data||[]) as unknown as Report[];}});}
+export function useMarketReports(market:string){const {user}=useKrishi();return useQuery({enabled:!!market,queryKey:['f-market',user,market],queryFn:async()=>{const {data,error}=await supabase.from('agri_reports').select('*').eq('market',market).order('date',{ascending:false}).limit(3000);if(error)throw error;return (data||[]) as unknown as Report[];}});}
+export function useSourceChecks(){return useQuery({queryKey:['f-checks'],queryFn:async()=>{const {data,error}=await supabase.from('agri_source_checks').select('*').order('checked_at',{ascending:false}).limit(20);if(error)throw error;return data||[];}});}
