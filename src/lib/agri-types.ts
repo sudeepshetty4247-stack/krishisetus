@@ -1,6 +1,6 @@
 export type Filters = {state:string;district:string;market:string;commodity:string;variety:string;source:string;start:string;end:string};
 export const emptyFilters:Filters={state:'',district:'',market:'',commodity:'',variety:'',source:'',start:'',end:''};
-export type Report={id:string;state:string;district:string;market:string;commodity:string;variety:string;date:string;min_price:number|null;max_price:number|null;modal_price:number;arrivals:number|null;arrival_unit:string|null;source_name:string;source_url:string;retrieved_at:string;official:boolean;suspicious:boolean};
+export type Report={id:string;state:string;district:string;market:string;commodity:string;variety:string;grade?:string;source_dataset?:string|null;date:string;min_price:number|null;max_price:number|null;modal_price:number;arrivals:number|null;arrival_unit:string|null;source_name:string;source_url:string;retrieved_at:string;official:boolean;suspicious:boolean};
 export type Catalog={states:string[];districts:string[];markets:string[];commodities:string[];varieties:string[];sources:string[]};
 export type Coverage={records:number;states:number;districts:number;markets:number;commodities:number;varieties:number;earliest:string|null;latest:string|null;last_update:string|null;missing_prices:number;missing_arrivals:number;outliers:number;state_coverage:{state:string;records:number}[]};
 export type PythonResult={available:boolean;error?:string;result?:Record<string,unknown>};

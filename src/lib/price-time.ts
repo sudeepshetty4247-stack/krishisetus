@@ -9,4 +9,11 @@ export function reportedDate(value:string){
 export function ageInIST(value:string,now=new Date()){
  const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Kolkata',year:'numeric',month:'2-digit',day:'2-digit'}).format(now);
  return Math.max(0,Math.round((Date.parse(today+'T00:00:00Z')-Date.parse(value+'T00:00:00Z'))/86400000));
-}
+}export type Freshness='latest'|'recent'|'older'|'historical';
+// Labels are derived only from the market reporting date (IST calendar days), never from retrieval time.
+export function freshness(date:string,now=new Date()):Freshness{const d=ageInIST(date,now);return d<=1?'latest':d<=7?'recent':d<=60?'older':'historical';}
+export const freshnessText:Record<string,Record<Freshness,string>>={
+ en:{latest:'Latest available report',recent:'Updated recently',older:'Older report',historical:'Historical record'},
+ kn:{latest:'ಇತ್ತೀಚಿನ ಲಭ್ಯ ವರದಿ',recent:'ಇತ್ತೀಚೆಗೆ ನವೀಕರಿಸಲಾಗಿದೆ',older:'ಹಳೆಯ ವರದಿ',historical:'ಐತಿಹಾಸಿಕ ದಾಖಲೆ'},
+ hi:{latest:'नवीनतम उपलब्ध रिपोर्ट',recent:'हाल ही में अपडेट',older:'पुरानी रिपोर्ट',historical:'ऐतिहासिक रिकॉर्ड'},
+};

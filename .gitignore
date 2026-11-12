@@ -30,3 +30,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local KRISHISETU data downloads and model artifacts
+local-system/data/

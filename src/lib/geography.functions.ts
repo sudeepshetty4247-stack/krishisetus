@@ -17,7 +17,7 @@ export const discoverMarkets=createServerFn({method:'POST'}).middleware([require
  let path:string,body:unknown,mask:string;
  if(data.action==='town'){
   path='/places/v1/places:searchText';mask='places.id,places.displayName,places.formattedAddress,places.location,places.googleMapsUri';
-  body={textQuery:`${data.town}, India`,pageSize:1};
+  body={textQuery:`${data.town}, India`,pageSize:5,regionCode:'IN'};
  }else if(data.action==='nearby'){
   const latitudeDelta=data.radius/111,longitudeDelta=Math.min(180,data.radius/(111*Math.max(.05,Math.cos(data.origin.latitude*Math.PI/180))));
   path='/places/v1/places:searchText';mask='places.id,places.displayName,places.formattedAddress,places.location,places.googleMapsUri';

@@ -99,6 +99,7 @@ export type Database = {
           commodity: string
           date: string
           district: string
+          grade: string
           id: string
           import_id: string | null
           market: string
@@ -109,6 +110,7 @@ export type Database = {
           owner_id: string | null
           price_unit: string
           retrieved_at: string
+          source_dataset: string | null
           source_name: string
           source_url: string
           state: string
@@ -121,6 +123,7 @@ export type Database = {
           commodity: string
           date: string
           district: string
+          grade?: string
           id?: string
           import_id?: string | null
           market: string
@@ -131,6 +134,7 @@ export type Database = {
           owner_id?: string | null
           price_unit?: string
           retrieved_at?: string
+          source_dataset?: string | null
           source_name: string
           source_url: string
           state: string
@@ -143,6 +147,7 @@ export type Database = {
           commodity?: string
           date?: string
           district?: string
+          grade?: string
           id?: string
           import_id?: string | null
           market?: string
@@ -153,6 +158,7 @@ export type Database = {
           owner_id?: string | null
           price_unit?: string
           retrieved_at?: string
+          source_dataset?: string | null
           source_name?: string
           source_url?: string
           state?: string
@@ -190,6 +196,51 @@ export type Database = {
           message?: string
           source?: string
           status?: string
+        }
+        Relationships: []
+      }
+      agri_source_runs: {
+        Row: {
+          errors: Json
+          finished_at: string | null
+          id: string
+          message: string | null
+          received: number
+          rejected: number
+          report_date: string | null
+          requested: number
+          source: string
+          started_at: string
+          status: string
+          stored: number
+        }
+        Insert: {
+          errors?: Json
+          finished_at?: string | null
+          id?: string
+          message?: string | null
+          received?: number
+          rejected?: number
+          report_date?: string | null
+          requested?: number
+          source: string
+          started_at?: string
+          status: string
+          stored?: number
+        }
+        Update: {
+          errors?: Json
+          finished_at?: string | null
+          id?: string
+          message?: string | null
+          received?: number
+          rejected?: number
+          report_date?: string | null
+          requested?: number
+          source?: string
+          started_at?: string
+          status?: string
+          stored?: number
         }
         Relationships: []
       }
@@ -280,6 +331,117 @@ export type Database = {
         }
         Relationships: []
       }
+      market_locations: {
+        Row: {
+          district: string
+          formatted_address: string | null
+          geocoded_at: string
+          id: string
+          latitude: number
+          location_type: string | null
+          longitude: number
+          market: string
+          match_quality: string
+          place_id: string | null
+          provider: string
+          query: string
+          state: string
+        }
+        Insert: {
+          district: string
+          formatted_address?: string | null
+          geocoded_at?: string
+          id?: string
+          latitude: number
+          location_type?: string | null
+          longitude: number
+          market: string
+          match_quality: string
+          place_id?: string | null
+          provider: string
+          query: string
+          state: string
+        }
+        Update: {
+          district?: string
+          formatted_address?: string | null
+          geocoded_at?: string
+          id?: string
+          latitude?: number
+          location_type?: string | null
+          longitude?: number
+          market?: string
+          match_quality?: string
+          place_id?: string | null
+          provider?: string
+          query?: string
+          state?: string
+        }
+        Relationships: []
+      }
+      ml_runs: {
+        Row: {
+          artifact_path: string | null
+          commodity: string
+          created_at: string
+          dataset_version: string
+          district: string
+          frequency: string
+          grade: string
+          id: string
+          market: string
+          observations: number
+          period_end: string
+          period_start: string
+          report: Json
+          run_version: string
+          source_name: string
+          state: string
+          status: string
+          variety: string
+        }
+        Insert: {
+          artifact_path?: string | null
+          commodity: string
+          created_at?: string
+          dataset_version: string
+          district: string
+          frequency: string
+          grade?: string
+          id?: string
+          market: string
+          observations: number
+          period_end: string
+          period_start: string
+          report: Json
+          run_version: string
+          source_name: string
+          state: string
+          status: string
+          variety: string
+        }
+        Update: {
+          artifact_path?: string | null
+          commodity?: string
+          created_at?: string
+          dataset_version?: string
+          district?: string
+          frequency?: string
+          grade?: string
+          id?: string
+          market?: string
+          observations?: number
+          period_end?: string
+          period_start?: string
+          report?: Json
+          run_version?: string
+          source_name?: string
+          state?: string
+          status?: string
+          variety?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -305,11 +467,25 @@ export type Database = {
     Functions: {
       agri_catalog: { Args: { f?: Json }; Returns: Json }
       agri_coverage: { Args: { f?: Json }; Returns: Json }
+      agri_ticker: { Args: { p_limit?: number }; Returns: Json }
+      prune_official_reports: {
+        Args: { p_keep_days: number; p_source: string }
+        Returns: number
+      }
       publish_agmarknet_batch: {
         Args: {
           expected_offset: number
           finished: boolean
           next_offset: number
+          records: Json
+        }
+        Returns: number
+      }
+      publish_official_reports: {
+        Args: {
+          p_dataset: string
+          p_source: string
+          p_url: string
           records: Json
         }
         Returns: number

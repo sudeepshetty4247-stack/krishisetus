@@ -22,6 +22,7 @@ import { Route as OpportunitiesRouteImport } from './routes/opportunities'
 import { Route as ResearchRouteImport } from './routes/research'
 import { Route as SellingAssistantRouteImport } from './routes/selling-assistant'
 import { Route as SourcesRouteImport } from './routes/sources'
+import { Route as ApiPublicJobsMandiSyncRouteImport } from './routes/api/public/jobs/mandi-sync'
 import { Route as ApiPublicJobsOfficialSyncRouteImport } from './routes/api/public/jobs/official-sync'
 
 const IndexRoute = IndexRouteImport.update({
@@ -89,6 +90,11 @@ const SourcesRoute = SourcesRouteImport.update({
   path: '/sources',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicJobsMandiSyncRoute = ApiPublicJobsMandiSyncRouteImport.update({
+  id: '/api/public/jobs/mandi-sync',
+  path: '/api/public/jobs/mandi-sync',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicJobsOfficialSyncRoute =
   ApiPublicJobsOfficialSyncRouteImport.update({
     id: '/api/public/jobs/official-sync',
@@ -110,6 +116,7 @@ export interface FileRoutesByFullPath {
   '/research': typeof ResearchRoute
   '/selling-assistant': typeof SellingAssistantRoute
   '/sources': typeof SourcesRoute
+  '/api/public/jobs/mandi-sync': typeof ApiPublicJobsMandiSyncRoute
   '/api/public/jobs/official-sync': typeof ApiPublicJobsOfficialSyncRoute
 }
 export interface FileRoutesByTo {
@@ -126,6 +133,7 @@ export interface FileRoutesByTo {
   '/research': typeof ResearchRoute
   '/selling-assistant': typeof SellingAssistantRoute
   '/sources': typeof SourcesRoute
+  '/api/public/jobs/mandi-sync': typeof ApiPublicJobsMandiSyncRoute
   '/api/public/jobs/official-sync': typeof ApiPublicJobsOfficialSyncRoute
 }
 export interface FileRoutesById {
@@ -143,6 +151,7 @@ export interface FileRoutesById {
   '/research': typeof ResearchRoute
   '/selling-assistant': typeof SellingAssistantRoute
   '/sources': typeof SourcesRoute
+  '/api/public/jobs/mandi-sync': typeof ApiPublicJobsMandiSyncRoute
   '/api/public/jobs/official-sync': typeof ApiPublicJobsOfficialSyncRoute
 }
 export interface FileRouteTypes {
@@ -161,6 +170,7 @@ export interface FileRouteTypes {
     | '/research'
     | '/selling-assistant'
     | '/sources'
+    | '/api/public/jobs/mandi-sync'
     | '/api/public/jobs/official-sync'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -177,6 +187,7 @@ export interface FileRouteTypes {
     | '/research'
     | '/selling-assistant'
     | '/sources'
+    | '/api/public/jobs/mandi-sync'
     | '/api/public/jobs/official-sync'
   id:
     | '__root__'
@@ -193,6 +204,7 @@ export interface FileRouteTypes {
     | '/research'
     | '/selling-assistant'
     | '/sources'
+    | '/api/public/jobs/mandi-sync'
     | '/api/public/jobs/official-sync'
   fileRoutesById: FileRoutesById
 }
@@ -210,6 +222,7 @@ export interface RootRouteChildren {
   ResearchRoute: typeof ResearchRoute
   SellingAssistantRoute: typeof SellingAssistantRoute
   SourcesRoute: typeof SourcesRoute
+  ApiPublicJobsMandiSyncRoute: typeof ApiPublicJobsMandiSyncRoute
   ApiPublicJobsOfficialSyncRoute: typeof ApiPublicJobsOfficialSyncRoute
 }
 
@@ -306,6 +319,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SourcesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/jobs/mandi-sync': {
+      id: '/api/public/jobs/mandi-sync'
+      path: '/api/public/jobs/mandi-sync'
+      fullPath: '/api/public/jobs/mandi-sync'
+      preLoaderRoute: typeof ApiPublicJobsMandiSyncRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/jobs/official-sync': {
       id: '/api/public/jobs/official-sync'
       path: '/api/public/jobs/official-sync'
@@ -330,6 +350,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResearchRoute: ResearchRoute,
   SellingAssistantRoute: SellingAssistantRoute,
   SourcesRoute: SourcesRoute,
+  ApiPublicJobsMandiSyncRoute: ApiPublicJobsMandiSyncRoute,
   ApiPublicJobsOfficialSyncRoute: ApiPublicJobsOfficialSyncRoute,
 }
 export const routeTree = rootRouteImport
