@@ -28,3 +28,9 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Application architecture
+- The live preview uses TanStack React with browser-only, session-scoped CSV imports; this avoids implying a persistent backend before the independent Flask delivery.
+- Keep market ingestion and selling calculations in browser-safe pure modules with concrete tests; use these contracts for the eventual Python implementation.
+- Share crop, language and imported reports through a root provider so each content route uses the same session dataset.
+- Never seed agricultural prices or render evaluation metrics without a verified input dataset and an executed validation pipeline.

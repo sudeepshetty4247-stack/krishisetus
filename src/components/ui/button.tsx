@@ -9,6 +9,9 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
+        harvest: "bg-harvest text-harvest-foreground hover:bg-harvest/90 shadow-sm",
+        hero: "border border-hero-foreground/50 bg-transparent text-hero-foreground hover:bg-hero-foreground/10",
+        mode: "bg-card text-primary shadow-sm",
         default: "bg-primary text-primary-foreground shadow hover:bg-primary/90",
         destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
         outline:

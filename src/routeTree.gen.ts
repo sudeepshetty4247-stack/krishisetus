@@ -10,33 +10,115 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DataQualityRouteImport } from './routes/data-quality'
+import { Route as ForecastRouteImport } from './routes/forecast'
+import { Route as HelpRouteImport } from './routes/help'
+import { Route as MarketsRouteImport } from './routes/markets'
+import { Route as ResearchRouteImport } from './routes/research'
+import { Route as SellingAssistantRouteImport } from './routes/selling-assistant'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DataQualityRoute = DataQualityRouteImport.update({
+  id: '/data-quality',
+  path: '/data-quality',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForecastRoute = ForecastRouteImport.update({
+  id: '/forecast',
+  path: '/forecast',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HelpRoute = HelpRouteImport.update({
+  id: '/help',
+  path: '/help',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketsRoute = MarketsRouteImport.update({
+  id: '/markets',
+  path: '/markets',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResearchRoute = ResearchRouteImport.update({
+  id: '/research',
+  path: '/research',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SellingAssistantRoute = SellingAssistantRouteImport.update({
+  id: '/selling-assistant',
+  path: '/selling-assistant',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/data-quality': typeof DataQualityRoute
+  '/forecast': typeof ForecastRoute
+  '/help': typeof HelpRoute
+  '/markets': typeof MarketsRoute
+  '/research': typeof ResearchRoute
+  '/selling-assistant': typeof SellingAssistantRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/data-quality': typeof DataQualityRoute
+  '/forecast': typeof ForecastRoute
+  '/help': typeof HelpRoute
+  '/markets': typeof MarketsRoute
+  '/research': typeof ResearchRoute
+  '/selling-assistant': typeof SellingAssistantRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/data-quality': typeof DataQualityRoute
+  '/forecast': typeof ForecastRoute
+  '/help': typeof HelpRoute
+  '/markets': typeof MarketsRoute
+  '/research': typeof ResearchRoute
+  '/selling-assistant': typeof SellingAssistantRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/data-quality'
+    | '/forecast'
+    | '/help'
+    | '/markets'
+    | '/research'
+    | '/selling-assistant'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/data-quality'
+    | '/forecast'
+    | '/help'
+    | '/markets'
+    | '/research'
+    | '/selling-assistant'
+  id:
+    | '__root__'
+    | '/'
+    | '/data-quality'
+    | '/forecast'
+    | '/help'
+    | '/markets'
+    | '/research'
+    | '/selling-assistant'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DataQualityRoute: typeof DataQualityRoute
+  ForecastRoute: typeof ForecastRoute
+  HelpRoute: typeof HelpRoute
+  MarketsRoute: typeof MarketsRoute
+  ResearchRoute: typeof ResearchRoute
+  SellingAssistantRoute: typeof SellingAssistantRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +130,59 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/data-quality': {
+      id: '/data-quality'
+      path: '/data-quality'
+      fullPath: '/data-quality'
+      preLoaderRoute: typeof DataQualityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forecast': {
+      id: '/forecast'
+      path: '/forecast'
+      fullPath: '/forecast'
+      preLoaderRoute: typeof ForecastRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/help': {
+      id: '/help'
+      path: '/help'
+      fullPath: '/help'
+      preLoaderRoute: typeof HelpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/markets': {
+      id: '/markets'
+      path: '/markets'
+      fullPath: '/markets'
+      preLoaderRoute: typeof MarketsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/research': {
+      id: '/research'
+      path: '/research'
+      fullPath: '/research'
+      preLoaderRoute: typeof ResearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/selling-assistant': {
+      id: '/selling-assistant'
+      path: '/selling-assistant'
+      fullPath: '/selling-assistant'
+      preLoaderRoute: typeof SellingAssistantRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DataQualityRoute: DataQualityRoute,
+  ForecastRoute: ForecastRoute,
+  HelpRoute: HelpRoute,
+  MarketsRoute: MarketsRoute,
+  ResearchRoute: ResearchRoute,
+  SellingAssistantRoute: SellingAssistantRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
