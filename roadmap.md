@@ -66,3 +66,6 @@
 - [ ] Current forecasts — history ends 20 Apr 2026 and Python cannot run in the hosted app; needs a deployed Python service and recent continuous weekly series.
 - [ ] Market locations outside Karnataka; joining daily vs historical market names (renamed under AGMARKNET 2.0).
 - [ ] CEDA prices (requests time out), AGMARKNET 2.0 (403), direct data.gov.in (needs API key).
+- [x] Crop discovery: categories, recent, popular, manual entry with suggestions; custom crops saved without prices.
+- [x] Price alerts (on-device) and live IST clock.
+- [ ] Hosted Python forecasting service (needs an external Python host; Lovable cannot run Python).

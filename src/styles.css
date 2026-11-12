@@ -536,3 +536,32 @@ button, a, input, select { outline-offset: 4px; }
 .ks-lab-two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem}
 .ks-forecast-box{margin-top:1rem;padding:1rem;border:1px dashed var(--harvest);border-radius:1rem}
 .ks-ticker .up{color:var(--primary)}.ks-ticker .down{color:var(--destructive)}
+/* crop discovery panel */
+.ks-crop-panel{position:absolute;top:100%;left:0;right:0;z-index:40;margin-top:.3rem;background:var(--card);border:1px solid var(--border);border-radius:1rem;box-shadow:var(--shadow-lg,0 12px 32px -12px color-mix(in oklab,var(--primary) 35%,transparent));padding:.75rem;display:grid;gap:.6rem;max-height:min(70vh,460px);overflow:auto}
+.ks-crop-panel small{display:flex;align-items:center;gap:.35rem;font-size:.78rem;font-weight:600;color:var(--muted-foreground);text-transform:uppercase;letter-spacing:.04em}
+.ks-crop-panel small svg{width:14px;height:14px}
+.ks-crop-browse,.ks-crop-manual{display:grid;gap:.5rem}
+.ks-crop-chips{display:flex;flex-wrap:wrap;gap:.4rem}.ks-crop-chips.scroll{max-height:180px;overflow:auto;padding:.25rem;border-radius:.6rem;background:var(--muted)}
+.ks-crop-chipbtn{display:inline-flex;align-items:center;gap:.3rem;padding:.4rem .75rem;border-radius:999px;border:1px solid var(--border);background:var(--background);font-size:.9rem;color:var(--foreground)}
+.ks-crop-chipbtn:hover{border-color:var(--primary);color:var(--primary)}.ks-crop-chipbtn svg{width:14px;height:14px;color:var(--harvest)}
+.ks-crop-cats{display:flex;flex-wrap:wrap;gap:.4rem}
+.ks-crop-cats button{padding:.45rem .8rem;border-radius:.6rem;background:var(--secondary);color:var(--primary);font-weight:600;font-size:.88rem}
+.ks-crop-cats button span{opacity:.6;font-weight:500}.ks-crop-cats button.on{background:var(--primary);color:var(--primary-foreground)}
+.ks-crop-list{display:grid;gap:2px}.ks-crop-list button{display:flex;gap:.5rem;align-items:center;width:100%;text-align:left;padding:.55rem .7rem;border-radius:.6rem}
+.ks-crop-list button:hover{background:var(--muted)}.ks-crop-list button small{margin-left:auto;text-transform:none;letter-spacing:0;font-weight:500}
+.ks-crop-list svg{width:16px;color:var(--harvest)}
+.ks-crop-manual-btn{display:flex;align-items:center;gap:.5rem;justify-content:center;padding:.6rem;border-top:1px dashed var(--border);color:var(--primary);font-weight:600}
+.ks-crop-manual-btn svg{width:16px}
+.ks-crop-custom{display:grid;grid-template-columns:auto 1fr;gap:.1rem .5rem;align-items:center;text-align:left;padding:.7rem .8rem;border:1px dashed var(--harvest);border-radius:.75rem;background:color-mix(in oklab,var(--harvest) 10%,transparent);font-weight:600}
+.ks-crop-custom svg{width:18px;color:var(--primary);grid-row:span 2}.ks-crop-custom small{text-transform:none;letter-spacing:0}
+.ks-crop-picked>div{display:grid;min-width:0}.ks-crop-picked.custom{border-style:dashed;border-color:var(--harvest)}
+.ks-crop-status{display:inline-flex;align-items:center;gap:.3rem;font-size:.78rem;color:var(--muted-foreground)}.ks-crop-status svg{width:13px;height:13px}
+.ks-crop-status.ok svg{color:var(--primary)}.ks-crop-status.custom svg{color:var(--harvest)}
+.ks-clock{display:inline-flex;align-items:center;gap:.4rem;font-variant-numeric:tabular-nums;font-weight:600}
+.ks-clock svg{width:16px;height:16px}
+.ks-alert-list{display:grid;gap:.6rem}.ks-alert{display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:center;padding:.8rem 1rem;border:1px solid var(--border);border-radius:.9rem;background:var(--card)}
+.ks-alert.hit{border-color:var(--harvest);background:color-mix(in oklab,var(--harvest) 12%,var(--card))}
+.ks-alert-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.6rem;align-items:end}
+.ks-alert-form label{display:grid;gap:.3rem;font-size:.9rem;font-weight:600}
+.ks-alert-form input,.ks-alert-form select{border:1px solid var(--border);border-radius:.6rem;padding:.55rem .7rem;background:var(--background)}
+.ks-crop-input input,.ks-crop-input input:focus{border:0;box-shadow:none;outline:none}.ks-crop-input:focus-within{border-color:var(--primary)}

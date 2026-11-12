@@ -52,3 +52,5 @@ use the editor.
 - Nationwide catalogue/coverage/ticker are precomputed into agri_summary after each sync because live aggregates exceed the statement timeout.
 - Model results are executed by `local-system/ml_engine/run_lab.py` (weekly series, purged chronological split, walk-forward test) and published to ml_runs; the website only displays them and never computes metrics.
 - Market coordinates in market_locations are geocoded official market names with a match-quality label; distances are straight-line unless a road route is requested.
+- Crop discovery (`src/lib/crop-catalogue.ts`) classifies official catalogue names by keyword rules and marks entries official / alias / custom; custom crops can be saved in plans with no reports and never receive a price.
+- Price alerts are guest-only browser records (`src/lib/alerts.ts`) evaluated against the latest official report dated on or after the alert's creation day.

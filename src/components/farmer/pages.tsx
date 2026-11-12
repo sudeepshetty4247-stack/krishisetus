@@ -1,6 +1,6 @@
 import {useEffect,useMemo,useState,type ReactNode} from 'react';
 import {Link,useNavigate} from '@tanstack/react-router';
-import {ArrowRight,CalendarDays,CheckCircle2,Download,IndianRupee,Info,Leaf,MapPin,Save,Scale,Share2,ShieldCheck,TrendingDown,TrendingUp,Minus,Trophy,Truck,Wheat,X,AlertTriangle,Database} from 'lucide-react';
+import {ArrowRight,CalendarDays,CheckCircle2,Download,IndianRupee,Info,Leaf,MapPin,Save,Scale,Share2,ShieldCheck,TrendingDown,TrendingUp,Minus,Trophy,Truck,Wheat,X,AlertTriangle,Database,Clock} from 'lucide-react';
 import {ResponsiveContainer,LineChart,Line,XAxis,YAxis,Tooltip,CartesianGrid,Legend} from 'recharts';
 import {useServerFn} from '@tanstack/react-start';
 import {Button} from '@/components/ui/button';
@@ -30,12 +30,14 @@ function HistoryChart({rows,keyOf,c}:{rows:Report[];keyOf:(r:Report)=>string;c:C
 function Loading({c}:{c:C}){return <div className="ks-loading">{c.loadingText}</div>;}
 
 /* ---------------- HOME ---------------- */
+// Live Indian time; rendered after hydration so server and browser markup match.
+function IstClock(){const [now,setNow]=useState<Date|null>(null);useEffect(()=>{setNow(new Date());const t=setInterval(()=>setNow(new Date()),1000);return ()=>clearInterval(t);},[]);if(!now)return null;return <span className="ks-clock"><Clock/>{new Intl.DateTimeFormat('en-IN',{timeZone:'Asia/Kolkata',weekday:'short',day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true}).format(now)} IST</span>;}
 export function FarmerHome(){const c=useCopy();const nav=useNavigate();const cat=useCatalog();const latest=useLatest(200);const cov=useCoverageAll();const checks=useSourceChecks();
  const [crop,setCrop]=useState('');const [qty,setQty]=useState('20');const [market,setMarket]=useState('');
  const crops=cat.data?.commodities||[];const markets=cat.data?.markets||[];const rows=latest.data||[];const cards=latestByMarket(rows).slice(0,6);const opp=sameDayOpportunity(rows);const okCheck=checks.data?.find(x=>x.status==='ok'||x.status==='success');
  return <>
   <section className="ks-hero"><img src={heroImage} alt="" className="ks-hero-img"/><div className="ks-wrap ks-hero-grid">
-   <div className="ks-hero-text"><div className="ks-eyebrow light">KRISHISETU · India</div><h1>{c.heroTitle}</h1><p>{c.heroSub}</p></div>
+   <div className="ks-hero-text"><div className="ks-eyebrow light">KRISHISETU · India · <IstClock/></div><h1>{c.heroTitle}</h1><p>{c.heroSub}</p></div>
    <form className="ks-quick" onSubmit={e=>{e.preventDefault();void nav({to:'/find-market',search:{crop:crop||undefined,qty:Number(qty)||undefined,market:market||undefined}});}}>
     <h2><Scale/>{c.find}</h2>
     <div className="ks-quick-field">{c.qCrop}<CropPicker crops={crops} value={crop} onChange={setCrop} placeholder={c.searchCrop}/></div>
@@ -85,6 +87,7 @@ export function FindMarketPage({initial}:{initial:{crop?:string|undefined;qty?:n
   <div className="ks-page-head"><h1>{c.find}</h1><p>{c.promise}</p></div>
   <NearbyMarkets/>
   <Step n={1} title={c.sCrop} c={c}>{cat.isLoading?<Loading c={c}/>:crops.length?<CropPicker crops={crops} value={crop} onChange={x=>{setCrop(x);setStart('');setVariety('');}} placeholder={c.searchCrop}/>:<Notice tone="warn">{c.noCrops}</Notice>}</Step>
+  {crop&&!cat.isLoading&&crops.length>0&&!crops.includes(crop)&&<CustomCropPlan crop={crop} qty={Number(qty)} c={c}/>}
   <Step n={2} title={c.sQty} c={c}><label className="ks-qty big"><input aria-label={c.qQty} type="number" min="0.1" step="0.1" inputMode="decimal" value={qty} onChange={e=>setQty(e.target.value)}/><span>{c.quintals}</span></label><small className="ks-hint">{c.quintalHint}</small>{!(q>0)&&<Notice tone="error">{c.qQty}</Notice>}</Step>
   {crop&&<Step n={3} title={c.sLoc} c={c}>{reports.isLoading?<Loading c={c}/>:!latest.length&&!rows.length?<Notice tone="warn">{c.noMarkets}</Notice>:<div className="ks-form-row">
    {varieties.length>1&&<label>{c.variety}<select value={v} onChange={e=>{setVariety(e.target.value);setStart('');}}>{varieties.map(x=><option key={x}>{x}</option>)}</select></label>}
@@ -106,6 +109,9 @@ export function FindMarketPage({initial}:{initial:{crop?:string|undefined;qty?:n
   {crop&&latest.length>0&&!startOpt&&<Notice>{c.chooseMarket}</Notice>}
   {crop&&rows.length>0&&<Step n={6} title={c.history} c={c}><HistoryChart rows={rows.filter(r=>r.variety===v)} keyOf={r=>r.market} c={c}/></Step>}
  </div>;}
+// Farmer-entered crop without official reports: save a draft plan with no price, never an invented one.
+function CustomCropPlan({crop,qty,c}:{crop:string;qty:number;c:C}){const [loc,setLoc]=useState('');const [done,setDone]=useState(false);
+ return <Notice tone="warn"><p><b>{crop}</b> — {c.noMarkets}</p><p className="ks-fine">{c.noGuarantee}</p><div className="ks-form-row"><label>{c.qLoc}<input value={loc} maxLength={200} onChange={e=>setLoc(e.target.value)}/></label><Button disabled={!loc.trim()||!(qty>0)} onClick={()=>{saveSellingPlan({id:crypto.randomUUID(),savedAt:new Date().toISOString(),crop,variety:'',quantity:qty,unit:'quintal',location:loc.trim(),sellingDate:'',marketKey:'',costs:{},reports:[]});setDone(true);}}><Save/>{c.save}</Button>{done&&<Link to="/selling-assistant" className="ks-ok"><CheckCircle2/>{c.saved}</Link>}</div></Notice>;}
 function Step({n,title,children,c}:{n:number;title:string;children:ReactNode;c:C}){return <section className="ks-flow-step"><div className="ks-flow-n"><small>{c.step}</small>{n}</div><div className="ks-flow-body"><h2>{title}</h2>{children}</div></section>;}
 function Highlight({icon,label,o,c,value}:{icon:ReactNode;label:string;o:Option;c:C;value:string}){return <div className="ks-highlight">{icon}<div><small>{label}</small><b>{o.report.market}</b><span>{value}</span><Fresh date={o.report.date} c={c}/></div></div>;}
 function OptionCard({o,rank,c,costs,setCost}:{o:Option;rank:number;c:C;costs:Costs;setCost:(f:keyof Costs,v:string)=>void}){return <article className={`ks-option ${rank===1?'best':''} ${o.isStart?'start':''}`}><header><span className="ks-rank">{rank}</span><div><h3>{o.report.market}</h3><small>{o.report.district}, {o.report.state}{o.isStart&&` · ${c.yourMarket}`}</small></div></header>
