@@ -1,5 +1,41 @@
 # KRISHISETU implementation result — 12 November 2026
 
+## Latest continuation — 12 November 2026, 19:46 UTC / 13 November IST
+
+**Overall remains PARTIALLY COMPLETE, not production-ready.** The existing website was published and tested at https://pixel-perfect-replay-94806.lovable.app. This does not deploy Python.
+
+### Verified this continuation
+- Complete genuine daily refresh: 16,785 received, 16,785 stored, 0 rejected, 0 duplicates, no errors; started 19:32:12 UTC, finished 19:34:07 UTC. Latest reporting day remains 12 November, not the retrieval day. Hosted count: 96,236, with original earliest 2025-04-21 retained.
+- Reproduced and fixed recovery suppression: partial/failed runs no longer block manual retry for 30 minutes; only complete success advances last_success. Final error collection now precedes the source-run status log; rejected and duplicate counts are separate.
+- Published website: five routes returned HTTP 200 with KRISHISETU titles and no browser runtime errors. Actual Local maize at APMC Hubballi: 20 × ₹3,018 = ₹60,360, four costs total ₹1,900, net ₹58,460. Account plan saved, edited to 25, reloaded and deleted; deletion read back as zero. The saved highest-net alternative was Davangere, not falsely described as Hubballi.
+- Account alert create/reload/delete verified through the preview. New alerts preserve source/grade. Migration `0009_isolate_malformed_alerts_and_match_price_identity` applied: malformed dates/numbers in one private record cannot abort all scheduled alert evaluations. Existing guest/account records remain intact. Scheduled triggering and two distinct live users remain unverified.
+- Seven-language selling-plan, alert, simplified journey and timestamp labels added. The discovered mobile alert field overlap was repaired without redesign. Seven language selections at 390px had no horizontal overflow. Full populated nearby/research language coverage remains incomplete.
+- Local history checksum independently matches `f14041fa0a154d22e717de38d9cf78c6eb6e27ab13af85edf81da2dbc4d68982`; actual row count 24,656,469; two 100-row Hubli maize pages read successfully. The history proxy now accepts district/variety/grade/date filters and aggregation as well as bounded pagination. No online transfer occurred.
+- Existing historical weekly artifact reload and SHA-256 verified; artifact remains sandbox-local, not a daily registered/deployed forecast. Real local SQLite backup restored into a separate new database; integrity `ok`.
+- Regression suites: 62 website tests + 56 Python tests = 118 passed; zero failures. Python emitted existing Starlette deprecations and fixture convergence warnings. Latest preview build is healthy.
+- Fresh database security scan: no critical finding, five warnings and two informational findings for intentionally public source/summary/model/location records. This is not a complete production security acceptance or hosted recovery proof.
+
+### Still blocked / not verified
+| Task | Status | Evidence / requirement |
+|---|---|---|
+| Persistent HTTPS Python deployment | BLOCKED BY EXTERNAL REQUIREMENT | Only CEDA and Maps connections available; no hosting access, KRISHI_PYTHON_URL or KRISHI_PYTHON_TOKEN. |
+| Online 24.65M history | BLOCKED BY EXTERNAL REQUIREMENT | Valid local file exists; live Retrieve History explicitly reports disconnected. |
+| Registered deployed ML inference | BLOCKED BY EXTERNAL REQUIREMENT | Recoverable binary is historical weekly research, not a compatible recent daily registry model. |
+| Live genuine 7/14/30 forecasts | BLOCKED BY EXTERNAL REQUIREMENT | No online Python and no recent eligible exact-identity daily model; April estimates must not become November forecasts. |
+| National verified market yards | PARTIALLY COMPLETE | 317 Karnataka positions only; no new coordinate invented or town location promoted to yard. |
+| Ingestion recovery | VERIFIED COMPLETE for manual real refresh | Complete real batch run passed; automatic post-publish schedule/recovery has not yet been independently observed. |
+| Private plans/alerts | PARTIALLY COMPLETE | Real one-account CRUD and owner-policy/storage tests pass; two-real-account browser acceptance and scheduled alert delivery pending. |
+| Translations/recovery | PARTIALLY COMPLETE | Farmer labels/mobile overlap fixed and local restore passed; nearby/research copy, hosted restore and service outage recovery pending. |
+| Production readiness | NOT IMPLEMENTED | Release acceptance still cannot pass without Python/history/current models/national yards and recovery. |
+
+### What you must provide
+1. Deployment access to a persistent HTTPS Python container host (existing Dockerfile; one worker; at least 2 GB RAM; persistent `/data` and snapshots). Supply the hosting target/account connection, not a password in chat.
+2. The resulting real HTTPS root URL for `KRISHI_PYTHON_URL`. A shared `KRISHI_PYTHON_TOKEN` must be entered securely on that host and in Lovable; never paste it into chat. No random placeholder or LLM key is needed.
+3. Genuine recent source/market/variety/grade-specific daily history sufficient for chronological 7/14/30 validation. More recent price snapshots alone do not establish a training series.
+4. Verified national yard-coordinate provenance/matching, a second test account for isolation acceptance, and an isolated hosted restore target. Notification delivery credentials are needed only if external SMS/email/push is requested.
+
+The older report below records the preceding implementation and is superseded by these continuation results where they differ.
+
 **Overall: PARTIALLY COMPLETE — not production-ready.** Existing branding, accounts and reports were preserved. No application was published and no external Python deployment was performed.
 
 ## Phase results

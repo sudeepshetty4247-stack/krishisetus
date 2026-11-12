@@ -21,3 +21,12 @@ export const freshnessText:Record<string,Record<Freshness,string>>={
  ml:{latest:'ലഭ്യമായ ഏറ്റവും പുതിയ റിപ്പോർട്ട്',recent:'അടുത്തിടെ പുതുക്കിയത്',older:'പഴയ റിപ്പോർട്ട്',historical:'ചരിത്ര രേഖ'},
  mr:{latest:'नवीनतम उपलब्ध अहवाल',recent:'अलीकडे अद्ययावत',older:'जुना अहवाल',historical:'ऐतिहासिक नोंद'},
 };
+export const timestampCopy={
+ en:{reported:'Market reported',version:'Source dataset version',retrieved:'Retrieved by KRISHISETU',success:'Last successful update',historical:'Historical import — not auto-refreshed',old:'Not today’s price'},
+ kn:{reported:'ಮಾರುಕಟ್ಟೆ ವರದಿ ದಿನಾಂಕ',version:'ಮೂಲ ದತ್ತಾಂಶ ಆವೃತ್ತಿ',retrieved:'KRISHISETU ಪಡೆದ ಸಮಯ',success:'ಕೊನೆಯ ಯಶಸ್ವಿ ನವೀಕರಣ',historical:'ಐತಿಹಾಸಿಕ ಆಮದು — ಸ್ವಯಂ ನವೀಕರಣವಿಲ್ಲ',old:'ಇದು ಇಂದಿನ ಬೆಲೆ ಅಲ್ಲ'},
+ hi:{reported:'मंडी रिपोर्ट तिथि',version:'स्रोत आँकड़ों का संस्करण',retrieved:'KRISHISETU ने प्राप्त किया',success:'अंतिम सफल अपडेट',historical:'ऐतिहासिक आयात — स्वतः अपडेट नहीं',old:'यह आज का भाव नहीं'},
+ te:{reported:'మార్కెట్ నివేదిక తేదీ',version:'మూల డేటా వెర్షన్',retrieved:'KRISHISETU పొందిన సమయం',success:'చివరి విజయవంతమైన నవీకరణ',historical:'చారిత్రక దిగుమతి — స్వయంచాలక నవీకరణ లేదు',old:'ఇది నేటి ధర కాదు'},
+ ta:{reported:'சந்தை அறிக்கை தேதி',version:'மூலத் தரவு பதிப்பு',retrieved:'KRISHISETU பெற்ற நேரம்',success:'கடைசி வெற்றிகரமான புதுப்பிப்பு',historical:'வரலாற்று இறக்குமதி — தானாக புதுப்பிக்கப்படாது',old:'இது இன்றைய விலை அல்ல'},
+ ml:{reported:'വിപണി റിപ്പോർട്ട് തീയതി',version:'ഉറവിട വിവര പതിപ്പ്',retrieved:'KRISHISETU ലഭിച്ച സമയം',success:'അവസാന വിജയകരമായ പുതുക്കൽ',historical:'ചരിത്ര ഇറക്കുമതി — സ്വയം പുതുക്കില്ല',old:'ഇത് ഇന്നത്തെ വിലയല്ല'},
+ mr:{reported:'बाजार अहवाल दिनांक',version:'स्रोत माहिती आवृत्ती',retrieved:'KRISHISETU ला मिळाल्याची वेळ',success:'शेवटचे यशस्वी अद्यतन',historical:'ऐतिहासिक आयात — आपोआप अद्यतन नाही',old:'हा आजचा भाव नाही'},
+};

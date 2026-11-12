@@ -1,10 +1,12 @@
 # KRISHISETU
 
 ## Remaining critical completion — 13 November IST
-- [ ] 1–4: verify available deployment access; connect persistent Python/history/artifacts/current forecasts only with a real host and eligible data.
-- [ ] 5: verify nationwide yard source/matching without inventing coordinates.
-- [ ] 6: exercise full real ingestion, repair timeouts/status reporting, verify private records/alerts, complete remaining farmer translations and check recovery.
-- [ ] 7: publish authorized repairs and test the actual hosted website; report verified results and external blockers.
+- [x] 1–4 access/local checks: no host connection or URL/token; verified 24,656,469-row checksum, two real history pages, historical artifact reload and isolated local restoration. Online integration/current forecasts blocked by persistent host and recent eligible series.
+- [ ] 5 nationwide yards: blocked by a verified national yard directory/matching evidence; retained 317 Karnataka positions and uncertain-distance restrictions.
+- [x] 6 reliability checks: complete real refresh 16,785/16,785, immediate partial-run retry, success-only refresh timestamp, source/grade-scoped alerts, malformed-payload isolation, plan/alert CRUD and local backup restoration; 62 website + 56 Python tests pass.
+- [x] Farmer language repairs: seven-language selling-plan, simplified journey, alert and timestamp labels; mobile alert overlap repaired. Full nearby/research translation review remains below.
+- [x] 7 limited deployed checks: published website HTTP 200 on five routes; real maize costs/net, account plan edit25/reload/delete, disconnected history and refresh status checked; no runtime errors.
+- [ ] External acceptance: persistent Python host/access and shared secure token; durable history/model transfer; recent eligible daily history; national yard provenance; second account and hosted recovery environment; full nearby/research language review and production forecast/service recovery.
 
 ## Phase-by-phase transformation
 - [x] Phase 1: inspect architecture, connections, schedules and baseline tests (52 website + 50 Python).

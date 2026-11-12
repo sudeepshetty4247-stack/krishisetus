@@ -60,6 +60,6 @@ use the editor.
 - Market coordinates in market_locations are geocoded official market names with a match-quality label; distances are straight-line unless a road route is requested.
 - Crop discovery (`src/lib/crop-catalogue.ts`) classifies official catalogue names by keyword rules and marks entries official / alias / custom; custom crops can be saved in plans with no reports and never receive a price.
 - Private plans and alerts use authenticated owner-scoped Cloud records; legacy browser records remain guest-only and are never silently assigned to an account.
-- Account alerts are evaluated after official ingestion against the creation day in IST; delivery is in-app only until an external delivery provider is configured.
-- Official daily ingestion uses a service-role-only expiring lease and small retryable publication batches so concurrent callbacks cannot conflict or erase valid data.
+- Account alerts use IST creation dates and source/grade snapshots; malformed payloads are skipped. Delivery is in-app only.
+- Daily ingestion uses service-only leases and retryable batches; partial runs allow immediate retry and only complete success advances last_success.
 - Forecast POST requests resolve exact source/market/crop/variety/grade identities in the daily registry; historical weekly artifacts remain separate from current daily inference.
