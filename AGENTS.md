@@ -30,6 +30,7 @@ use the editor.
 <!-- LOVABLE:END -->
 
 ## Application architecture
+- Keep the shared React context in a separate hot-refresh-stable module so provider edits cannot disconnect mounted page consumers; retain context identity only, never account values.
 - Hosted reports persist in Cloud with owner-scoped import policies and public read access only to source-verified records; private uploads must never become public merely because they name an official source.
 - Actual analysis and training run through an authenticated server proxy to the isolated Python service; return an explicit unavailable state when no service is configured.
 - Share filters, language and paginated RLS-scoped queries through a root provider so all content routes use the same account dataset.

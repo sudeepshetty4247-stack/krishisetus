@@ -1,9 +1,10 @@
-import {createContext,useContext,useEffect,useState,type ReactNode} from 'react';
+import {useContext,useEffect,useState,type ReactNode} from 'react';
 import {dictionary,languages,type Language} from '@/lib/translations';
 import {supabase} from '@/integrations/supabase/client';
 import {useQuery,useQueryClient} from '@tanstack/react-query';
 import {emptyFilters,type Filters,type Report,type Catalog,type Coverage} from '@/lib/agri-types';
-const Context=createContext<ReturnType<typeof useStateData>|null>(null);
+import {KrishisetuContext} from './krishisetu-context';
+export type KrishiState=ReturnType<typeof useStateData>;
 function useStateData(){
  const [lang,setLang]=useState<Language>('kn');const [filters,setFilters]=useState<Filters>(emptyFilters);const [page,setPage]=useState(0);const [user,setUser]=useState<string|null>(null);const queryClient=useQueryClient();
  useEffect(()=>{const saved=localStorage.getItem('krishisetu-language');if(saved&&saved in languages)setLang(saved as Language);void supabase.auth.getSession().then(({data})=>setUser(data.session?.user.id||null));const {data}=supabase.auth.onAuthStateChange((event,session)=>{if(['SIGNED_IN','SIGNED_OUT','INITIAL_SESSION'].includes(event)){setUser(session?.user.id||null);if(event!=='INITIAL_SESSION')void queryClient.invalidateQueries();}});return()=>data.subscription.unsubscribe();},[queryClient]);
@@ -15,5 +16,5 @@ function useStateData(){
  const reports=useQuery({queryKey:['reports',user,filters,page],queryFn:async()=>{let q=supabase.from('agri_reports').select('*',{count:'exact'});for(const [k,v]of Object.entries(filters)){if(!v)continue;if(k==='source')q=q.eq('source_name',v);else if(k==='start')q=q.gte('date',v);else if(k==='end')q=q.lte('date',v);else q=q.eq(k as 'state'|'district'|'market'|'commodity'|'variety',v);}const {data,error,count}=await q.order('date',{ascending:false}).range(page*100,page*100+99);if(error)throw error;return {records:(data||[]) as unknown as Report[],total:count||0};}});
  return {lang,changeLanguage,t:dictionary(lang),filters,updateFilter,setFilters,page,setPage,user,catalog:catalog.data,coverage:coverage.data,records:reports.data?.records||[],total:reports.data?.total||0,loading:reports.isLoading||catalog.isLoading||coverage.isLoading,error:reports.error||catalog.error||coverage.error,refresh:()=>queryClient.invalidateQueries(),crop:filters.commodity,setCrop:(v:string)=>updateFilter('commodity',v)};
 }
-export function KrishisetuProvider({children}:{children:ReactNode}){const value=useStateData();return <Context.Provider value={value}>{children}</Context.Provider>;}
-export function useKrishi(){const value=useContext(Context);if(!value)throw new Error('Missing provider');return value;}
+export function KrishisetuProvider({children}:{children:ReactNode}){const value=useStateData();return <KrishisetuContext.Provider value={value}>{children}</KrishisetuContext.Provider>;}
+export function useKrishi(){const value=useContext(KrishisetuContext);if(!value)throw new Error('Missing provider');return value;}
