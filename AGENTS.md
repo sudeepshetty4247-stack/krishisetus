@@ -30,9 +30,10 @@ use the editor.
 <!-- LOVABLE:END -->
 
 ## Application architecture
-- The live preview uses TanStack React with browser-only, session-scoped CSV imports; this avoids implying a persistent backend before the independent Flask delivery.
-- Keep market ingestion and selling calculations in browser-safe pure modules with concrete tests; use these contracts for the eventual Python implementation.
-- Share crop, language and imported reports through a root provider so each content route uses the same session dataset.
+- Hosted reports persist in Cloud with owner-scoped import policies and public read access only to source-verified records; private uploads must never become public merely because they name an official source.
+- Actual analysis and training run through an authenticated server proxy to the isolated Python service; return an explicit unavailable state when no service is configured.
+- Share filters, language and paginated RLS-scoped queries through a root provider so all content routes use the same account dataset.
+- CEDA calls use the documented versioned contract through the linked connector; keep response-schema and missing-unit failures explicit rather than inventing market varieties or units.
 - Never seed agricultural prices or render evaluation metrics without a verified input dataset and an executed validation pipeline.
 - Keep the independent Flask/SQLite/Parquet source in `local-system`, outside the hosted application import graph; Python cannot execute in the Lovable hosted runtime.
 - Local research groups are source/market/commodity/variety-specific, with direct calendar-horizon targets and purged chronological validation; this prevents source mixing and future-target leakage.

@@ -8,6 +8,13 @@
       "when": 1794493213786,
       "tag": "0000_agricultural_records",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794494368346,
+      "tag": "0001_coverage_all_filters",
+      "breakpoints": true
     }
   ]
 }

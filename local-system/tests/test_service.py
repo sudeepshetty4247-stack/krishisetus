@@ -33,3 +33,10 @@ def test_service_rejects_incompatible_dates(client):
 
 def test_missing_model_returns_error(client):
     assert request(client,'forecast',{'model_id':'missing','horizon':7}).status_code==400
+
+def test_opportunity_threshold_is_applied(client):
+    rows=[{**r,'min_price':1000,'max_price':4000} for r in reports()]
+    payload={'records':rows,'filters':{'commodity':'Maize','variety':'Local','source':'test-fixture'},'threshold':301}
+    assert request(client,'analytics',payload).get_json()['opportunities']==[]
+    payload['threshold']=300
+    assert request(client,'analytics',payload).get_json()['opportunities'][0]['spread']==300

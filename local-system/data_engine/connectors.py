@@ -63,9 +63,33 @@ class DataGovConnector:
         return {'status':'complete' if complete else 'partial','next_offset':offset,'pages':results}
 
 class CedaConnector:
-    """Do not guess undocumented URLs, auth headers or pagination."""
+    """Versioned CEDA OpenAPI contract; window requests are not offset pagination."""
+    base='https://api.ceda.ashoka.edu.in/v1/agmarknet/'
+    def __init__(self,key=None,session=None):
+        self.key=key or os.environ.get('CEDA_API_TOKEN')
+        self.session=session or requests.Session()
+        retry=Retry(total=3,backoff_factor=2,status_forcelist=[429,500,502,503,504],respect_retry_after_header=True,allowed_methods=['GET','POST'])
+        self.session.mount('https://',HTTPAdapter(max_retries=retry))
+    def request(self,action,body=None):
+        if action not in ('commodities','geographies','markets','prices','quantities'): raise ValueError('Unsupported CEDA endpoint')
+        if not self.key: raise SourceUnavailable('CEDA_API_TOKEN is not configured. An authorized CEDA token is required.')
+        try:
+            response=self.session.request('GET' if action in ('commodities','geographies') else 'POST',self.base+action,headers={'Authorization':'Bearer '+self.key},json=body,timeout=TIMEOUT)
+            if not response.ok: raise SourceUnavailable(f'CEDA returned HTTP {response.status_code}')
+            result=response.json();result=result.get('output',result)
+            if result.get('type')=='error': raise SourceUnavailable(str(result.get('message','CEDA rejected request')))
+            return result
+        except (requests.RequestException,ValueError): raise SourceUnavailable('CEDA request failed; no substitute data provided') from None
     def discover(self):
-        raise SourceUnavailable('CEDA supplied /agmarknet/commodities and /geographies paths returned HTTP 404 in the recorded access audit. Current documentation could not be retrieved. Obtain the current documented base URL, authentication and pagination contract plus an authorized key before enabling. CSV/Excel exports remain supported.')
+        return {'commodities':self.request('commodities'),'geographies':self.request('geographies')}
+    def markets(self,commodity_id,state_id,district_id,indicator='price'):
+        if indicator not in ('price','quantity'): raise ValueError('Invalid indicator')
+        return self.request('markets',{'commodity_id':int(commodity_id),'state_id':int(state_id),'district_id':int(district_id),'indicator':indicator})
+    def prices(self,commodity_id,state_id,district_id,market_id,from_date,to_date):
+        from datetime import date
+        start,end=date.fromisoformat(from_date),date.fromisoformat(to_date)
+        if start>end or (end-start).days>366: raise ValueError('Date window must be valid and at most one year')
+        return self.request('prices',{'commodity_id':int(commodity_id),'state_id':int(state_id),'district_id':[int(district_id)],'market_id':[int(market_id)],'from_date':from_date,'to_date':to_date})
 
 def import_file(store,path,source_name,source_url,default_price_unit=None):
     path=Path(path)

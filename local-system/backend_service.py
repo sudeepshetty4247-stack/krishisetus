@@ -42,7 +42,12 @@ def install_service(app,root):
                 raw.append({**r,'arrival_date':r['date'],'price_unit':'INR/quintal'})
             if raw:
                 path=store.root/'raw'/f'service-{uuid.uuid4().hex}.json';path.write_text(json.dumps(raw),encoding='utf-8');ingest_rows(store,raw,filters.get('source',''),'',path)
-        if action=='analytics':return jsonify(analytics(store,filters))
+        if action=='analytics':
+            result=analytics(store,filters);threshold=float(body.get('threshold',100))
+            if not __import__('math').isfinite(threshold) or threshold<0:raise ValueError('Threshold must be finite and non-negative')
+            result['opportunities']=[r for r in result.get('spreads',[]) if r['spread']>=threshold]
+            result['opportunity_basis']='Same-day maximum minus minimum reported price meets the entered threshold; this is not net income or a forecast.'
+            return jsonify(result)
         if action=='compare':
             quantity=float(body.get('quantity',0));expenses=body.get('expenses',{});nearest=body.get('nearest');rows=[]
             for r in records:
