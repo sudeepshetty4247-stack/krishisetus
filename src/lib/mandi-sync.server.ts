@@ -69,7 +69,7 @@ async function fromRelay(date:string|undefined,errors:string[]):Promise<{rows:un
  });
  return {rows,dataset:`data.gov.in 9ef84268 via api.dharun.dev relay version ${version}`};
 }
-export async function syncDailyMandi(opts:{date?:string}={}){
+export async function syncDailyMandi(opts:{date?:string|undefined}={}){
  const {supabaseAdmin}=await import('@/integrations/supabase/client.server');
  const started=new Date().toISOString(),errors:string[]=[];
  const today=new Date(Date.now()+5.5*3600000).toISOString().slice(0,10);
@@ -91,6 +91,7 @@ export async function syncDailyMandi(opts:{date?:string}={}){
  if(stored>0){
   await supabaseAdmin.from('agri_sync_state').upsert({source:DAILY_SOURCE,status,last_success:new Date().toISOString(),updated_at:new Date().toISOString(),message,next_offset:0});
   await supabaseAdmin.rpc('prune_official_reports',{p_source:DAILY_SOURCE,p_keep_days:21});
+  const {error:sumErr}=await supabaseAdmin.rpc('refresh_agri_summary');if(sumErr)errors.push(`summary: ${sumErr.message}`);
  }else{
   await supabaseAdmin.from('agri_sync_state').upsert({source:DAILY_SOURCE,status,updated_at:new Date().toISOString(),message:errors[0]??message,next_offset:0},{onConflict:'source',ignoreDuplicates:false});
  }

@@ -244,6 +244,24 @@ export type Database = {
         }
         Relationships: []
       }
+      agri_summary: {
+        Row: {
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          value: Json
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: []
+      }
       agri_sync_state: {
         Row: {
           last_success: string | null
@@ -490,6 +508,7 @@ export type Database = {
         }
         Returns: number
       }
+      refresh_agri_summary: { Args: never; Returns: undefined }
     }
     Enums: {
       [_ in never]: never

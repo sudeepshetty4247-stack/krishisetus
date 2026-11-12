@@ -2,8 +2,10 @@ import {useQuery} from '@tanstack/react-query';
 import {supabase} from '@/integrations/supabase/client';
 import {emptyFilters,type Catalog,type Coverage,type Report} from '@/lib/agri-types';
 import {useKrishi} from '../krishisetu-provider';
-export function useCatalog(){const {user}=useKrishi();return useQuery({queryKey:['f-catalog',user],queryFn:async()=>{const {data,error}=await supabase.rpc('agri_catalog',{f:emptyFilters});if(error)throw error;return data as unknown as Catalog;}});}
-export function useCoverageAll(){const {user}=useKrishi();return useQuery({queryKey:['f-coverage',user],queryFn:async()=>{const {data,error}=await supabase.rpc('agri_coverage',{f:emptyFilters});if(error)throw error;return data as unknown as Coverage;}});}
+// Nationwide catalogue/coverage/ticker are precomputed after every sync (agri_summary) so pages load instantly.
+async function summary<T>(key:string){const {data,error}=await supabase.from('agri_summary').select('value,updated_at').eq('key',key).maybeSingle();if(error)throw error;return (data?.value??null) as T|null;}
+export function useCatalog(){return useQuery({queryKey:['f-catalog'],staleTime:300000,queryFn:async()=>(await summary<Catalog>('catalog'))??{states:[],districts:[],markets:[],commodities:[],varieties:[],sources:[]}});}
+export function useCoverageAll(){return useQuery({queryKey:['f-coverage'],staleTime:300000,queryFn:async()=>(await summary<Coverage>('coverage')) as Coverage});}
 export function useLatest(limit=200){const {user}=useKrishi();return useQuery({queryKey:['f-latest',user,limit],queryFn:async()=>{const {data,error}=await supabase.from('agri_reports').select('*').order('date',{ascending:false}).limit(limit);if(error)throw error;return (data||[]) as unknown as Report[];}});}
 export function useCropReports(crop:string){const {user}=useKrishi();return useQuery({enabled:!!crop,queryKey:['f-crop',user,crop],queryFn:async()=>{const {data,error}=await supabase.from('agri_reports').select('*').eq('commodity',crop).order('date',{ascending:false}).limit(5000);if(error)throw error;return (data||[]) as unknown as Report[];}});}
 export function useMarketReports(market:string){const {user}=useKrishi();return useQuery({enabled:!!market,queryKey:['f-market',user,market],queryFn:async()=>{const {data,error}=await supabase.from('agri_reports').select('*').eq('market',market).order('date',{ascending:false}).limit(3000);if(error)throw error;return (data||[]) as unknown as Report[];}});}
@@ -11,9 +13,9 @@ export function useSourceChecks(){return useQuery({queryKey:['f-checks'],queryFn
 export const DAILY_SOURCE='data.gov.in daily mandi';
 export const HISTORY_SOURCE='data.gov.in variety-wise history';
 export type TickerRow={state:string;district:string;market:string;commodity:string;variety:string;grade:string;source_name:string;date:string;modal_price:number;retrieved_at:string;prev_date:string;prev_price:number;change:number;pct:number};
-export function useTicker(){return useQuery({queryKey:['f-ticker'],staleTime:300000,queryFn:async()=>{const {data,error}=await supabase.rpc('agri_ticker',{p_limit:20});if(error)throw error;return (data||[]) as unknown as TickerRow[];}});}
+export function useTicker(){return useQuery({queryKey:['f-ticker'],staleTime:300000,queryFn:async()=>(await summary<TickerRow[]>('ticker'))??[]});}
 // Server-side filtered latest reports so national daily volumes (~15k rows/day) are never truncated client-side.
-export function useFilteredReports(f:{commodity?:string;search?:string;state?:string;district?:string;market?:string},limit=600){const {user}=useKrishi();return useQuery({queryKey:['f-filtered',user,f,limit],queryFn:async()=>{let q=supabase.from('agri_reports').select('*').order('date',{ascending:false}).order('modal_price',{ascending:false}).limit(limit);
+export function useFilteredReports(f:{commodity?:string|undefined;search?:string|undefined;state?:string|undefined;district?:string|undefined;market?:string|undefined},limit=600){const {user}=useKrishi();return useQuery({queryKey:['f-filtered',user,f,limit],queryFn:async()=>{let q=supabase.from('agri_reports').select('*').order('date',{ascending:false}).order('modal_price',{ascending:false}).limit(limit);
  if(f.commodity)q=q.eq('commodity',f.commodity);else if(f.search)q=q.ilike('commodity',`%${f.search.replace(/[%_,()]/g,' ').trim()}%`);
  if(f.state)q=q.eq('state',f.state);if(f.district)q=q.eq('district',f.district);if(f.market)q=q.eq('market',f.market);
  const {data,error}=await q;if(error)throw error;return (data||[]) as unknown as Report[];}});}

@@ -58,3 +58,11 @@
 - [ ] Real official prices — CEDA is connected, but report requests time out; public AGMARKNET returns 403 and data.gov.in cannot connect.
 - [ ] Python forecasts/model metrics — blocked: no hosted Python service URL configured.
 - [ ] Market map / road distance — Google Maps connected and discovery/routing code implemented; deployed-origin verification and price-market matching remain outstanding.
+## Production data + ML (Nov 2026)
+- [x] Nationwide daily mandi reports (≈30k rows, 11–12 Nov 2026) retrieved, validated and stored; 3-hourly schedule.
+- [x] 5-year Karnataka history (796k rows) cleaned locally; latest 12 months (65.8k) published.
+- [x] 12 crop–market model groups trained and evaluated (Naive/Seasonal naive/ARIMA/SARIMA/RF/XGBoost, SHAP).
+- [x] Crop search with aliases/typos; IST freshness labels; ticker from comparable movements; Karnataka market locations (317).
+- [ ] Current forecasts — history ends 20 Apr 2026 and Python cannot run in the hosted app; needs a deployed Python service and recent continuous weekly series.
+- [ ] Market locations outside Karnataka; joining daily vs historical market names (renamed under AGMARKNET 2.0).
+- [ ] CEDA prices (requests time out), AGMARKNET 2.0 (403), direct data.gov.in (needs API key).

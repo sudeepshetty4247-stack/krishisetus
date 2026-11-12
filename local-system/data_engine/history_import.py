@@ -66,6 +66,7 @@ def publish(frame,log):
             if r.ok: stored+=int(r.json()); break
             log.append({'batch':i,'status':r.status_code,'error':r.text[:300]}); time.sleep(2*(attempt+1))
         else: raise RuntimeError(f'Hosted publication failed at batch {i}')
+    requests.post(f'{url}/rest/v1/rpc/refresh_agri_summary',headers=headers,data='{}',timeout=200)
     return stored
 
 if __name__=='__main__':

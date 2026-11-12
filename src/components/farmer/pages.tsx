@@ -13,7 +13,9 @@ import type {Report} from '@/lib/agri-types';
 import {pythonAction} from '@/lib/agri.functions';
 import {NearbyMarkets} from './nearby';
 import {PriceTimestamps} from './price-timestamps';
-import {SourceHistory} from './source-history';
+import {CropPicker} from './crop-picker';
+import {useModelRuns,useFilteredReports} from './data';
+import {findRun,ForecastBox} from './model-lab';
 import {SellingPlans} from './selling-plan';
 import {saveSellingPlan} from '@/lib/plans';
 import {ageInIST,istTimestamp} from '@/lib/price-time';
@@ -36,7 +38,7 @@ export function FarmerHome(){const c=useCopy();const nav=useNavigate();const cat
    <div className="ks-hero-text"><div className="ks-eyebrow light">KRISHISETU · India</div><h1>{c.heroTitle}</h1><p>{c.heroSub}</p></div>
    <form className="ks-quick" onSubmit={e=>{e.preventDefault();void nav({to:'/find-market',search:{crop:crop||undefined,qty:Number(qty)||undefined,market:market||undefined}});}}>
     <h2><Scale/>{c.find}</h2>
-    <label>{c.qCrop}<select value={crop} onChange={e=>setCrop(e.target.value)} disabled={!crops.length}><option value="">{c.chooseCrop}</option>{crops.map(x=><option key={x}>{x}</option>)}</select></label>
+    <div className="ks-quick-field">{c.qCrop}<CropPicker crops={crops} value={crop} onChange={setCrop} placeholder={c.searchCrop}/></div>
     <label>{c.qQty}<div className="ks-qty"><input type="number" min="0.1" step="0.1" inputMode="decimal" value={qty} onChange={e=>setQty(e.target.value)}/><span>{c.quintals}</span></div><small>{c.quintalHint}</small></label>
     <label>{c.qLoc}<select value={market} onChange={e=>setMarket(e.target.value)} disabled={!markets.length}><option value="">{c.chooseMarket}</option>{markets.map(x=><option key={x}>{x}</option>)}</select></label>
     <Button type="submit" variant="harvest" size="lg" className="ks-big-btn">{c.findBtn}<ArrowRight/></Button>
@@ -44,7 +46,6 @@ export function FarmerHome(){const c=useCopy();const nav=useNavigate();const cat
    </form></div></section>
   <div className="ks-wrap">
    <NearbyMarkets/>
-   <SourceHistory/>
    <Section title={c.latestTitle} eyebrow={c.freshNote} action={<Link to="/markets" className="ks-link">{c.prices}<ArrowRight/></Link>}>
     {latest.isLoading?<Loading c={c}/>:latest.error?<Notice tone="error">{c.error}</Notice>:cards.length?<div className="ks-card-grid">{cards.map(r=><PriceCard key={r.id} r={r} c={c}/>)}</div>:<Notice tone="warn">{c.latestNone}</Notice>}
    </Section>
@@ -69,7 +70,9 @@ export function FindMarketPage({initial}:{initial:{crop?:string|undefined;qty?:n
  const reports=useCropReports(crop);const rows=reports.data||[];
  const varieties=[...new Set(rows.map(r=>r.variety))];const v=variety&&varieties.includes(variety)?variety:varieties[0]||'';
  const sources=[...new Set(rows.filter(r=>r.variety===v).map(r=>r.source_name))];
- const latest=useMemo(()=>latestByMarket(rows.filter(r=>r.variety===v&&(!state||r.state===state)&&r.source_name===sources[0])),[rows,v,state,sources[0]]);
+ const allLatest=useMemo(()=>latestByMarket(rows.filter(r=>r.variety===v&&r.source_name===sources[0])),[rows,v,sources[0]]);
+ // Default comparison stays within the starting market's state; farmers can widen it with the state selector.
+ const effState=state||(start?start.split('|')[0]:'')||'';const latest=useMemo(()=>allLatest.filter(r=>!effState||r.state===effState),[allLatest,effState]);
  const states=[...new Set(rows.map(r=>r.state))].sort();
  const initialReport=initial.market?latest.find(r=>r.market===initial.market):undefined;
  const startKey=start||(initialReport?marketKey(initialReport):'');
@@ -81,12 +84,12 @@ export function FindMarketPage({initial}:{initial:{crop?:string|undefined;qty?:n
  return <div className="ks-wrap ks-flow">
   <div className="ks-page-head"><h1>{c.find}</h1><p>{c.promise}</p></div>
   <NearbyMarkets/>
-  <Step n={1} title={c.sCrop} c={c}>{cat.isLoading?<Loading c={c}/>:crops.length?<div className="ks-crop-grid">{crops.map(x=><button key={x} type="button" className={`ks-crop ${crop===x?'on':''}`} onClick={()=>{setCrop(x);setStart('');setVariety('');}}><Wheat/>{x}</button>)}</div>:<Notice tone="warn">{c.noCrops}</Notice>}</Step>
+  <Step n={1} title={c.sCrop} c={c}>{cat.isLoading?<Loading c={c}/>:crops.length?<CropPicker crops={crops} value={crop} onChange={x=>{setCrop(x);setStart('');setVariety('');}} placeholder={c.searchCrop}/>:<Notice tone="warn">{c.noCrops}</Notice>}</Step>
   <Step n={2} title={c.sQty} c={c}><label className="ks-qty big"><input aria-label={c.qQty} type="number" min="0.1" step="0.1" inputMode="decimal" value={qty} onChange={e=>setQty(e.target.value)}/><span>{c.quintals}</span></label><small className="ks-hint">{c.quintalHint}</small>{!(q>0)&&<Notice tone="error">{c.qQty}</Notice>}</Step>
   {crop&&<Step n={3} title={c.sLoc} c={c}>{reports.isLoading?<Loading c={c}/>:!latest.length&&!rows.length?<Notice tone="warn">{c.noMarkets}</Notice>:<div className="ks-form-row">
    {varieties.length>1&&<label>{c.variety}<select value={v} onChange={e=>{setVariety(e.target.value);setStart('');}}>{varieties.map(x=><option key={x}>{x}</option>)}</select></label>}
    <label>{c.chooseState}<select value={state} onChange={e=>{setState(e.target.value);setStart('');}}><option value="">{c.any}</option>{states.map(x=><option key={x}>{x}</option>)}</select></label>
-   <label>{c.chooseMarket}<select value={startKey} onChange={e=>setStart(e.target.value)}><option value="">—</option>{latest.map(r=><option key={marketKey(r)} value={marketKey(r)}>{r.market} ({r.district})</option>)}</select></label>
+   <label>{c.chooseMarket}<select value={startKey} onChange={e=>setStart(e.target.value)}><option value="">—</option>{allLatest.filter(r=>!state||r.state===state).map(r=><option key={marketKey(r)} value={marketKey(r)}>{r.market} ({r.district})</option>)}</select></label>
   </div>}<Notice>{c.distanceNote}</Notice></Step>}
   {crop&&startOpt&&q>0&&bestNet&&bestPrice&&<>
    <Step n={4} title={`${c.sMarkets} (${options.length})`} c={c}>
@@ -114,14 +117,13 @@ function OptionCard({o,rank,c,costs,setCost}:{o:Option;rank:number;c:C;costs:Cos
  <small className="ks-source">{c.source}: {o.report.source_name}</small></article>;}
 
 /* ---------------- MARKET PRICES ---------------- */
-export function PricesPage({initialCrop='',initialMarket=''}:{initialCrop?:string;initialMarket?:string}={}){const c=useCopy();const latestQ=useLatest(3000);const [search,setSearch]=useState(initialCrop);const [state,setState]=useState('');const [district,setDistrict]=useState('');const [open,setOpen]=useState(initialMarket);
- const rows=latestQ.data||[];const filtered=rows.filter(r=>(!search||r.commodity.toLowerCase().includes(search.toLowerCase()))&&(!state||r.state===state)&&(!district||r.district===district));
+export function PricesPage({initialCrop='',initialMarket=''}:{initialCrop?:string;initialMarket?:string}={}){const c=useCopy();const [search,setSearch]=useState(initialCrop);const [state,setState]=useState('');const [district,setDistrict]=useState('');const [open,setOpen]=useState(initialMarket);const all=useLatest(1500);
+ const latestQ=useFilteredReports({search:search.trim().length>=2?search.trim():undefined,state:state||undefined,district:district||undefined},1500);const rows=all.data||[];const filtered=latestQ.data||[];
  const groups=new Map<string,Report[]>();for(const r of filtered){const k=marketKey(r)+'|'+r.commodity+'|'+r.variety;groups.set(k,[...(groups.get(k)||[]),r]);}
  const cards=[...groups.values()].map(g=>g.sort((a,b)=>b.date.localeCompare(a.date))).slice(0,60);
  return <div className="ks-wrap"><div className="ks-page-head"><h1>{c.prices}</h1><p>{c.freshNote}</p></div>
   <div className="ks-searchbar"><input type="search" placeholder={c.searchCrop} value={search} onChange={e=>setSearch(e.target.value)} aria-label={c.searchCrop}/><select value={state} onChange={e=>{setState(e.target.value);setDistrict('');}} aria-label={c.chooseState}><option value="">{c.chooseState}</option>{[...new Set(rows.map(r=>r.state))].sort().map(x=><option key={x}>{x}</option>)}</select><select value={district} onChange={e=>setDistrict(e.target.value)} aria-label={c.chooseDistrict} disabled={!state}><option value="">{c.chooseDistrict}</option>{[...new Set(rows.filter(r=>r.state===state).map(r=>r.district))].sort().map(x=><option key={x}>{x}</option>)}</select></div>
   {latestQ.isLoading?<Loading c={c}/>:latestQ.error?<Notice tone="error">{c.error}</Notice>:!cards.length?<Notice tone="warn">{c.latestNone}</Notice>:<div className="ks-card-grid">{cards.map(g=>{const r=g[0];if(!r)return null;const p=g.find(previous=>previous.date<r.date&&previous.source_name===r.source_name);const ch=p?r.modal_price-p.modal_price:null;return <PriceCard key={r.id} r={r} c={c} onClick={()=>setOpen(r.market)} extra={ch!=null&&<div className={`ks-change ${ch>0?'up':ch<0?'down':''}`}>{ch>0?<TrendingUp/>:ch<0?<TrendingDown/>:<Minus/>}{ch>0?'+':''}{rupee(ch)} <small>{c.change} ({p?.date})</small></div>}/>;})}</div>}
-  <SourceHistory/>
   {open&&<MarketDetail market={open} c={c} onClose={()=>setOpen('')}/>}
  </div>;}
 function MarketDetail({market,c,onClose}:{market:string;c:C;onClose:()=>void}){const q=useMarketReports(market);const rows=q.data||[];const crops=[...new Set(rows.map(r=>`${r.commodity} · ${r.variety}`))];const [crop,setCrop]=useState('');const sel=crop||crops[0]||'';const sub=rows.filter(r=>`${r.commodity} · ${r.variety}`===sel);
@@ -135,7 +137,7 @@ export function ComparePage(){const c=useCopy();const cat=useCatalog();const [cr
  const varieties=[...new Set(rows.map(r=>r.variety))];const v=variety||varieties[0]||'';const sub=rows.filter(r=>r.variety===v);const latest=latestByMarket(sub);const chosen=sub.filter(r=>picked.includes(marketKey(r)));const {wins,shared}=winDays(sub,picked);
  const lat=latestByMarket(chosen);const dates=new Set(lat.map(r=>r.date));
  return <div className="ks-wrap"><div className="ks-page-head"><h1>{c.compare}</h1><p>{c.compareHint}</p></div>
-  <div className="ks-searchbar"><select value={crop} onChange={e=>{setCrop(e.target.value);setPicked([]);setVariety('');}} aria-label={c.chooseCrop}><option value="">{(cat.data?.commodities||[]).length?c.chooseCrop:c.noCrops}</option>{(cat.data?.commodities||[]).map(x=><option key={x}>{x}</option>)}</select>{varieties.length>1&&<select value={v} onChange={e=>{setVariety(e.target.value);setPicked([]);}} aria-label={c.variety}>{varieties.map(x=><option key={x}>{x}</option>)}</select>}</div>
+  <div className="ks-searchbar"><CropPicker crops={cat.data?.commodities||[]} value={crop} onChange={x=>{setCrop(x);setPicked([]);setVariety('');}} placeholder={c.searchCrop}/>{varieties.length>1&&<select value={v} onChange={e=>{setVariety(e.target.value);setPicked([]);}} aria-label={c.variety}>{varieties.map(x=><option key={x}>{x}</option>)}</select>}</div>
   {!crop?<Notice>{c.chooseFirst}</Notice>:q.isLoading?<Loading c={c}/>:!latest.length?<Notice tone="warn">{c.noMarkets}</Notice>:<>
    <div className="ks-chips big">{latest.map(r=>{const k=marketKey(r);const on=picked.includes(k);return <button key={k} className={on?'on':''} disabled={!on&&picked.length>=5} onClick={()=>setPicked(p=>on?p.filter(x=>x!==k):[...p,k])}>{on&&<CheckCircle2/>}{r.market}<small>{r.district}</small></button>;})}</div>
    {picked.length>=2?<>{dates.size>1&&<Notice tone="warn">{c.dateWarn}</Notice>}
@@ -150,13 +152,15 @@ export function TrendsPage(){const c=useCopy();const {user}=useKrishi();const ca
  const recent=series.slice(-10).map(r=>r.modal_price),older=series.slice(-20,-10).map(r=>r.modal_price);const ra=priceStats(recent)?.mean,oa=priceStats(older)?.mean;const dir=ra&&oa?(ra-oa)/oa>0.02?'up':(ra-oa)/oa<-0.02?'down':'stable':null;
  async function forecast(){if(!sub[0])return;setFc({state:'busy'});try{const res=await run({data:{action:'forecast',payload:{horizon:h,filters:{state:sub[0].state,district:sub[0].district,market:m,commodity:crop,variety:v||'',source:sub[0].source_name}}}});if(!res.available)setFc({state:'service'});else if(!res.result||(res.result as Record<string,unknown>)['error'])setFc({state:'none'});else setFc({state:'ok',data:res.result as Record<string,unknown>});}catch{setFc({state:'none'});}}
  return <div className="ks-wrap"><div className="ks-page-head"><h1>{c.trends}</h1><p>{c.fcText}</p></div>
-  <div className="ks-searchbar"><select value={crop} onChange={e=>{setCrop(e.target.value);setMarket('');setFc({state:'idle'});}} aria-label={c.chooseCrop}><option value="">{(cat.data?.commodities||[]).length?c.chooseCrop:c.noCrops}</option>{(cat.data?.commodities||[]).map(x=><option key={x}>{x}</option>)}</select><select value={m} onChange={e=>{setMarket(e.target.value);setFc({state:'idle'});}} disabled={!markets.length} aria-label={c.chooseMarket}>{markets.map(x=><option key={x}>{x}</option>)}</select><div className="ks-seg" role="group" aria-label={c.period}>{[7,14,30].map(d=><button key={d} className={h===d?'on':''} onClick={()=>{setH(d);setFc({state:'idle'});}}>{d} {c.days}</button>)}</div></div>
+  <div className="ks-searchbar"><CropPicker crops={cat.data?.commodities||[]} value={crop} onChange={x=>{setCrop(x);setMarket('');}} placeholder={c.searchCrop}/><select value={m} onChange={e=>{setMarket(e.target.value);setFc({state:'idle'});}} disabled={!markets.length} aria-label={c.chooseMarket}>{markets.map(x=><option key={x}>{x}</option>)}</select><div className="ks-seg" role="group" aria-label={c.period}>{[7,14,28].map(d=><button key={d} className={h===d?'on':''} onClick={()=>{setH(d);setFc({state:'idle'});}}>{d} {c.days}</button>)}</div></div>
   {!crop?<Notice>{c.chooseFirst}</Notice>:q.isLoading?<Loading c={c}/>:!series.length?<Notice tone="warn">{c.noMarkets}</Notice>:<>
    {dir&&<div className={`ks-trend ${dir}`}>{dir==='up'?<TrendingUp/>:dir==='down'?<TrendingDown/>:<Minus/>}<div><b>{c[dir]}</b><small>{c.actual}: {rupee(oa!)} → {rupee(ra!)} ({series.at(-1)?.date})</small></div></div>}
    <Section title={`${c.history} — ${m}`}><HistoryChart rows={series} keyOf={()=>c.actual} c={c}/></Section>
-   <Section title={`${c.estimate} · ${h} ${c.days}`}>{!user?<Notice>{c.fcUnavailable} {c.fcSignIn}</Notice>:fc.state==='idle'?<Button size="lg" onClick={()=>void forecast()}><TrendingUp/>{c.trends}</Button>:fc.state==='busy'?<Loading c={c}/>:fc.state==='service'?<Notice tone="warn">{c.fcService}</Notice>:fc.state==='none'?<Notice tone="warn">{c.fcUnavailable}</Notice>:fc.data&&typeof fc.data['forecast']==='number'?<div className="ks-result"><TrendingUp/><div><h3>{rupee(fc.data['forecast'])} · {String(fc.data['date'])}</h3><p>{typeof fc.data['lower']==='number'&&typeof fc.data['upper']==='number'?`${rupee(fc.data['lower'])} – ${rupee(fc.data['upper'])}`:''}</p><p>{String(fc.data['selected'])} · {c.reportedOn}: {String(fc.data['latest_observation'])}</p><p className="ks-fine">{c.fcText}</p></div></div>:<Notice>{c.fcUnavailable}</Notice>}<p className="ks-fine">{c.noGuarantee}</p></Section>
+   <TrendForecast crop={crop} market={m} district={sub[0]?.district} h={h} c={c}/>
   </>}</div>;}
 
+function TrendForecast({crop,market,district,h,c}:{crop:string;market:string;district?:string|undefined;h:number;c:C}){const runs=useModelRuns();const run=findRun(runs.data,crop,market,district);const hr=run?.report.horizons[String(h/7)];
+ return <Section title={`${c.estimate} · ${h} ${c.days}`}>{runs.isLoading?<Loading c={c}/>:!run?<Notice>{c.fcUnavailable} No validated model has been trained for {crop} at {market}. Trained markets are listed in Research Mode.</Notice>:!hr||hr.status!=='trained'?<Notice tone="warn">{hr?.reason||c.fcUnavailable}</Notice>:<><p className="ks-fine">{hr.selected} · test MAE ₹{Math.round(hr.test[hr.selected]?.MAE??0)} · sMAPE {(hr.test[hr.selected]?.sMAPE??0).toFixed(1)}% · {hr.baseline_beaten?'beats naive baseline':'baseline-level skill'}</p><ForecastBox h={hr}/><Link to="/research" className="ks-link">Model comparison<ArrowRight/></Link></>}<p className="ks-fine">{c.noGuarantee}</p></Section>;}
 /* ---------------- PLAN ---------------- */
 export function PlanPage(){return <SellingPlans/>;}
 

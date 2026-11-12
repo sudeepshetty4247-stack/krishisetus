@@ -47,3 +47,8 @@ use the editor.
 - Nearby discovery uses authenticated bounded Google Places searches and explicit on-demand Routes calls; provider places remain separate from price market identities until verified matching exists.
 - Python deployment uses one persistent-volume service process with atomic job files and SQLite online backups; local loopback pages remain isolated from its authenticated service endpoints.
 - Research imports and training require server-verified roles plus restrictive import policies; no account is promoted automatically.
+- Current daily prices come from data.gov.in resource 9ef84268 (direct API when DATA_GOV_IN_API_KEY exists, else the GODL relay) via `src/lib/mandi-sync.server.ts` every 3 hours; every run is logged in agri_source_runs and success is recorded only when rows are stored.
+- Long history comes from the GODL variety-wise compilation via `local-system/data_engine/history_import.py`; commodity names are canonicalised (no space before "(") identically in both pipelines.
+- Nationwide catalogue/coverage/ticker are precomputed into agri_summary after each sync because live aggregates exceed the statement timeout.
+- Model results are executed by `local-system/ml_engine/run_lab.py` (weekly series, purged chronological split, walk-forward test) and published to ml_runs; the website only displays them and never computes metrics.
+- Market coordinates in market_locations are geocoded official market names with a match-quality label; distances are straight-line unless a road route is requested.

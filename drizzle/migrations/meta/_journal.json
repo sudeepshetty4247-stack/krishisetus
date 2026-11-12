@@ -43,6 +43,13 @@
       "when": 1794501518385,
       "tag": "0005_official_multi_source_ml_locations",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1794504014035,
+      "tag": "0006_precomputed_agri_summary",
+      "breakpoints": true
     }
   ]
 }
