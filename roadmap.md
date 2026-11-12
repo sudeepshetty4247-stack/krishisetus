@@ -1,5 +1,12 @@
 # KRISHISETU
 
+## Final master implementation audit
+- [ ] Recheck genuine coverage, retrieval logs, schedules and saved model artifacts.
+- [ ] Execute nationwide historical preparation and reproducible Python evaluation on accessible data.
+- [ ] Fix source ingestion completeness, comparison compatibility and disconnected nearby-market selection.
+- [ ] Verify farmer workflows, source failure/recovery and desktop/mobile layouts.
+- [ ] Deliver evidence-based data/model/test report and name deployment, credential and data blockers.
+
 ## Final farmer completion request
 - [x] Retrieved four genuine CEDA historical maize reports, persisted and read back publicly; missing units/varieties explicitly exclude them from comparable selling reports. Added authenticated bounded ingestion with retry and failure logs.
 - [x] Added editable guest selling plans with kg/quintal/tonne, location, date, per-market costs, download and share; browser verified save/edit/reload/download without invented prices.

@@ -35,7 +35,7 @@ async function getJson(url:string,init?:RequestInit):Promise<any>{
 }
 async function pool<T,R>(items:T[],size:number,fn:(t:T)=>Promise<R>):Promise<R[]>{
  const out:R[]=[];let i=0;
- await Promise.all(Array.from({length:Math.min(size,items.length)},async()=>{while(i<items.length){const k=i++;out[k]=await fn(items[k]!);}}));
+ await Promise.all(Array.from({length:Math.min(size,items.length)},async()=>{while(i<items.length){const k=i++;const item=items[k];if(item!==undefined)out[k]=await fn(item);}}));
  return out;
 }
 async function fromOfficial(key:string,errors:string[]):Promise<{rows:unknown[];dataset:string}|null>{
@@ -47,7 +47,8 @@ async function fromOfficial(key:string,errors:string[]):Promise<{rows:unknown[];
    rows.push(...recs.map(r=>({date:toIso(r.arrival_date),state:r.state,district:r.district,market:r.market,commodity:r.commodity,variety:r.variety,grade:r.grade,min_price:r.min_price,max_price:r.max_price,modal_price:r.modal_price})));
    if(!recs.length)break;offset+=recs.length;
   }
-  return {rows,dataset:`data.gov.in API ${new Date().toISOString().slice(0,10)}`};
+   if(offset<total)errors.push(`data.gov.in: bounded download stopped at ${offset}/${total}; coverage is incomplete`);
+   return {rows,dataset:`data.gov.in API ${new Date().toISOString().slice(0,10)}`};
  }catch(e){errors.push(`data.gov.in API: ${e instanceof Error?e.message:e}`);return null;}
 }
 function toIso(v:unknown){const m=/^(\d{2})\/(\d{2})\/(\d{4})$/.exec(String(v??''));return m?`${m[3]}-${m[2]}-${m[1]}`:String(v??'');}
@@ -59,12 +60,14 @@ async function fromRelay(date:string|undefined,errors:string[]):Promise<{rows:un
  const rows:unknown[]=[];
  await pool(names,8,async name=>{
   try{const d=await getJson(q(`&commodity=${encodeURIComponent(name)}`));
-   const recs=d.data??[];rows.push(...recs);
+   const recs=d.data??[];
    if(Number(d.meta?.total)>recs.length){
-    rows.splice(rows.length-recs.length,recs.length);let got=0;
-    for(const s of STATES){const p=await getJson(q(`&commodity=${encodeURIComponent(name)}&state=${encodeURIComponent(s)}`));rows.push(...(p.data??[]));got+=(p.data??[]).length;}
+    // Keep each commodity's results local until complete; concurrent workers must not splice shared rows.
+    const commodityRows:unknown[]=[];let got=0;
+    for(const s of STATES){const p=await getJson(q(`&commodity=${encodeURIComponent(name)}&state=${encodeURIComponent(s)}`));commodityRows.push(...(p.data??[]));got+=(p.data??[]).length;if(Number(p.meta?.total)>(p.data??[]).length)errors.push(`${name}/${s}: provider limit truncates ${Number(p.meta.total)} rows`);}
+    rows.push(...commodityRows);
     if(got<Number(d.meta.total))errors.push(`${name}: ${got}/${d.meta.total} rows after state split`);
-   }
+   }else rows.push(...recs);
   }catch(e){errors.push(`${name}: ${e instanceof Error?e.message:e}`);}
  });
  return {rows,dataset:`data.gov.in 9ef84268 via api.dharun.dev relay version ${version}`};
@@ -80,8 +83,8 @@ export async function syncDailyMandi(opts:{date?:string|undefined}={}){
  const received=fetched?.rows.length??0;
  const records=(fetched?.rows??[]).map(r=>normaliseRecord(r,started,today)).filter((r):r is DailyRecord=>!!r);
  let stored=0;
- for(let i=0;i<records.length;i+=1000){
-  const {data,error}=await supabaseAdmin.rpc('publish_official_reports',{records:records.slice(i,i+1000) as never,p_source:DAILY_SOURCE,p_url:DAILY_URL,p_dataset:fetched!.dataset});
+ for(let i=0;fetched&&i<records.length;i+=1000){
+  const {data,error}=await supabaseAdmin.rpc('publish_official_reports',{records:records.slice(i,i+1000) as never,p_source:DAILY_SOURCE,p_url:DAILY_URL,p_dataset:fetched.dataset});
   if(error){errors.push(`store: ${error.message}`);break;}stored+=Number(data)||0;
  }
  const reportDate=records.reduce((m,r)=>r.date>m?r.date:m,'')||null;
