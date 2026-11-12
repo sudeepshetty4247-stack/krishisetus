@@ -5,7 +5,7 @@ import pytest
 from data_engine.agmarknet import AgmarknetConnector, normalize_report
 from data_engine.storage import Store
 from data_engine.cleaning import ingest_rows
-from operations import backup, official_export, atomic_json
+from operations import backup, restore_backup, official_export, atomic_json
 from ml_engine.reliability import assess_forecast
 
 def fixture():
@@ -38,6 +38,15 @@ def test_backup_integrity_and_atomic_job(tmp_path):
     with sqlite3.connect(path) as con:assert con.execute('PRAGMA integrity_check').fetchone()[0]=='ok'
     path=tmp_path/'job.json';atomic_json(path,{'status':'completed'})
     assert json.loads(path.read_text())['status']=='completed'
+
+def test_backup_restores_into_separate_database_without_overwriting(tmp_path):
+    store=Store(tmp_path/'data')
+    with store.connect() as con:con.execute("INSERT INTO checkpoints VALUES('fixture','{}',42,'complete','2026-11-12')")
+    saved=backup(store,tmp_path/'backups');target=tmp_path/'recovery'/'metadata.sqlite'
+    restore_backup(saved,target)
+    import sqlite3
+    with sqlite3.connect(target) as con:assert con.execute("SELECT next_offset FROM checkpoints WHERE job='fixture'").fetchone()[0]==42
+    with pytest.raises(ValueError,match='must not already exist'):restore_backup(saved,target)
 
 def test_supported_forecast_horizons_have_real_validation_gate():
     fc={'latest_observation':'2025-01-01','selected':'Random Forest','baseline_beaten_on_final_test':True,'evaluation':{'sMAPE':10}}

@@ -32,6 +32,20 @@ def test_missing_model_never_returns_prediction(client,horizon):
 def test_thirty_day_is_not_twenty_eight(client):
     assert client.get('/v1/forecast/28?owner=fixture&model_id=missing',headers=auth()).status_code==422
 
+@pytest.mark.parametrize('horizon',[7,14,30])
+def test_post_forecast_resolves_exact_identity_without_inventing_models(client,horizon):
+    response=client.post('/forecast',headers=auth(),json={'owner':'fixture','horizon':horizon,'filters':{'state':'Karnataka','district':'Dharwad','market':'Hubli','commodity':'Maize','variety':'Local','source':'fixture'}})
+    assert response.status_code==404
+    assert 'forecast' not in response.json()
+
+def test_post_forecast_rejects_twenty_eight_days(client):
+    assert client.post('/forecast',headers=auth(),json={'owner':'fixture','horizon':28}).status_code==422
+
+def test_compatible_public_names_keep_private_auth(client):
+    assert client.get('/ready?owner=fixture').status_code==401
+    assert client.get('/models?owner=fixture',headers=auth()).json()=={'records':[]}
+    assert client.get('/history',headers=auth()).status_code==422
+
 def test_model_metadata_is_owner_scoped(client,tmp_path):
     s=Store(tmp_path/'service'/stable_id('owner-one'))
     with s.connect() as con:con.execute('INSERT INTO model_registry VALUES(?,?,?,?,?,?)',('model-one','{}','v1','2026-01-01','missing','{}'))

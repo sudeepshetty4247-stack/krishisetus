@@ -12,7 +12,7 @@ export function PriceTimestamps({report}:{report:Pick<Report,'date'|'retrieved_a
  const f=historical?'historical':freshness(report.date);
  return <div className="ks-timestamps"><span className={`ks-fresh-badge ${f}`}>{t[f]}</span>
   <span>{kn?'ಮಾರುಕಟ್ಟೆ ವರದಿ ದಿನಾಂಕ':'Market reported'}: <b>{reportedDate(report.date)}</b></span>
-  {report.source_dataset&&<span>{kn?'ಮೂಲ ಪ್ರಕಟಣೆ':'Source publication'}: {report.source_dataset}</span>}
+  {report.source_dataset&&<span>{kn?'ಮೂಲ ದತ್ತಾಂಶ ಆವೃತ್ತಿ':'Source dataset version'}: {report.source_dataset}</span>}
   <span>{kn?'KRISHISETU ಪಡೆದ ಸಮಯ':'Retrieved by KRISHISETU'}: {istTimestamp(report.retrieved_at)}</span>
   <span>{kn?'ಕೊನೆಯ ಯಶಸ್ವಿ ನವೀಕರಣ':'Last successful update'}: {historical?(kn?'ಐತಿಹಾಸಿಕ ಆಮದು — ಸ್ವಯಂ ನವೀಕರಣವಿಲ್ಲ':'Historical import — not auto-refreshed'):istTimestamp(q.data?.last_success)}</span>
   {(f==='older'||f==='historical')&&<strong>{kn?'ಇದು ಇಂದಿನ ಬೆಲೆ ಅಲ್ಲ':'Not today’s price'}</strong>}</div>;

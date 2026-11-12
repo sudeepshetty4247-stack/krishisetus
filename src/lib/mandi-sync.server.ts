@@ -74,6 +74,14 @@ async function fromRelay(date:string|undefined,errors:string[]):Promise<{rows:un
 }
 export async function syncDailyMandi(opts:{date?:string|undefined}={}){
  const {supabaseAdmin}=await import('@/integrations/supabase/client.server');
+ const lease=crypto.randomUUID();
+ const {data:acquired,error}=await supabaseAdmin.rpc('acquire_ingestion_lease',{p_source:DAILY_SOURCE,p_lease_id:lease});
+ if(error)throw new Error('Could not establish the ingestion lock; no retrieval started.');
+ if(!acquired)return {status:'running',stored:0,received:0,rejected:0,reportDate:null,errors:[],message:'An official price retrieval is already running.'};
+ try{return await performDailySync(opts);}finally{const {error:release}=await supabaseAdmin.rpc('release_ingestion_lease',{p_source:DAILY_SOURCE,p_lease_id:lease});if(release)console.error('Ingestion lease release failed');}
+}
+async function performDailySync(opts:{date?:string|undefined}){
+ const {supabaseAdmin}=await import('@/integrations/supabase/client.server');
  const started=new Date().toISOString(),errors:string[]=[];
  const today=new Date(Date.now()+5.5*3600000).toISOString().slice(0,10);
  let fetched:{rows:unknown[];dataset:string}|null=null;
@@ -81,22 +89,32 @@ export async function syncDailyMandi(opts:{date?:string|undefined}={}){
  if(key&&!opts.date)fetched=await fromOfficial(key,errors);
  if(!fetched||!fetched.rows.length){try{fetched=await fromRelay(opts.date,errors);}catch(e){errors.push(`relay: ${e instanceof Error?e.message:e}`);}}
  const received=fetched?.rows.length??0;
- const records=(fetched?.rows??[]).map(r=>normaliseRecord(r,started,today)).filter((r):r is DailyRecord=>!!r);
+ const valid=(fetched?.rows??[]).map(r=>normaliseRecord(r,started,today)).filter((r):r is DailyRecord=>!!r);
+ const unique=new Map<string,DailyRecord>();
+ for(const r of valid){const id=JSON.stringify([r.state,r.district,r.market,r.commodity,r.variety,r.grade,r.date]);const prev=unique.get(id);if(prev&&prev.modal_price!==r.modal_price)errors.push('Conflicting duplicate official price observation');else unique.set(id,r);}
+ const records=[...unique.values()];const duplicates=valid.length-records.length;
  let stored=0;
- for(let i=0;fetched&&i<records.length;i+=1000){
-  const {data,error}=await supabaseAdmin.rpc('publish_official_reports',{records:records.slice(i,i+1000) as never,p_source:DAILY_SOURCE,p_url:DAILY_URL,p_dataset:fetched.dataset});
-  if(error){errors.push(`store: ${error.message}`);break;}stored+=Number(data)||0;
+ for(let i=0;fetched&&i<records.length;i+=100){
+  let succeeded=false;
+  for(let attempt=0;attempt<3;attempt++){
+   const {data,error}=await supabaseAdmin.rpc('publish_official_reports',{records:records.slice(i,i+100) as never,p_source:DAILY_SOURCE,p_url:DAILY_URL,p_dataset:fetched.dataset});
+   if(!error){stored+=Number(data)||0;succeeded=true;break;}
+   if(attempt===2)errors.push(`store: ${error.message}`);
+   else await new Promise(resolve=>setTimeout(resolve,400*2**attempt));
+  }
+  if(!succeeded)break;
  }
  const reportDate=records.reduce((m,r)=>r.date>m?r.date:m,'')||null;
  const status=stored>0?(errors.length?'partial':'success'):received?'failed':'no_records';
  const message=`${stored} reports stored from ${received} received${reportDate?` · latest market report ${reportDate}`:''}`;
- const {error:runError}=await supabaseAdmin.from('agri_source_runs').insert({source:DAILY_SOURCE,report_date:reportDate,started_at:started,finished_at:new Date().toISOString(),status,requested:received,received,stored,rejected:received-records.length,message,errors:errors.slice(0,50)});
+ const {error:runError}=await supabaseAdmin.from('agri_source_runs').insert({source:DAILY_SOURCE,report_date:reportDate,started_at:started,finished_at:new Date().toISOString(),status,requested:received,received,stored,rejected:received-valid.length,duplicates,message,errors:errors.slice(0,50)});
  if(runError)errors.push(`ingestion log: ${runError.message}`);
  if(stored>0){
   const {error:stateError}=await supabaseAdmin.from('agri_sync_state').upsert({source:DAILY_SOURCE,status,last_success:new Date().toISOString(),updated_at:new Date().toISOString(),message,next_offset:0});
   if(stateError)errors.push(`sync status: ${stateError.message}`);
   // Retain every verified daily observation. Source failures and newer snapshots must not erase history.
   const {error:sumErr}=await supabaseAdmin.rpc('refresh_agri_summary');if(sumErr)errors.push(`summary: ${sumErr.message}`);
+  const {error:alertError}=await supabaseAdmin.rpc('evaluate_farmer_alerts');if(alertError)errors.push('Account alert evaluation failed');
  }else{
   const {error:stateError}=await supabaseAdmin.from('agri_sync_state').upsert({source:DAILY_SOURCE,status,updated_at:new Date().toISOString(),message:errors[0]??message,next_offset:0},{onConflict:'source',ignoreDuplicates:false});
   if(stateError)errors.push(`sync status: ${stateError.message}`);

@@ -1,0 +1,10 @@
+import {beforeEach,expect,it} from 'vitest';
+import {readSellingPlans,saveSellingPlan,type SellingPlan} from '@/lib/plans';
+import {readAlerts,writeAlerts,evaluateAlert,type PriceAlert} from '@/lib/alerts';
+import type {Report} from '@/lib/agri-types';
+const plan:SellingPlan={id:'p',savedAt:'2026-11-12T19:00:00Z',crop:'Maize',variety:'',quantity:20,unit:'quintal',location:'Dharwad',sellingDate:'',marketKey:'',costs:{},reports:[]};
+const alert:PriceAlert={id:'a',crop:'Maize',variety:'Local',marketKey:'K|D|M',market:'M',direction:'above',threshold:2200,createdAt:'2026-11-12T19:00:00Z'};
+beforeEach(()=>localStorage.clear());
+it('keeps guest plans separate from two accounts on the same browser',()=>{saveSellingPlan(plan);saveSellingPlan({...plan,id:'one'},'one');saveSellingPlan({...plan,id:'two'},'two');expect(readSellingPlans().map(p=>p.id)).toEqual(['p']);expect(readSellingPlans('one').map(p=>p.id)).toEqual(['one']);expect(readSellingPlans('two').map(p=>p.id)).toEqual(['two']);});
+it('keeps guest and two-account alerts separate',()=>{writeAlerts([alert]);writeAlerts([{...alert,id:'one'}],'one');expect(readAlerts('two')).toEqual([]);expect(readAlerts('one')[0]?.id).toBe('one');expect(readAlerts()[0]?.id).toBe('a');});
+it('does not trigger from the previous IST day after local midnight',()=>{expect(evaluateAlert(alert,{date:'2026-11-12',modal_price:2500} as Report).triggered).toBe(false);expect(evaluateAlert(alert,{date:'2026-11-13',modal_price:2500} as Report).triggered).toBe(true);});

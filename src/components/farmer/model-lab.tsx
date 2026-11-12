@@ -10,6 +10,7 @@ import {istTimestamp,reportedDate} from '@/lib/price-time';
 import {pythonHistory} from '@/lib/agri.functions';
 import {distanceKm,verifiedYard} from '@/lib/geography';
 import {backtestStrategies,marketAnalytics} from '@/lib/research-analytics';
+import {sourceHealth} from '@/lib/source-monitor';
 const r0=(n:number|null|undefined)=>n==null||!Number.isFinite(n)?'—':`₹${Math.round(n).toLocaleString('en-IN')}`;
 const f2=(n:number|null|undefined,d=2)=>n==null||!Number.isFinite(n)?'—':n.toFixed(d);
 const MODELS=['Naive','Seasonal naive','ARIMA','SARIMA','Random Forest','XGBoost'];
@@ -49,8 +50,10 @@ export function ForecastBox({h}:{h:HorizonReport}){const f=h.forecast;const {lan
   <p className="ks-fine">{kn?'ಮೂಲ ವಾರ':'Origin week'} {f.origin_week} → {kn?'ಗುರಿ ವಾರ':'target week'} {f.target_week} · {kn?'ಕೊನೆಯ ನಿಜ ಬೆಲೆ':'latest actual'} {r0(f.latest_actual)} ({reportedDate(f.latest_report_date)}) · {h.interval.method}</p>
   <div className="ks-notice warn"><AlertTriangle/><div>{kn?'ಇದು ಐತಿಹಾಸಿಕ ಮೂಲದ ಅಂದಾಜು; ಇಂದಿನ ಮುನ್ಸೂಚನೆ ಅಲ್ಲ. ಈ ಮಾರುಕಟ್ಟೆಯ ನಿರಂತರ ಇತ್ತೀಚಿನ ವಾರದ ವರದಿಗಳು ಮತ್ತು ಪೈಥಾನ್ ಸೇವೆ ಬೇಕು.':`Historical-origin estimate, not a current forecast. A current forecast needs continuous weekly reports for this market since ${reportedDate(f.latest_report_date)} and a running Python service.`}</div></div></div>;}
 function SourcePanel(){const runs=useSourceRuns();const {user,refresh}=useKrishi();const call=useServerFn(refreshDailyPrices);const [msg,setMsg]=useState('');const [busy,setBusy]=useState(false);
+ const daily=runs.data?.find(r=>r.source==='data.gov.in daily mandi');const health=sourceHealth(daily?.started_at,daily?.status);
  return <section className="ks-section"><div className="ks-section-head"><div><div className="ks-eyebrow">Data engine</div><h2>Source retrieval log</h2></div>{user&&<Button disabled={busy} onClick={async()=>{setBusy(true);try{const r=await call();setMsg(r.message);await runs.refetch();await refresh();}catch(e){setMsg(e instanceof Error?e.message:'Refresh failed');}finally{setBusy(false);}}}><RefreshCw/>Refresh daily prices now</Button>}</div>
   {msg&&<p role="status" className="ks-notice">{msg}</p>}
+  {health.state!=='healthy'&&<p role="status" className="ks-notice warn">{health.missed?'Daily retrieval is overdue or has not run. Previous verified prices are preserved.':'Latest retrieval needs attention; inspect its recorded errors below.'}</p>}
   <p className="ks-fine">Daily AGMARKNET reports (data.gov.in resource 9ef84268…) are retrieved every 3 hours. Historical variety-wise reports (2021 → 20 Apr 2026) come from the GODL compilation of data.gov.in. CEDA price requests currently time out; AGMARKNET 2.0 returns 403; direct data.gov.in needs an API key.</p>
   <div className="ks-table-wrap"><table className="ks-table"><thead><tr><th>Started (IST)</th><th>Source</th><th>Status</th><th>Market report date</th><th>Received</th><th>Stored</th><th>Rejected</th><th>Errors</th></tr></thead><tbody>{(runs.data||[]).map(r=><tr key={r.id}><td>{istTimestamp(r.started_at)}</td><td>{r.source}</td><td>{r.status}</td><td>{r.report_date?reportedDate(r.report_date):'—'}</td><td>{r.received}</td><td>{r.stored}</td><td>{r.rejected}</td><td>{Array.isArray(r.errors)&&r.errors.length?String(r.errors[0]).slice(0,80):'—'}</td></tr>)}</tbody></table></div>
  </section>;}

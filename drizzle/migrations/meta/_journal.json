@@ -50,6 +50,20 @@
       "when": 1794504014035,
       "tag": "0006_precomputed_agri_summary",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1794510438733,
+      "tag": "0007_private_farmer_records_and_sync_leases",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1794511093538,
+      "tag": "0008_scheduled_private_alert_evaluation",
+      "breakpoints": true
     }
   ]
 }

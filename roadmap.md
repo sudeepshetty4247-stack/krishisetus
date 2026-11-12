@@ -1,5 +1,20 @@
 # KRISHISETU
 
+## Phase-by-phase transformation
+- [x] Phase 1: inspect architecture, connections, schedules and baseline tests (52 website + 50 Python).
+- [x] Phase 2 local checks: reconciled 24,656,469 rows and SHA-256; bounded APIs retained. Online transfer blocked by missing persistent host.
+- [x] Phase 3 fixes: service-only ingestion lease, duplicate counts, smaller retryable writes, overdue monitoring. Real refresh partial (10,000/16,785), statement timeout; scheduled recovery still unverified.
+- [x] Phase 4 code/API checks: unified aliases and exact model-resolution POST contract tested. HTTPS deployment blocked by missing host URL/shared token.
+- [x] Phase 5 local research: genuinely retrained six approaches and saved/reloaded historical 7/14/28 weekly artifact. Current daily registry still unavailable; maize has no eligible consecutive-daily series.
+- [x] Phase 6 contract checks: 7/14/30 reject missing models and 28-day input. Current successful inference blocked by recent eligible data/host.
+- [x] Phase 7 limited fixes: selected-language location input/errors and freshness text; precise distances still yard-gated. National yard verification blocked by directory/provenance and deployed provider acceptance.
+- [x] Phase 8 core checks: genuine maize 20q, gross 60,360, expenses 1,900, net 58,460; signed-in plan save/edit25/reload/delete verified.
+- [x] Phase 9 implementation: private owner-policy Cloud records, guest/account key isolation tests and sync; service-only alert evaluation. Two-live-account acceptance/delivery and complete translations remain unverified.
+- [x] Phase 10 limited checks: API auth/owner tests and safe real local SQLite restoration pass; hosted restoration/production recovery require external environment.
+- [x] Phase 11 limited checks: 57 website + 56 Python tests; six pages/no runtime errors, seven-language 390px no overflow. Full populated-language and production acceptance not passed.
+- [x] Phase 12 decision/report: production release withheld because mandatory acceptance is blocked; factual report created.
+- [ ] External completion: persistent HTTPS host, matching secure token, durable history transfer, recent eligible series, verified national yards, delivery service, second-account and hosted recovery acceptance.
+
 ## Farmer usability simplification
 - [x] Compact crop/quantity/location sequence, optional nearby search, clear result and empty states.
 - [x] Remove unrelated home windfalls; simplify forecast availability and source/history details.

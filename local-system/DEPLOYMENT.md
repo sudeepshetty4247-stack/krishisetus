@@ -20,6 +20,8 @@ python -m data_engine.analytical_store --root /data --file /data/analytical/indi
 Activation refuses invalid rows, duplicate business keys, wrong checksum and count mismatches. Existing active history is unchanged on failure. Pagination accepts limit 1–1000, and offsets up to 100,000; filter dates/geography for larger result sets. SQL values are parameterized. Analytical data is separate from daily hosted reports; no old data is relabelled current.
 
 ## Service contracts
+- Stable authenticated aliases `GET /ready`, `/models`, `/history`, `/model-status`, `/training-status` share the existing versioned handlers.
+- `POST /forecast` accepts trusted owner, either a model ID or exact filters (state/district/market/commodity/variety/source/grade), and horizon 7, 14 or 30. `POST /forecast/compare` accepts up to five independent requests; failures remain explicit. The website uses `/forecast`, never the weekly lab schema.
 - Public `GET /health` and `/service/health`: **liveness only**, not readiness.
 - Authenticated `GET /v1/ready?owner=...`: history availability plus owner-specific artifact presence; not proof of valid current forecast.
 - Authenticated `/v1/history`: crop/variety/grade/state/district/market/start/end, pagination and optional historical aggregation.

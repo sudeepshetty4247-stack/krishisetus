@@ -14,6 +14,17 @@ from starlette.middleware.wsgi import WSGIMiddleware
 from data_engine.analytical_store import AnalyticalStore
 from data_engine.storage import Store, stable_id
 from config import DATA_DIR
+from pydantic import BaseModel, Field
+from typing import Literal
+
+class ForecastRequest(BaseModel):
+    owner: str = Field(min_length=1,max_length=100)
+    model_id: str = Field(default='',max_length=100)
+    filters: dict[str,str] = Field(default_factory=dict)
+    horizon: Literal[7,14,30] = 7
+
+class CompareRequest(BaseModel):
+    forecasts: list[ForecastRequest] = Field(min_length=1,max_length=5)
 
 log = logging.getLogger('krishisetu.service')
 
@@ -72,6 +83,7 @@ def create_service(root=None):
     @app.get('/service/health')
     def health():return {'status':'alive','contract_version':2,'python':True,'ready':False,'note':'Liveness only; use authenticated readiness for dataset/model checks'}
 
+    @app.get('/ready',dependencies=[Depends(authorize)])
     @app.get('/v1/ready',dependencies=[Depends(authorize)])
     def ready(owner:str=Query(min_length=1,max_length=100)):
         store=owner_store(owner)
@@ -84,6 +96,7 @@ def create_service(root=None):
                              'history_version':meta.get('cleaned_sha256') if meta else None,
                              'current_forecast_verified':False},200 if ok else 503)
 
+    @app.get('/history',dependencies=[Depends(authorize)])
     @app.get('/v1/history',dependencies=[Depends(authorize)])
     def historical(state:str=Query('',max_length=200),district:str=Query('',max_length=200),market:str=Query('',max_length=200),commodity:str=Query('',max_length=200),variety:str=Query('',max_length=200),grade:str=Query('',max_length=100),start:str='',end:str='',limit:int=Query(100,ge=1,le=1000),offset:int=Query(0,ge=0,le=100000),aggregate:bool=False):
         return history.query(dict(state=state,district=district,market=market,commodity=commodity,variety=variety,grade=grade,start=start,end=end),limit,offset,aggregate)
@@ -94,6 +107,7 @@ def create_service(root=None):
         if not rows:raise HTTPException(404,detail='Model is not registered for this account')
         return store,rows[0]
 
+    @app.get('/models',dependencies=[Depends(authorize)])
     @app.get('/v1/models',dependencies=[Depends(authorize)])
     def models(owner:str=Query(min_length=1,max_length=100)):
         return {'records':[{'id':r['id'],'created_at':r['created_at'],'dataset_version':r['dataset_version'],'group':json.loads(r['group_json']),'artifact_available':Path(r['artifact']).is_file()} for r in owner_store(owner).query('SELECT * FROM model_registry ORDER BY created_at DESC LIMIT 200')]}
@@ -114,6 +128,36 @@ def create_service(root=None):
         result=forecast(store,model_id,horizon);gate=assess_forecast(result)
         if not gate['supported']:return JSONResponse({'available':False,'error':gate['reason'],'reliability':gate},422)
         return {**result,'generated_at':datetime.now(timezone.utc).isoformat(),'reliability':gate,'available':True}
+
+    @app.post('/forecast',dependencies=[Depends(authorize)])
+    def forecast_request(body:ForecastRequest):
+        model_id=body.model_id
+        if not model_id:
+            required=('state','district','market','commodity','variety','source')
+            if not all(body.filters.get(k) for k in required):raise HTTPException(422,detail='Choose one full crop, variety, source and market identity')
+            for row in owner_store(body.owner).query('SELECT id,group_json FROM model_registry ORDER BY created_at DESC'):
+                group=json.loads(row['group_json'])
+                if all(group.get(k)==body.filters[k] for k in required) and group.get('grade','')==body.filters.get('grade',''):
+                    model_id=row['id'];break
+            if not model_id:raise HTTPException(404,detail='No registered model exists for this exact source and market')
+        return predict(body.horizon,model_id,body.owner)
+
+    @app.post('/forecast/compare',dependencies=[Depends(authorize)])
+    def forecast_compare(body:CompareRequest):
+        results=[]
+        for item in body.forecasts:
+            try:
+                result=forecast_request(item)
+                if isinstance(result,JSONResponse):result=json.loads(result.body)
+                results.append(result)
+            except HTTPException as exc:results.append({'available':False,'error':exc.detail,'status':exc.status_code})
+        return {'results':results,'basis':'Independent exact-horizon estimates; not market-price or net-return rankings'}
+
+    @app.get('/model-status',dependencies=[Depends(authorize)])
+    def model_status(model_id:str,owner:str):return model(model_id,owner)
+
+    @app.get('/training-status',dependencies=[Depends(authorize)])
+    def training_status(job_id:str,owner:str):return retraining(job_id,owner)
 
     @app.get('/v1/explanation/{model_id}',dependencies=[Depends(authorize)])
     def explanation(model_id:str,owner:str=Query(min_length=1,max_length=100),horizon:int=Query(7)):

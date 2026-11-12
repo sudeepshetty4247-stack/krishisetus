@@ -37,13 +37,13 @@ export const sourceCheck=createServerFn({method:'POST'}).middleware([requireSupa
 });
 
 export const pythonAction=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).inputValidator((input:unknown)=>z.object({action:z.enum(['train','analytics','compare','backtest','forecast','models','job','explain']),payload:z.record(z.unknown())}).parse(input)).handler(async({data,context})=>{
- if(data.action==='train'){
+ if(['train','backtest'].includes(data.action)){
   const {data:roles,error}=await context.supabase.from('user_roles').select('role').eq('user_id',context.userId);
   if(error||!roles?.some(r=>r.role==='admin'||r.role==='researcher'))throw new Error('Authorized research access is required to start training.');
  }
  const origin=process.env['KRISHI_PYTHON_URL'];const token=process.env['KRISHI_PYTHON_TOKEN'];
  if(!origin||!token)return {available:false,error:'Python service is not configured. A reachable Python service is required for training, forecasts and analytical calculations.'};
- const target=new URL('/service/'+data.action,origin);if(target.protocol!=='https:'&&target.hostname!=='127.0.0.1')throw new Error('Python service requires HTTPS');
+ const target=new URL(data.action==='forecast'?'/forecast':'/service/'+data.action,origin);if(target.protocol!=='https:'&&target.hostname!=='127.0.0.1')throw new Error('Python service requires HTTPS');
  let rows:unknown[]=[];
  if(['train','analytics','compare','backtest'].includes(data.action)){
   const filters=z.object({state:z.string().max(200).optional(),district:z.string().max(200).optional(),market:z.string().max(200).optional(),commodity:z.string().min(1).max(200),variety:z.string().min(1).max(200),source:z.string().min(1).max(200),start:z.string().optional(),end:z.string().optional()}).parse(data.payload['filters']);

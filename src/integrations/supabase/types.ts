@@ -201,6 +201,8 @@ export type Database = {
       }
       agri_source_runs: {
         Row: {
+          corrected: number
+          duplicates: number
           errors: Json
           finished_at: string | null
           id: string
@@ -215,6 +217,8 @@ export type Database = {
           stored: number
         }
         Insert: {
+          corrected?: number
+          duplicates?: number
           errors?: Json
           finished_at?: string | null
           id?: string
@@ -229,6 +233,8 @@ export type Database = {
           stored?: number
         }
         Update: {
+          corrected?: number
+          duplicates?: number
           errors?: Json
           finished_at?: string | null
           id?: string
@@ -346,6 +352,48 @@ export type Database = {
           state?: string
           state_id?: number
           variety?: string | null
+        }
+        Relationships: []
+      }
+      farmer_records: {
+        Row: {
+          id: string
+          kind: string
+          owner_id: string
+          payload: Json
+          updated_at: string
+        }
+        Insert: {
+          id: string
+          kind: string
+          owner_id: string
+          payload: Json
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          kind?: string
+          owner_id?: string
+          payload?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ingestion_leases: {
+        Row: {
+          expires_at: string
+          lease_id: string
+          source: string
+        }
+        Insert: {
+          expires_at: string
+          lease_id: string
+          source: string
+        }
+        Update: {
+          expires_at?: string
+          lease_id?: string
+          source?: string
         }
         Relationships: []
       }
@@ -483,9 +531,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      acquire_ingestion_lease: {
+        Args: { p_lease_id: string; p_source: string }
+        Returns: boolean
+      }
       agri_catalog: { Args: { f?: Json }; Returns: Json }
       agri_coverage: { Args: { f?: Json }; Returns: Json }
       agri_ticker: { Args: { p_limit?: number }; Returns: Json }
+      evaluate_farmer_alerts: { Args: never; Returns: number }
       prune_official_reports: {
         Args: { p_keep_days: number; p_source: string }
         Returns: number
@@ -509,6 +562,10 @@ export type Database = {
         Returns: number
       }
       refresh_agri_summary: { Args: never; Returns: undefined }
+      release_ingestion_lease: {
+        Args: { p_lease_id: string; p_source: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

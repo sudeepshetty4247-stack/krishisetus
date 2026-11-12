@@ -16,4 +16,8 @@ export const freshnessText:Record<string,Record<Freshness,string>>={
  en:{latest:'Latest available report',recent:'Updated recently',older:'Older report',historical:'Historical record'},
  kn:{latest:'ಇತ್ತೀಚಿನ ಲಭ್ಯ ವರದಿ',recent:'ಇತ್ತೀಚೆಗೆ ನವೀಕರಿಸಲಾಗಿದೆ',older:'ಹಳೆಯ ವರದಿ',historical:'ಐತಿಹಾಸಿಕ ದಾಖಲೆ'},
  hi:{latest:'नवीनतम उपलब्ध रिपोर्ट',recent:'हाल ही में अपडेट',older:'पुरानी रिपोर्ट',historical:'ऐतिहासिक रिकॉर्ड'},
+ te:{latest:'తాజా అందుబాటులో ఉన్న నివేదిక',recent:'ఇటీవల నవీకరించబడింది',older:'పాత నివేదిక',historical:'చారిత్రక రికార్డు'},
+ ta:{latest:'கிடைக்கும் சமீபத்திய அறிக்கை',recent:'சமீபத்தில் புதுப்பிக்கப்பட்டது',older:'பழைய அறிக்கை',historical:'வரலாற்றுப் பதிவு'},
+ ml:{latest:'ലഭ്യമായ ഏറ്റവും പുതിയ റിപ്പോർട്ട്',recent:'അടുത്തിടെ പുതുക്കിയത്',older:'പഴയ റിപ്പോർട്ട്',historical:'ചരിത്ര രേഖ'},
+ mr:{latest:'नवीनतम उपलब्ध अहवाल',recent:'अलीकडे अद्ययावत',older:'जुना अहवाल',historical:'ऐतिहासिक नोंद'},
 };

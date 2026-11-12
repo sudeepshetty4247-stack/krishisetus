@@ -25,6 +25,18 @@ def backup(store, directory):
             raise ValueError('Backup integrity verification failed')
     return str(target)
 
+def restore_backup(source, target):
+    """Restore into a NEW test database only; never overwrite a working store."""
+    source,target=Path(source),Path(target)
+    if target.exists():raise ValueError('Restore target must not already exist')
+    target.parent.mkdir(parents=True,exist_ok=True)
+    with sqlite3.connect(f'file:{source.resolve()}?mode=ro',uri=True) as original:
+        if original.execute('PRAGMA integrity_check').fetchone()[0]!='ok':raise ValueError('Source backup failed integrity check')
+        with sqlite3.connect(target) as destination:
+            original.backup(destination)
+            if destination.execute('PRAGMA integrity_check').fetchone()[0]!='ok':raise ValueError('Restored backup failed integrity check')
+    return str(target)
+
 def official_export(store, offset=0, limit=1000):
     """Only observations obtained by the fixed official connector; not uploads.
 

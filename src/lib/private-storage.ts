@@ -1,0 +1,2 @@
+/** Legacy keys remain guest-only; account keys never read or adopt guest records. */
+export function privateStorageKey(base:string,owner:string|null=null){return owner?`${base}:account:${owner}`:base;}
