@@ -1,0 +1,8 @@
+import {useQuery} from '@tanstack/react-query';
+import {supabase} from '@/integrations/supabase/client';
+import {useKrishi} from '../krishisetu-provider';
+import {istTimestamp,reportedDate} from '@/lib/price-time';
+export function SourceHistory(){const {lang}=useKrishi();const kn=lang==='kn';const q=useQuery({queryKey:['ceda-history'],queryFn:async()=>{const {data,error}=await supabase.from('ceda_observations').select('*').order('date',{ascending:false}).limit(12);if(error)throw error;return data||[];}});
+ if(!q.data?.length)return null;
+ return <section className="ks-section"><h2>{kn?'ನಿಜವಾದ ಐತಿಹಾಸಿಕ ಮೂಲ ವರದಿಗಳು':'Retrieved historical source reports'}</h2><p className="ks-fine">{kn?'ತಳಿ ಮತ್ತು ಘಟಕ ಮೂಲ ಪ್ರತಿಕ್ರಿಯೆಯಲ್ಲಿ ಇಲ್ಲ. ಇವು ಇಂದಿನ ಬೆಲೆಗಳಲ್ಲ; ಮಾರಾಟ ಹೋಲಿಕೆಗೆ ಬಳಸಲಾಗುವುದಿಲ್ಲ.':'Variety and units are missing from these source responses. These are historical observations—not today’s prices or variety-specific selling quotes.'}</p><div className="ks-card-grid mt-4">{q.data.map(r=><article className="ks-option" key={r.id}><h3>{r.commodity} · {r.market}</h3><b>{r.modal_price.toLocaleString('en-IN')}</b><span>{kn?'ಘಟಕ':'Unit'}: {r.price_unit||'—'}</span><span>{kn?'ವರದಿ':'Reported'}: {reportedDate(r.date)}</span><small>{kn?'ಪಡೆದ ಸಮಯ':'Retrieved'}: {istTimestamp(r.retrieved_at)}</small></article>)}</div><p className="ks-fine">Centre for Economic Data &amp; Analysis, Ashoka University · <a href="https://ceda.ashoka.edu.in/api-terms-conditions/" target="_blank" rel="noreferrer">CEDA source terms</a></p></section>;
+}

@@ -12,13 +12,18 @@ import {latestByMarket,marketKey,rankOptions,sameDayOpportunity,priceStats,winDa
 import type {Report} from '@/lib/agri-types';
 import {pythonAction} from '@/lib/agri.functions';
 import {NearbyMarkets} from './nearby';
+import {PriceTimestamps} from './price-timestamps';
+import {SourceHistory} from './source-history';
+import {SellingPlans} from './selling-plan';
+import {saveSellingPlan} from '@/lib/plans';
+import {ageInIST,istTimestamp} from '@/lib/price-time';
 type C=ReturnType<typeof useCopy>;
 export const rupee=(n:number)=>`₹${Math.round(n).toLocaleString('en-IN')}`;
 const lineColors=['var(--primary)','var(--harvest)','var(--leaf)','var(--chart-4)','var(--chart-5)'];
-function Fresh({date,c}:{date:string;c:C}){const d=freshnessDays(date);return <span className={`ks-fresh ${d>7?'old':''}`}><CalendarDays/>{c.reportedOn} {date} · {d===0?c.today:`${d} ${c.daysOld}`}</span>;}
+function Fresh({date,c}:{date:string;c:C}){const d=ageInIST(date);return <span className={`ks-fresh ${d>7?'old':''}`}><CalendarDays/>{c.reportedOn} {date} · {d===0?c.today:`${d} ${c.daysOld}`}</span>;}
 function Notice({children,tone='info'}:{children:ReactNode;tone?:'info'|'warn'|'error'}){return <div className={`ks-notice ${tone}`}>{tone==='info'?<Info/>:<AlertTriangle/>}<div>{children}</div></div>;}
 function Section({title,eyebrow,children,action}:{title:string;eyebrow?:string;children:ReactNode;action?:ReactNode}){return <section className="ks-section"><div className="ks-section-head"><div>{eyebrow&&<div className="ks-eyebrow">{eyebrow}</div>}<h2>{title}</h2></div>{action}</div>{children}</section>;}
-function PriceCard({r,c,onClick,extra}:{r:Report;c:C;onClick?:()=>void;extra?:ReactNode}){return <button type="button" className="ks-price-card" onClick={onClick} disabled={!onClick}><div className="ks-price-top"><span className="ks-crop-chip"><Wheat/>{r.commodity}{r.variety&&r.variety!=='Other'?` · ${r.variety}`:''}</span>{!r.official&&<span className="ks-tag">private</span>}</div><div className="ks-price-market"><MapPin/>{r.market}<small>{r.district}, {r.state}</small></div><div className="ks-price-value">{rupee(r.modal_price)}<small>{c.perQuintal}</small></div>{(r.min_price!=null||r.max_price!=null)&&<div className="ks-minmax">{c.min} {r.min_price!=null?rupee(r.min_price):'—'} · {c.max} {r.max_price!=null?rupee(r.max_price):'—'}</div>}{extra}<Fresh date={r.date} c={c}/><div className="ks-source">{c.source}: {r.source_name}</div></button>;}
+function PriceCard({r,c,onClick,extra}:{r:Report;c:C;onClick?:()=>void;extra?:ReactNode}){return <Button type="button" variant="ghost" className="ks-price-card" onClick={onClick} disabled={!onClick}><div className="ks-price-top"><span className="ks-crop-chip"><Wheat/>{r.commodity}{r.variety&&r.variety!=='Other'?` · ${r.variety}`:''}</span>{!r.official&&<span className="ks-tag">private</span>}</div><div className="ks-price-market"><MapPin/>{r.market}<small>{r.district}, {r.state}</small></div><div className="ks-price-value">{rupee(r.modal_price)}<small>{c.perQuintal}</small></div>{(r.min_price!=null||r.max_price!=null)&&<div className="ks-minmax">{c.min} {r.min_price!=null?rupee(r.min_price):'—'} · {c.max} {r.max_price!=null?rupee(r.max_price):'—'}</div>}{extra}<PriceTimestamps report={r}/><div className="ks-source">{c.source}: {r.source_name}</div></Button>;}
 function HistoryChart({rows,keyOf,c}:{rows:Report[];keyOf:(r:Report)=>string;c:C}){const series=[...new Set(rows.map(keyOf))].slice(0,5);const byDate=new Map<string,Record<string,number|string>>();for(const r of rows){const k=keyOf(r);if(!series.includes(k))continue;const o=byDate.get(r.date)||{date:r.date};o[k]=r.modal_price;byDate.set(r.date,o);}const data=[...byDate.values()].sort((a,b)=>String(a['date']).localeCompare(String(b['date'])));if(data.length<2)return <Notice>{c.noHistory}</Notice>;return <div className="ks-chart"><ResponsiveContainer width="100%" height={320}><LineChart data={data} margin={{top:10,right:16,left:8,bottom:0}}><CartesianGrid stroke="var(--border)" strokeDasharray="3 3"/><XAxis dataKey="date" tick={{fontSize:13}} minTickGap={28}/><YAxis tick={{fontSize:13}} tickFormatter={v=>`₹${v}`} width={70} domain={['auto','auto']}/><Tooltip formatter={(v:number)=>rupee(v)}/><Legend/>{series.map((s,i)=><Line key={s} type="monotone" dataKey={s} name={s} stroke={lineColors[i]} strokeWidth={2.5} dot={false} connectNulls/>)}</LineChart></ResponsiveContainer></div>;}
 function Loading({c}:{c:C}){return <div className="ks-loading">{c.loadingText}</div>;}
 
@@ -31,7 +36,7 @@ export function FarmerHome(){const c=useCopy();const nav=useNavigate();const cat
    <div className="ks-hero-text"><div className="ks-eyebrow light">KRISHISETU · India</div><h1>{c.heroTitle}</h1><p>{c.heroSub}</p></div>
    <form className="ks-quick" onSubmit={e=>{e.preventDefault();void nav({to:'/find-market',search:{crop:crop||undefined,qty:Number(qty)||undefined,market:market||undefined}});}}>
     <h2><Scale/>{c.find}</h2>
-    <label>{c.qCrop}<select value={crop} onChange={e=>setCrop(e.target.value)} disabled={!crops.length}><option value="">{crops.length?c.chooseCrop:c.noCrops}</option>{crops.map(x=><option key={x}>{x}</option>)}</select></label>
+    <label>{c.qCrop}<select value={crop} onChange={e=>setCrop(e.target.value)} disabled={!crops.length}><option value="">{c.chooseCrop}</option>{crops.map(x=><option key={x}>{x}</option>)}</select></label>
     <label>{c.qQty}<div className="ks-qty"><input type="number" min="0.1" step="0.1" inputMode="decimal" value={qty} onChange={e=>setQty(e.target.value)}/><span>{c.quintals}</span></div><small>{c.quintalHint}</small></label>
     <label>{c.qLoc}<select value={market} onChange={e=>setMarket(e.target.value)} disabled={!markets.length}><option value="">{c.chooseMarket}</option>{markets.map(x=><option key={x}>{x}</option>)}</select></label>
     <Button type="submit" variant="harvest" size="lg" className="ks-big-btn">{c.findBtn}<ArrowRight/></Button>
@@ -39,6 +44,7 @@ export function FarmerHome(){const c=useCopy();const nav=useNavigate();const cat
    </form></div></section>
   <div className="ks-wrap">
    <NearbyMarkets/>
+   <SourceHistory/>
    <Section title={c.latestTitle} eyebrow={c.freshNote} action={<Link to="/markets" className="ks-link">{c.prices}<ArrowRight/></Link>}>
     {latest.isLoading?<Loading c={c}/>:latest.error?<Notice tone="error">{c.error}</Notice>:cards.length?<div className="ks-card-grid">{cards.map(r=><PriceCard key={r.id} r={r} c={c}/>)}</div>:<Notice tone="warn">{c.latestNone}</Notice>}
    </Section>
@@ -46,7 +52,7 @@ export function FarmerHome(){const c=useCopy();const nav=useNavigate();const cat
    <Section title={c.howTitle}><div className="ks-steps">{[c.how1,c.how2,c.how3].map((s,i)=><div key={s} className="ks-step"><span>{i+1}</span><p>{s}</p></div>)}</div></Section>
    <Section title={c.trustTitle}><div className="ks-trust">
     <div><ShieldCheck/><h3>{c.source}</h3><p>{[...new Set(rows.map(r=>r.source_name))].join(', ')||'CEDA / AGMARKNET · data.gov.in'}</p></div>
-    <div><CalendarDays/><h3>{c.lastUpdate}</h3><p>{cov.data?.last_update?new Date(cov.data.last_update).toLocaleString():okCheck?new Date(okCheck.checked_at).toLocaleString():c.noUpdate}</p></div>
+    <div><CalendarDays/><h3>{c.lastUpdate}</h3><p>{cov.data?.last_update?istTimestamp(cov.data.last_update):c.noUpdate}</p></div>
     <div><Database/><h3>{c.coverage}</h3><p>{cov.data?.records?`${cov.data.records.toLocaleString('en-IN')} ${c.records} · ${cov.data.earliest} → ${cov.data.latest}`:c.latestNone.split('.')[0]+'.'}</p></div>
     <div><IndianRupee/><h3>{c.calcTitle}</h3><p>{c.calcText}</p></div>
     <div><TrendingUp/><h3>{c.fcTitle}</h3><p>{c.fcText}</p></div>
@@ -92,7 +98,7 @@ export function FindMarketPage({initial}:{initial:{crop?:string|undefined;qty?:n
     <p className="ks-why"><b>{c.why}</b> {bestNet.isStart?`${c.yourMarket}: ${rupee(bestNet.report.modal_price)}${c.perQuintal} × ${q} = ${rupee(bestNet.gross)} − ${rupee(bestNet.expenses)}.`:`${rupee(bestNet.report.modal_price)} vs ${rupee(startOpt.report.modal_price)}${c.perQuintal} (${c.yourMarket}) × ${q} ${c.quintals} = +${rupee(bestNet.gross-startOpt.gross)} ${c.gross}; ${c.expenses} ${rupee(bestNet.expenses)} vs ${rupee(startOpt.expenses)} → +${rupee(bestNet.advantage)} ${c.net}.`}</p>
     {!bestNet.sameDate&&<Notice tone="warn">{c.dateWarn}</Notice>}<p className="ks-fine">{c.noGuarantee}</p></div></div>
     <div className="ks-table-wrap"><table className="ks-table"><thead><tr><th>#</th><th>APMC</th><th>{c.reportedOn}</th><th>{c.price}</th><th>{c.gross}</th><th>{c.expenses}</th><th>{c.net}</th></tr></thead><tbody>{options.map((o,i)=><tr key={o.key} className={o.isStart?'start':''}><td>{i+1}</td><td>{o.report.market}{o.isStart&&<small> · {c.yourMarket}</small>}</td><td>{o.report.date}{!o.sameDate&&' ⚠'}</td><td>{rupee(o.report.modal_price)}</td><td>{rupee(o.gross)}</td><td>{rupee(o.expenses)}</td><td><b>{rupee(o.net)}</b></td></tr>)}</tbody></table></div>
-    <div className="ks-actions"><Button variant="default" size="lg" onClick={()=>{const s=toSaved();localStorage.setItem('krishisetu-plans',JSON.stringify([s,...loadPlans()].slice(0,50)));setMsg(c.saved);}}><Save/>{c.save}</Button><Button variant="outline" size="lg" onClick={()=>downloadText(toSaved(),c)}><Download/>{c.download}</Button><Button variant="outline" size="lg" onClick={async()=>{const text=reportText(toSaved(),c);if(navigator.share){try{await navigator.share({title:'KRISHISETU',text});}catch{/* cancelled */}}else{await navigator.clipboard.writeText(text);setMsg(c.copied);}}}><Share2/>{c.share}</Button>{msg&&<span className="ks-ok"><CheckCircle2/>{msg}</span>}</div>
+    <div className="ks-actions"><Button variant="default" size="lg" onClick={()=>{const s=toSaved();saveSellingPlan({id:s.id,savedAt:s.savedAt,crop,variety:v,quantity:q,unit:'quintal',location:startOpt.report.market,sellingDate:'',marketKey:bestNet.key,costs,reports:latest});localStorage.setItem('krishisetu-plans',JSON.stringify([s,...loadPlans()].slice(0,50)));setMsg(c.saved);}}><Save/>{c.save}</Button><Button variant="outline" size="lg" onClick={()=>downloadText(toSaved(),c)}><Download/>{c.download}</Button><Button variant="outline" size="lg" onClick={async()=>{const text=reportText(toSaved(),c);if(navigator.share){try{await navigator.share({title:'KRISHISETU',text});}catch{/* cancelled */}}else{await navigator.clipboard.writeText(text);setMsg(c.copied);}}}><Share2/>{c.share}</Button>{msg&&<span className="ks-ok"><CheckCircle2/>{msg}</span>}</div>
    </Step></>}
   {crop&&latest.length>0&&!startOpt&&<Notice>{c.chooseMarket}</Notice>}
   {crop&&rows.length>0&&<Step n={6} title={c.history} c={c}><HistoryChart rows={rows.filter(r=>r.variety===v)} keyOf={r=>r.market} c={c}/></Step>}
@@ -101,19 +107,21 @@ function Step({n,title,children,c}:{n:number;title:string;children:ReactNode;c:C
 function Highlight({icon,label,o,c,value}:{icon:ReactNode;label:string;o:Option;c:C;value:string}){return <div className="ks-highlight">{icon}<div><small>{label}</small><b>{o.report.market}</b><span>{value}</span><Fresh date={o.report.date} c={c}/></div></div>;}
 function OptionCard({o,rank,c,costs,setCost}:{o:Option;rank:number;c:C;costs:Costs;setCost:(f:keyof Costs,v:string)=>void}){return <article className={`ks-option ${rank===1?'best':''} ${o.isStart?'start':''}`}><header><span className="ks-rank">{rank}</span><div><h3>{o.report.market}</h3><small>{o.report.district}, {o.report.state}{o.isStart&&` · ${c.yourMarket}`}</small></div></header>
  <div className="ks-option-price">{rupee(o.report.modal_price)}<small>{c.perQuintal}</small></div><Fresh date={o.report.date} c={c}/>{!o.sameDate&&<p className="ks-warn-line"><AlertTriangle/>{c.dateWarn}</p>}
+ <PriceTimestamps report={o.report}/>
  <dl><dt>{c.gross}</dt><dd>{rupee(o.gross)}</dd><dt>{c.expenses}</dt><dd>− {rupee(o.expenses)}</dd><dt className="net">{c.net}</dt><dd className="net">{rupee(o.net)}</dd></dl>
  <div className="ks-costs">{(['transport','loading','unloading','other'] as const).map(f=><label key={f}>{f==='transport'?<Truck/>:null}{c[f]}<input type="number" min="0" inputMode="numeric" placeholder="₹ 0" value={costs[f]||''} onChange={e=>setCost(f,e.target.value)}/></label>)}</div>
  {!o.isStart&&<p className="ks-be">{o.breakEven!=null&&o.breakEven>0?<><b>{c.breakEven}: {rupee(o.breakEven)}</b><br/><small>{c.breakEvenText}</small></>:<small>{c.noBreakEven}</small>}</p>}
  <small className="ks-source">{c.source}: {o.report.source_name}</small></article>;}
 
 /* ---------------- MARKET PRICES ---------------- */
-export function PricesPage(){const c=useCopy();const latestQ=useLatest(3000);const [search,setSearch]=useState('');const [state,setState]=useState('');const [district,setDistrict]=useState('');const [open,setOpen]=useState('');
+export function PricesPage({initialCrop='',initialMarket=''}:{initialCrop?:string;initialMarket?:string}={}){const c=useCopy();const latestQ=useLatest(3000);const [search,setSearch]=useState(initialCrop);const [state,setState]=useState('');const [district,setDistrict]=useState('');const [open,setOpen]=useState(initialMarket);
  const rows=latestQ.data||[];const filtered=rows.filter(r=>(!search||r.commodity.toLowerCase().includes(search.toLowerCase()))&&(!state||r.state===state)&&(!district||r.district===district));
  const groups=new Map<string,Report[]>();for(const r of filtered){const k=marketKey(r)+'|'+r.commodity+'|'+r.variety;groups.set(k,[...(groups.get(k)||[]),r]);}
  const cards=[...groups.values()].map(g=>g.sort((a,b)=>b.date.localeCompare(a.date))).slice(0,60);
  return <div className="ks-wrap"><div className="ks-page-head"><h1>{c.prices}</h1><p>{c.freshNote}</p></div>
   <div className="ks-searchbar"><input type="search" placeholder={c.searchCrop} value={search} onChange={e=>setSearch(e.target.value)} aria-label={c.searchCrop}/><select value={state} onChange={e=>{setState(e.target.value);setDistrict('');}} aria-label={c.chooseState}><option value="">{c.chooseState}</option>{[...new Set(rows.map(r=>r.state))].sort().map(x=><option key={x}>{x}</option>)}</select><select value={district} onChange={e=>setDistrict(e.target.value)} aria-label={c.chooseDistrict} disabled={!state}><option value="">{c.chooseDistrict}</option>{[...new Set(rows.filter(r=>r.state===state).map(r=>r.district))].sort().map(x=><option key={x}>{x}</option>)}</select></div>
-  {latestQ.isLoading?<Loading c={c}/>:latestQ.error?<Notice tone="error">{c.error}</Notice>:!cards.length?<Notice tone="warn">{c.latestNone}</Notice>:<div className="ks-card-grid">{cards.map(g=>{const r=g[0]!,p=g[1];const ch=p?r.modal_price-p.modal_price:null;return <PriceCard key={r.id} r={r} c={c} onClick={()=>setOpen(r.market)} extra={ch!=null&&<div className={`ks-change ${ch>0?'up':ch<0?'down':''}`}>{ch>0?<TrendingUp/>:ch<0?<TrendingDown/>:<Minus/>}{ch>0?'+':''}{rupee(ch)} <small>{c.change} ({p?.date})</small></div>}/>;})}</div>}
+  {latestQ.isLoading?<Loading c={c}/>:latestQ.error?<Notice tone="error">{c.error}</Notice>:!cards.length?<Notice tone="warn">{c.latestNone}</Notice>:<div className="ks-card-grid">{cards.map(g=>{const r=g[0];if(!r)return null;const p=g.find(previous=>previous.date<r.date&&previous.source_name===r.source_name);const ch=p?r.modal_price-p.modal_price:null;return <PriceCard key={r.id} r={r} c={c} onClick={()=>setOpen(r.market)} extra={ch!=null&&<div className={`ks-change ${ch>0?'up':ch<0?'down':''}`}>{ch>0?<TrendingUp/>:ch<0?<TrendingDown/>:<Minus/>}{ch>0?'+':''}{rupee(ch)} <small>{c.change} ({p?.date})</small></div>}/>;})}</div>}
+  <SourceHistory/>
   {open&&<MarketDetail market={open} c={c} onClose={()=>setOpen('')}/>}
  </div>;}
 function MarketDetail({market,c,onClose}:{market:string;c:C;onClose:()=>void}){const q=useMarketReports(market);const rows=q.data||[];const crops=[...new Set(rows.map(r=>`${r.commodity} · ${r.variety}`))];const [crop,setCrop]=useState('');const sel=crop||crops[0]||'';const sub=rows.filter(r=>`${r.commodity} · ${r.variety}`===sel);
@@ -150,10 +158,7 @@ export function TrendsPage(){const c=useCopy();const {user}=useKrishi();const ca
   </>}</div>;}
 
 /* ---------------- PLAN ---------------- */
-export function PlanPage(){const c=useCopy();const [plans,setPlans]=useState<Saved[]>([]);useEffect(()=>setPlans(loadPlans()),[]);
- return <div className="ks-wrap"><div className="ks-page-head"><h1>{c.plan}</h1><p>{c.noGuarantee}</p></div>
-  {!plans.length?<div className="ks-empty"><Leaf/><p>{c.planEmpty}</p><Button asChild size="lg" variant="harvest"><Link to="/find-market" search={{}}>{c.find}<ArrowRight/></Link></Button></div>:<div className="ks-plan-list">{plans.map(p=>{const best=p.rows[0];return <article key={p.id} className="ks-plan"><header><div><h3>{p.crop} · {p.variety}</h3><small>{p.qty} {c.quintals} · {c.yourMarket}: {p.start} · {c.savedOn} {new Date(p.savedAt).toLocaleDateString()}</small></div></header>{best&&<p className="ks-lead"><Trophy/>{c.bestNet}: <b>{best.market} — {rupee(best.net)}</b> ({best.date})</p>}<div className="ks-actions"><Button variant="outline" onClick={()=>downloadText(p,c)}><Download/>{c.download}</Button><Button variant="ghost" onClick={()=>{const n=plans.filter(x=>x.id!==p.id);setPlans(n);localStorage.setItem('krishisetu-plans',JSON.stringify(n));}}><X/>{c.remove}</Button></div></article>;})}</div>}
- </div>;}
+export function PlanPage(){return <SellingPlans/>;}
 
 /* ---------------- HOW / ABOUT ---------------- */
 export function HowPage(){const c=useCopy();return <div className="ks-wrap"><div className="ks-page-head"><h1>{c.how}</h1><p>{c.promise}</p></div><div className="ks-steps">{[c.how1,c.how2,c.how3].map((s,i)=><div key={s} className="ks-step"><span>{i+1}</span><p>{s}</p></div>)}</div><div className="ks-trust"><div><IndianRupee/><h3>{c.calcTitle}</h3><p>{c.calcText}</p></div><div><Truck/><h3>{c.breakEven}</h3><p>{c.breakEvenText} {c.distanceNote}</p></div><div><TrendingUp/><h3>{c.fcTitle}</h3><p>{c.fcText}</p></div><div><CalendarDays/><h3>{c.reportedOn}</h3><p>{c.freshNote}</p></div></div></div>;}

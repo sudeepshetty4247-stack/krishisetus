@@ -1,0 +1,5 @@
+CREATE TABLE public.ceda_observations(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),commodity_id integer NOT NULL,state_id integer NOT NULL,district_id integer NOT NULL,market_id integer NOT NULL,commodity text NOT NULL,state text NOT NULL,district text NOT NULL,market text NOT NULL,date date NOT NULL,min_price numeric, max_price numeric,modal_price numeric NOT NULL CHECK(modal_price>0),variety text,price_unit text,raw_response jsonb NOT NULL, retrieved_at timestamptz NOT NULL DEFAULT now(), UNIQUE(commodity_id,state_id,district_id,market_id,date));
+GRANT SELECT ON public.ceda_observations TO anon,authenticated; GRANT ALL ON public.ceda_observations TO service_role;
+ALTER TABLE public.ceda_observations ENABLE ROW LEVEL SECURITY;
+CREATE POLICY ceda_public_source_read ON public.ceda_observations FOR SELECT TO anon,authenticated USING(true);
+CREATE INDEX ceda_observations_series ON public.ceda_observations(commodity_id,state_id,district_id,market_id,date DESC);

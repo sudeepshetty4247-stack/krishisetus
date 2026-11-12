@@ -15,10 +15,10 @@ export function NearbyMarkets(){
  async function search(location:Coordinates){setBusy(true);setError('');setPlaces([]);setRoads({});try{const result=await call({data:{action:'nearby',origin:location,radius}});setPlaces(result.places);setSearched(true);}catch(e){setError(e instanceof Error?e.message:c.error);}finally{setBusy(false);}}
  function locate(){setError('');if(!navigator.geolocation){setError(c.denied);return;}setBusy(true);navigator.geolocation.getCurrentPosition(p=>{const location={latitude:p.coords.latitude,longitude:p.coords.longitude};setOrigin(location);if(user)void search(location);else setBusy(false);},()=>{setBusy(false);setError(c.denied);},{enableHighAccuracy:false,timeout:15000,maximumAge:300000});}
  async function manual(){setBusy(true);setError('');try{const result=await call({data:{action:'town',town}});const p=result.places[0];if(!p){setError(c.empty);return;}const location={latitude:p.latitude,longitude:p.longitude};setOrigin(location);await search(location);}catch(e){setError(e instanceof Error?e.message:c.error);}finally{setBusy(false);}}
- return <section className="ks-section" aria-label={c.find}><h2 className="mb-4">{c.find}</h2><div className="ks-form-row">
+ return <section className="ks-section ks-nearby" aria-label={c.find}><h2 className="mb-4">{c.find}</h2><div className="ks-location-grid">
   <Button variant="outline" disabled={busy} onClick={locate}><Navigation/>{c.locate}</Button>
-  <label>{c.manual}<input value={town} onChange={e=>setTown(e.target.value)} maxLength={160}/></label>
-  <label>{c.radius}<select value={radius} onChange={e=>setRadius(Number(e.target.value) as 25|50|100|200)}>{[25,50,100,200].map(k=><option key={k} value={k}>{k} {c.km}</option>)}</select></label>
+  <label className="ks-manual-location">{c.manual}<input aria-label={c.manual} value={town} onChange={e=>setTown(e.target.value)} maxLength={160}/></label>
+  <label className="ks-radius">{c.radius}<select aria-label={c.radius} value={radius} onChange={e=>setRadius(Number(e.target.value) as 25|50|100|200)}>{[25,50,100,200].map(k=><option key={k} value={k}>{k} {c.km}</option>)}</select></label>
   {user?<Button disabled={busy||(!origin&&town.trim().length<2)} onClick={()=>void(town.trim().length>=2?manual():origin?search(origin):undefined)}><Search/>{c.search}</Button>:<Button variant="outline" onClick={async()=>{const result=await lovable.auth.signInWithOAuth('lovable',{redirect_uri:window.location.origin});if(result.error)setError(result.error.message);}}><LogIn/>{c.signIn}</Button>}
  </div>{origin&&<p className="ks-fine">{c.location}</p>}{busy&&<p role="status">{c.loading}</p>}{error&&<p className="ks-notice warn" role="alert">{error}</p>}
  {searched&&!places.length&&!busy&&<p className="ks-notice">{c.empty}</p>}

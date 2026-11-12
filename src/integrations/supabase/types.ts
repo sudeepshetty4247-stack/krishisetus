@@ -220,6 +220,66 @@ export type Database = {
         }
         Relationships: []
       }
+      ceda_observations: {
+        Row: {
+          commodity: string
+          commodity_id: number
+          date: string
+          district: string
+          district_id: number
+          id: string
+          market: string
+          market_id: number
+          max_price: number | null
+          min_price: number | null
+          modal_price: number
+          price_unit: string | null
+          raw_response: Json
+          retrieved_at: string
+          state: string
+          state_id: number
+          variety: string | null
+        }
+        Insert: {
+          commodity: string
+          commodity_id: number
+          date: string
+          district: string
+          district_id: number
+          id?: string
+          market: string
+          market_id: number
+          max_price?: number | null
+          min_price?: number | null
+          modal_price: number
+          price_unit?: string | null
+          raw_response: Json
+          retrieved_at?: string
+          state: string
+          state_id: number
+          variety?: string | null
+        }
+        Update: {
+          commodity?: string
+          commodity_id?: number
+          date?: string
+          district?: string
+          district_id?: number
+          id?: string
+          market?: string
+          market_id?: number
+          max_price?: number | null
+          min_price?: number | null
+          modal_price?: number
+          price_unit?: string | null
+          raw_response?: Json
+          retrieved_at?: string
+          state?: string
+          state_id?: number
+          variety?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string

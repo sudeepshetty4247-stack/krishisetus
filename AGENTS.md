@@ -34,6 +34,9 @@ use the editor.
 - Actual analysis and training run through an authenticated server proxy to the isolated Python service; return an explicit unavailable state when no service is configured.
 - Share filters, language and paginated RLS-scoped queries through a root provider so all content routes use the same account dataset.
 - CEDA calls use the documented versioned contract through the linked connector; keep response-schema and missing-unit failures explicit rather than inventing market varieties or units.
+- Store incomplete provider observations separately from comparable reports, preserving raw fields; missing units or varieties must never enter net-selling rankings or model groups.
+- Guest selling plans use versioned validated browser storage with report snapshots and unit normalization; editing and downloads remain available without accounts.
+- Price movement and freshness helpers use source-specific distinct-date observations and IST calendar dates; connection checks never substitute for successful report retrieval.
 - Never seed agricultural prices or render evaluation metrics without a verified input dataset and an executed validation pipeline.
 - Keep the independent Flask/SQLite/Parquet source in `local-system`, outside the hosted application import graph; Python cannot execute in the Lovable hosted runtime.
 - Local research groups are source/market/commodity/variety-specific, with direct calendar-horizon targets and purged chronological validation; this prevents source mixing and future-target leakage.

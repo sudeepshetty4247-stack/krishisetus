@@ -1,12 +1,22 @@
 # KRISHISETU
 
+## Final farmer completion request
+- [x] Retrieved four genuine CEDA historical maize reports, persisted and read back publicly; missing units/varieties explicitly exclude them from comparable selling reports. Added authenticated bounded ingestion with retry and failure logs.
+- [x] Added editable guest selling plans with kg/quintal/tonne, location, date, per-market costs, download and share; browser verified save/edit/reload/download without invented prices.
+- [x] Fixed location/distance grid, invisible text inputs, header collision and no-data clipping; source-driven accessible ticker retains honest no-data state.
+- [x] Added separate IST reporting/retrieval/successful-refresh timestamps and source-specific previous-observation movement.
+- [x] Audited thirteen pages and location controls at 1054/768/390 widths; no overflow or runtime errors; all 21 frontend tests pass.
+- [ ] Verify current comparable prices, automatic history updates, scrolling ticker with current reports and genuine net-ranking journey — source denies current requests or omits variety/units; authenticated CEDA browser request timed out, while one-off historical retrieval succeeded.
+- [ ] Verify live nearby routing and full seven-language/local parity — Maps needs an authorized deployment and verified price-market identity matching; new labels currently Kannada/English fallback.
+- [ ] Execute real historical training and deployed forecasting — requires accessible verified history and a Python deployment target.
+
 ## Production implementation (current request)
 - [x] Rechecked linked CEDA (catalogue 200, market timeout), exact public AGMARKNET (403), data.gov.in (connection failure), e-NAM (404 page), ReMS (TLS failure); retained access controls and licensing caveats.
 - [x] Implemented monthly resumable AGMARKNET ingestion, explicit unit mapping, audited export, transactional official-only hosted publication and hourly managed callback.
 - [x] Added permission-based location control, manual town search, bounded authenticated Google Places discovery and on-demand road routing; existing farmer design preserved.
 - [x] Added seasonal naive/SARIMA, full-market forecast lookup, publication freshness/baseline/error gates, atomic job files, online backups, container deployment and bounded retraining scheduler.
 - [x] Verified 39 Python tests and 17 frontend tests; signed-in Kannada denied-location fallback, protected callback (401), research navigation and mobile no-overflow; no runtime errors.
-- [ ] Execute official historical retrieval/publication and real-data model evaluation — external source access failures; no official price observations retrieved.
+- [ ] Execute comparable historical publication and real-data model evaluation — four CEDA observations retrieved but lack units/varieties; no eligible training dataset or Python deployment.
 - [ ] Verify permitted-location Google Maps, road routing and price-directory matching — Maps live checks unsupported in sandbox; requires authorized deployed origin and source-backed market identity matching.
 - [ ] Deploy persistent HTTPS Python service and verify refresh/retraining — no external hosting target or Python URL/token configured; container supplied but not deployed.
 - [ ] Complete real-data maize 20-quintal journey including trained forecasts and saved comparisons — waits on official reports and Python deployment, not substituted fixtures.
