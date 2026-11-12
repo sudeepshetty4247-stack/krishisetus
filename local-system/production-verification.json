@@ -1,0 +1,59 @@
+{
+  "history": {
+    "records": 24656469,
+    "states": 32,
+    "districts": 614,
+    "reported_markets": 6592,
+    "commodities": 370,
+    "earliest": "2021-01-01",
+    "latest": "2026-04-21",
+    "source": "data.gov.in variety-wise history",
+    "source_url": "https://www.data.gov.in/resource/variety-wise-daily-market-prices-data-commodity",
+    "dataset": "Khandelwal AGMARKNET compilation via Hugging Face DHIVAKARNAIDUSUNKARI/mandi-india-daily-prices-2001-2026",
+    "received": 24656472,
+    "rejected": 3,
+    "duplicate_rows": 0,
+    "unit": "INR/quintal",
+    "arrivals_available": false,
+    "duplicate_policy": "Median modal within identical date/source/geography/commodity/variety/grade; extrema retained",
+    "created_at": "2026-11-12T18:29:10.609844+00:00",
+    "cleaned_sha256": "f14041fa0a154d22e717de38d9cf78c6eb6e27ab13af85edf81da2dbc4d68982",
+    "files": {
+      "mandi_daily_2021.parquet": "5eae40f34178db1777860723ebe7d6aa34aaafd2f504b43324958dd3acd5df4f",
+      "mandi_daily_2022.parquet": "5b20a545407c919683105f094813e69ed78fa87aec71ba0390338dbf9bef675a",
+      "mandi_daily_2023.parquet": "0b76d03b08f2d3b21bc38e2829a4a5a6c5c58e71cc4aeba4ea1d03b0dd88998f",
+      "mandi_daily_2024.parquet": "74430fe70839da147fc316563a48a68b477516ce770a1d5c2597d8d13b3e281c",
+      "mandi_daily_2025.parquet": "65a848dfc4be3f84a911e5375abfa5d67481cf547c6a9ae382932d9166bb5e93",
+      "mandi_daily_2026.parquet": "3f768db13bf083749611bc12d4766cf04ab4b307e30429f05794552ad6ea8fe2"
+    },
+    "file": "india_2021_2026.parquet",
+    "bytes": 215527897,
+    "price_unit": "INR/quintal"
+  },
+  "local_health": {
+    "url": "http://127.0.0.1:8091/health",
+    "http_status": 200,
+    "status": "alive",
+    "deployed": false
+  },
+  "local_historical_api": {
+    "http_status": 200,
+    "commodity": "Maize",
+    "state": "Karnataka",
+    "market": "Hubli (Amaragol) APMC",
+    "dates": [
+      "2026-04-16",
+      "2026-04-13"
+    ],
+    "modal_prices": [
+      1700,
+      1700
+    ]
+  },
+  "tests": {
+    "frontend": 51,
+    "python": 50,
+    "failures": 0
+  },
+  "deployment": "Blocked: external HTTPS host and shared credential absent"
+}

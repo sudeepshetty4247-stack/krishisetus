@@ -7,7 +7,8 @@ import {useKrishi} from '../krishisetu-provider';
 import {useModelRuns,useSourceRuns,useMarketLocations,marketBase,type ModelRun,type HorizonReport,type Metric} from './data';
 import {refreshDailyPrices} from '@/lib/mandi-sync.functions';
 import {istTimestamp,reportedDate} from '@/lib/price-time';
-import {distanceKm} from '@/lib/geography';
+import {pythonHistory} from '@/lib/agri.functions';
+import {distanceKm,verifiedYard} from '@/lib/geography';
 import {backtestStrategies,marketAnalytics} from '@/lib/research-analytics';
 const r0=(n:number|null|undefined)=>n==null||!Number.isFinite(n)?'—':`₹${Math.round(n).toLocaleString('en-IN')}`;
 const f2=(n:number|null|undefined,d=2)=>n==null||!Number.isFinite(n)?'—':n.toFixed(d);
@@ -56,7 +57,7 @@ function SourcePanel(){const runs=useSourceRuns();const {user,refresh}=useKrishi
 function Analytics({runs}:{runs:ModelRun[]}){const crops=[...new Set(runs.map(r=>r.commodity))];const [crop,setCrop]=useState(crops[0]||'');const locs=useMarketLocations();const group=runs.filter(r=>r.commodity===crop&&r.report.history);
  const a=useMemo(()=>marketAnalytics(group.map(r=>({market:r.market,history:r.report.history}))),[group]);
  const [start,setStart]=useState('');const [perKm,setPerKm]=useState('0');const s=start||group[0]?.market||'';
- const coords=(m:ModelRun)=>{const l=(locs.data||[]).find(x=>x.district===m.district&&marketBase(x.market)===m.market);return l?{latitude:l.latitude,longitude:l.longitude}:null;};
+ const coords=(m:ModelRun)=>{const l=(locs.data||[]).find(x=>x.state===m.state&&x.district===m.district&&marketBase(x.market)===m.market&&verifiedYard(x));return l?{latitude:l.latitude,longitude:l.longitude}:null;};
  const startRun=group.find(g=>g.market===s);const sc=startRun?coords(startRun):null;
  const dist=Object.fromEntries(group.map(g=>{const c=coords(g);return [g.market,sc&&c?distanceKm(sc,c):null];}));
  const bt=useMemo(()=>backtestStrategies(group.map(r=>({market:r.market,history:r.report.history})),s,dist,Number(perKm)||0),[group,s,JSON.stringify(dist),perKm]);
@@ -70,6 +71,9 @@ function Analytics({runs}:{runs:ModelRun[]}){const crops=[...new Set(runs.map(r=
   {bt?<div className="ks-table-wrap"><table className="ks-table"><thead><tr><th>Strategy</th><th>Weeks</th><th>Average realised net ₹/qtl</th><th>vs staying at start</th></tr></thead><tbody>{bt.map(b=><tr key={b.strategy}><td><b>{b.strategy}</b></td><td>{b.weeks}</td><td>{r0(b.meanNet)}</td><td>{r0(b.vsStart)}</td></tr>)}</tbody></table></div>:<p className="ks-notice">Distances unavailable for these markets.</p>}
   <p className="ks-fine">Each week the strategy picks a market using only the previous week's reported prices and realises that market's current-week price minus distance × cost. Distances are straight-line between geocoded markets. Cost assumption is yours; loading, commission and waiting costs are excluded. Past results do not guarantee future returns.</p></>}
  </section>;}
+function HistoricalService(){const {user}=useKrishi();const call=useServerFn(pythonHistory);const [crop,setCrop]=useState('Maize');const [state,setState]=useState('');const [page,setPage]=useState(0);const [busy,setBusy]=useState(false);const [message,setMessage]=useState('');const [rows,setRows]=useState<Record<string,unknown>[]>([]);const [more,setMore]=useState(false);
+ async function load(offset:number){setBusy(true);setMessage('');try{const r=await call({data:{commodity:crop,state,market:'',limit:100,offset}});if(!r.available){setRows([]);setMessage(r.error||'Historical service unavailable');setMore(false);return;}const result=r.result;setRows((result?.['records']||[]) as Record<string,unknown>[]);setMore(result?.['has_more']===true);setPage(offset);setMessage(`Historical dataset cutoff: ${String(result?.['latest_dataset_observation']||'Unknown')} · ${String(result?.['source']||'')}`);}catch{setMessage('Historical service unavailable');setRows([]);}finally{setBusy(false);}}
+ return <section className="ks-section"><h2>Nationwide historical observations</h2><div className="ks-form-row"><label>Crop<input value={crop} maxLength={200} onChange={e=>setCrop(e.target.value)}/></label><label>State<input value={state} maxLength={200} onChange={e=>setState(e.target.value)}/></label><Button disabled={!user||busy||!crop.trim()} onClick={()=>load(0)}><RefreshCw/>Retrieve history</Button></div>{message&&<p className="ks-notice" role="status">{message}</p>}{rows.length>0&&<><div className="ks-table-wrap"><table className="ks-table"><thead><tr>{['Date','State','Market','Crop','Variety','Modal ₹/qtl'].map(x=><th key={x}>{x}</th>)}</tr></thead><tbody>{rows.map((r,i)=><tr key={i}>{['date','state','market','commodity','variety','modal_price'].map(k=><td key={k}>{String(r[k]??'—')}</td>)}</tr>)}</tbody></table></div><div className="ks-actions"><Button variant="outline" disabled={busy||page===0} onClick={()=>load(page-100)}>Previous</Button><Button variant="outline" disabled={busy||!more} onClick={()=>load(page+100)}>Next</Button></div></>}</section>;}
 export function ModelLabPage(){const runs=useModelRuns();const list=runs.data||[];const [id,setId]=useState('');const sel=list.find(r=>r.id===id)||list[0];
  return <div className="ks-lab"><div className="ks-page-head"><h1><FlaskConical className="inline"/> Model comparison laboratory</h1><p>Executed Python results on genuine AGMARKNET history: Naive, Seasonal naive, ARIMA, SARIMA, Random Forest and XGBoost, chronological validation and walk-forward testing. No metric on this page is typed by hand.</p></div>
   {runs.isLoading?<p role="status">Loading model runs…</p>:!list.length?<p className="ks-notice">Not trained: no model run has been published yet.</p>:<>
@@ -77,6 +81,7 @@ export function ModelLabPage(){const runs=useModelRuns();const list=runs.data||[
    {sel&&<section className="ks-section"><h2>{sel.commodity} · {sel.market} ({sel.variety})</h2><RunDetail key={sel.id} run={sel}/></section>}
    <Analytics runs={list.filter(r=>r.status==='trained')}/>
   </>}
+  <HistoricalService/>
   <SourcePanel/>
  </div>;}
 export function findRun(runs:ModelRun[]|undefined,commodity:string,market:string,district?:string){return (runs||[]).find(r=>r.commodity===commodity&&r.market===marketBase(market)&&(!district||r.district===district));}

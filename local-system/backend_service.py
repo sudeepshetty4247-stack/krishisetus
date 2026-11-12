@@ -29,7 +29,7 @@ def install_service(app,root):
         if not token or not secrets.compare_digest(header,'Bearer '+token):return jsonify(error='Service authorization required'),401
 
     @service.get('/service/health')
-    def health():return jsonify(status='ready',python=True,authorized=bool(token),contract_version=1)
+    def health():return jsonify(status='alive',python=True,ready=False,contract_version=1,message='Liveness only, not model readiness')
 
     @service.post('/service/official-reports')
     def source_reports():
@@ -61,7 +61,8 @@ def install_service(app,root):
                 rows.append({**r,'market_key':key,'gross':r['modal_price']*quantity,'expenses':sum(float(cost.get(k,0)) for k in ('transport','handling','other')),'net':net_value(r['modal_price'],quantity,cost.get('transport',0),cost.get('handling',0),cost.get('other',0))})
             current=next((r for r in rows if r['market_key']==nearest),None)
             if current is None:raise ValueError('Current market has no compatible report')
-            if len({(r['date'],r['commodity'],r['variety'],r['source_name']) for r in rows})!=1:raise ValueError('Comparisons require one date, commodity, variety and source')
+            if len({(r['date'],r['commodity'],r['variety'],r.get('grade',''),r.get('price_unit'),r['source_name']) for r in rows})!=1:raise ValueError('Comparisons require one date, commodity, variety, grade, unit and source')
+            if any(r.get('price_unit')!='INR/quintal' or r.get('suspicious') or r.get('variety')=='Not specified' for r in rows):raise ValueError('Comparable reports require verified units, variety and reviewed prices')
             for r in rows:
                 r['net_advantage']=r['net']-current['net'];other=expenses.get(r['market_key'],{});base=expenses.get(nearest,{})
                 r['break_even_additional_transport']=break_even_transport(r['modal_price'],current['modal_price'],quantity,float(other.get('handling',0))+float(other.get('other',0))-float(base.get('handling',0))-float(base.get('other',0)))

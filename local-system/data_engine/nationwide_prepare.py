@@ -43,7 +43,7 @@ def prepare(years=range(2021,2027)):
     manifest.update(source=SOURCE_NAME,source_url=SOURCE_URL,dataset=DATASET,received=received,
       rejected=received-valid,duplicate_rows=valid-counts[0],unit='INR/quintal',arrivals_available=False,
       duplicate_policy='Median modal within identical date/source/geography/commodity/variety/grade; extrema retained',
-      created_at=datetime.now(timezone.utc).isoformat(),files={p.name:sha256(p) for p in files})
+      created_at=datetime.now(timezone.utc).isoformat(),cleaned_sha256=sha256(out),files={p.name:sha256(p) for p in files})
     out.with_suffix('.manifest.json').write_text(json.dumps(manifest,indent=2,default=str))
     print(json.dumps(manifest,indent=2,default=str)); return out
 

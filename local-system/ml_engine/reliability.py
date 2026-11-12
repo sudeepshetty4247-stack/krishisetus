@@ -1,9 +1,10 @@
 """Transparent, configurable publication gates; metrics must come from validation."""
 import os
-from datetime import date
+from datetime import date, datetime
+from zoneinfo import ZoneInfo
 
 def assess_forecast(result, today=None, max_age=None, max_smape=None):
-    today = today or date.today()
+    today = today or datetime.now(ZoneInfo('Asia/Kolkata')).date()
     max_age = int(os.environ.get('FORECAST_MAX_AGE_DAYS', '7')) if max_age is None else max_age
     max_smape = float(os.environ.get('FORECAST_MAX_SMAPE', '30')) if max_smape is None else max_smape
     age = (today - date.fromisoformat(result['latest_observation'])).days

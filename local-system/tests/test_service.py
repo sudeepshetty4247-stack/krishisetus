@@ -11,7 +11,7 @@ def request(client,action,payload):
     return client.post('/service/'+action,json={**payload,'owner':'test-owner'},headers={'Authorization':'Bearer unit-test-only-not-a-production-token'})
 
 def reports():
-    base={'state':'Karnataka','district':'Dharwad','commodity':'Maize','variety':'Local','date':'2025-01-02','source_name':'test-fixture'}
+    base={'state':'Karnataka','district':'Dharwad','commodity':'Maize','variety':'Local','date':'2025-01-02','source_name':'test-fixture','price_unit':'INR/quintal'}
     return [{**base,'market':'Dharwad','modal_price':2000},{**base,'market':'Hubballi','modal_price':2300}]
 
 def test_service_requires_token(client):

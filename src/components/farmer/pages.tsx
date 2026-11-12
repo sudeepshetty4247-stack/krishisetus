@@ -8,14 +8,14 @@ import heroImage from '@/assets/maize-field.jpg';
 import {useKrishi} from '../krishisetu-provider';
 import {useCopy} from './shell';
 import {useCatalog,useCoverageAll,useLatest,useCropReports,useMarketReports,useSourceChecks} from './data';
-import {latestByMarket,marketKey,rankOptions,sameDayOpportunity,priceStats,winDays,freshnessDays,zeroCosts,type Costs,type Option} from '@/lib/selling';
+import {latestByMarket,marketKey,rankOptions,sameDayOpportunity,priceStats,winDays,freshnessDays,zeroCosts,comparisonKey,comparableReport,type Costs,type Option} from '@/lib/selling';
 import type {Report} from '@/lib/agri-types';
 import {pythonAction} from '@/lib/agri.functions';
 import {NearbyMarkets} from './nearby';
 import {PriceTimestamps} from './price-timestamps';
 import {CropPicker} from './crop-picker';
 import {useModelRuns,useFilteredReports} from './data';
-import {findRun,ForecastBox} from './model-lab';
+import {findRun} from './model-lab';
 import {SellingPlans} from './selling-plan';
 import {saveSellingPlan} from '@/lib/plans';
 import {ageInIST,istTimestamp} from '@/lib/price-time';
@@ -68,24 +68,25 @@ export const loadPlans=():Saved[]=>{try{return JSON.parse(localStorage.getItem('
 function reportText(s:Saved,c:C){return [`KRISHISETU — ${s.crop} (${s.variety}), ${s.qty} ${c.quintals}`,`${c.yourMarket}: ${s.start}`,'',...s.rows.map(r=>`${r.market} | ${r.date} | ${rupee(r.price)}${c.perQuintal} | ${c.gross} ${rupee(r.gross)} | ${c.expenses} ${rupee(r.expenses)} | ${c.net} ${rupee(r.net)}`),'',c.noGuarantee].join('\n');}
 function downloadText(s:Saved,c:C){const blob=new Blob([reportText(s,c)],{type:'text/plain;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`krishisetu-${s.crop}-${s.savedAt.slice(0,10)}.txt`;a.click();URL.revokeObjectURL(a.href);}
 export function FindMarketPage({initial}:{initial:{crop?:string|undefined;qty?:number|undefined;market?:string|undefined}}){const c=useCopy();const cat=useCatalog();
- const [crop,setCrop]=useState(initial.crop||'');const [qty,setQty]=useState(String(initial.qty||20));const [variety,setVariety]=useState('');const [state,setState]=useState('');const [start,setStart]=useState('');const [costs,setCosts]=useState<Record<string,Costs>>({});const [msg,setMsg]=useState('');
- const reports=useCropReports(crop);const rows=reports.data||[];
+ const [crop,setCrop]=useState(initial.crop||'');const [qty,setQty]=useState(String(initial.qty||20));const [variety,setVariety]=useState('');const [state,setState]=useState('');const [start,setStart]=useState('');const [costs,setCosts]=useState<Record<string,Costs>>({});const [msg,setMsg]=useState('');const [selectedReport,setSelectedReport]=useState<Report|null>(null);
+ const reports=useCropReports(crop);const rows=selectedReport?.commodity===crop?[selectedReport,...(reports.data||[]).filter(r=>r.id!==selectedReport.id)]:reports.data||[];
  const varieties=[...new Set(rows.map(r=>r.variety))];const v=variety&&varieties.includes(variety)?variety:varieties[0]||'';
  const sources=[...new Set(rows.filter(r=>r.variety===v).map(r=>r.source_name))];
- const allLatest=useMemo(()=>latestByMarket(rows.filter(r=>r.variety===v&&r.source_name===sources[0])),[rows,v,sources[0]]);
+ const source=selectedReport?.commodity===crop&&selectedReport.variety===v?selectedReport.source_name:sources[0];
+ const allLatest=useMemo(()=>latestByMarket(rows.filter(r=>r.variety===v&&r.source_name===source)),[rows,v,source]);
  // Default comparison stays within the starting market's state; farmers can widen it with the state selector.
  const effState=state||(start?start.split('|')[0]:'')||'';const latest=useMemo(()=>allLatest.filter(r=>!effState||r.state===effState),[allLatest,effState]);
  const states=[...new Set(rows.map(r=>r.state))].sort();
  const initialReport=initial.market?latest.find(r=>r.market===initial.market):undefined;
  const startKey=start||(initialReport?marketKey(initialReport):'');
- const q=Number(qty);const {options,start:startOpt}=rankOptions(latest,startKey,q,costs);
+ const q=Number(qty);const {options,start:startOpt,excluded}=rankOptions(latest,startKey,q,costs);
  const bestNet=options[0];const bestPrice=[...options].sort((a,b)=>b.report.modal_price-a.report.modal_price)[0];
  const setCost=(k:string,f:keyof Costs,val:string)=>setCosts(o=>({...o,[k]:{...(o[k]||zeroCosts),[f]:Math.max(0,Number(val)||0)}}));
  const toSaved=():Saved=>({id:crypto.randomUUID(),savedAt:new Date().toISOString(),crop,variety:v,qty:q,start:startOpt?.report.market||'',rows:options.map(o=>({market:o.report.market,date:o.report.date,price:o.report.modal_price,gross:o.gross,expenses:o.expenses,net:o.net}))});
  const crops=cat.data?.commodities||[];
  return <div className="ks-wrap ks-flow">
   <div className="ks-page-head"><h1>{c.find}</h1><p>{c.promise}</p></div>
-  <NearbyMarkets crop={crop||undefined} onPick={l=>{setState(l.state);setStart(marketKey(l));}}/>
+  <NearbyMarkets crop={crop||undefined} variety={v||undefined} onPick={(l,r)=>{setSelectedReport(r);setState(l.state);setVariety(r.variety);setStart(marketKey(l));}}/>
   <Step n={1} title={c.sCrop} c={c}>{cat.isLoading?<Loading c={c}/>:crops.length?<CropPicker crops={crops} value={crop} onChange={x=>{setCrop(x);setStart('');setVariety('');}} placeholder={c.searchCrop}/>:<Notice tone="warn">{c.noCrops}</Notice>}</Step>
   {crop&&!cat.isLoading&&crops.length>0&&!crops.includes(crop)&&<CustomCropPlan crop={crop} qty={Number(qty)} c={c}/>}
   <Step n={2} title={c.sQty} c={c}><label className="ks-qty big"><input aria-label={c.qQty} type="number" min="0.1" step="0.1" inputMode="decimal" value={qty} onChange={e=>setQty(e.target.value)}/><span>{c.quintals}</span></label><small className="ks-hint">{c.quintalHint}</small>{!(q>0)&&<Notice tone="error">{c.qQty}</Notice>}</Step>
@@ -96,18 +97,20 @@ export function FindMarketPage({initial}:{initial:{crop?:string|undefined;qty?:n
   </div>}<Notice>{c.distanceNote}</Notice></Step>}
   {crop&&startOpt&&q>0&&bestNet&&bestPrice&&<>
    <Step n={4} title={`${c.sMarkets} (${options.length})`} c={c}>
+    {excluded>0&&<Notice tone="warn">{excluded} · {c.dateWarn}</Notice>}
+    {ageInIST(bestNet.report.date)>7&&<Notice tone="warn">{c.reportedOn}: {bestNet.report.date} · {c.noGuarantee}</Notice>}
     <div className="ks-highlights"><Highlight icon={<Trophy/>} label={c.bestNet} o={bestNet} c={c} value={rupee(bestNet.net)}/><Highlight icon={<IndianRupee/>} label={c.bestPrice} o={bestPrice} c={c} value={`${rupee(bestPrice.report.modal_price)}${c.perQuintal}`}/></div>
     <div className="ks-option-grid">{options.map((o,i)=><OptionCard key={o.key} o={o} rank={i+1} c={c} costs={costs[o.key]||zeroCosts} setCost={(f,val)=>setCost(o.key,f,val)}/>)}</div>
     <small className="ks-hint">{c.costHint}</small>
    </Step>
-   <Step n={5} title={c.sResult} c={c}><div className="ks-result"><CheckCircle2/><div><p className="ks-lead">{c.resultText}</p><h3>{bestNet.report.market} — {rupee(bestNet.net)}</h3>
+   <Step n={5} title={c.sResult} c={c}><div className="ks-result"><CheckCircle2/><div><p className="ks-lead">{ageInIST(bestNet.report.date)>7?`${c.reportedOn}: ${bestNet.report.date} · ${c.noGuarantee}`:c.resultText}</p><h3>{bestNet.report.market} — {rupee(bestNet.net)}</h3>
     <p className="ks-why"><b>{c.why}</b> {bestNet.isStart?`${c.yourMarket}: ${rupee(bestNet.report.modal_price)}${c.perQuintal} × ${q} = ${rupee(bestNet.gross)} − ${rupee(bestNet.expenses)}.`:`${rupee(bestNet.report.modal_price)} vs ${rupee(startOpt.report.modal_price)}${c.perQuintal} (${c.yourMarket}) × ${q} ${c.quintals} = +${rupee(bestNet.gross-startOpt.gross)} ${c.gross}; ${c.expenses} ${rupee(bestNet.expenses)} vs ${rupee(startOpt.expenses)} → +${rupee(bestNet.advantage)} ${c.net}.`}</p>
     {!bestNet.sameDate&&<Notice tone="warn">{c.dateWarn}</Notice>}<p className="ks-fine">{c.noGuarantee}</p></div></div>
     <div className="ks-table-wrap"><table className="ks-table"><thead><tr><th>#</th><th>APMC</th><th>{c.reportedOn}</th><th>{c.price}</th><th>{c.gross}</th><th>{c.expenses}</th><th>{c.net}</th></tr></thead><tbody>{options.map((o,i)=><tr key={o.key} className={o.isStart?'start':''}><td>{i+1}</td><td>{o.report.market}{o.isStart&&<small> · {c.yourMarket}</small>}</td><td>{o.report.date}{!o.sameDate&&' ⚠'}</td><td>{rupee(o.report.modal_price)}</td><td>{rupee(o.gross)}</td><td>{rupee(o.expenses)}</td><td><b>{rupee(o.net)}</b></td></tr>)}</tbody></table></div>
     <div className="ks-actions"><Button variant="default" size="lg" onClick={()=>{const s=toSaved();saveSellingPlan({id:s.id,savedAt:s.savedAt,crop,variety:v,quantity:q,unit:'quintal',location:startOpt.report.market,sellingDate:'',marketKey:bestNet.key,costs,reports:latest});localStorage.setItem('krishisetu-plans',JSON.stringify([s,...loadPlans()].slice(0,50)));setMsg(c.saved);}}><Save/>{c.save}</Button><Button variant="outline" size="lg" onClick={()=>downloadText(toSaved(),c)}><Download/>{c.download}</Button><Button variant="outline" size="lg" onClick={async()=>{const text=reportText(toSaved(),c);if(navigator.share){try{await navigator.share({title:'KRISHISETU',text});}catch{/* cancelled */}}else{await navigator.clipboard.writeText(text);setMsg(c.copied);}}}><Share2/>{c.share}</Button>{msg&&<span className="ks-ok"><CheckCircle2/>{msg}</span>}</div>
    </Step></>}
   {crop&&latest.length>0&&!startOpt&&<Notice>{c.chooseMarket}</Notice>}
-  {crop&&rows.length>0&&<Step n={6} title={c.history} c={c}><HistoryChart rows={rows.filter(r=>r.variety===v)} keyOf={r=>r.market} c={c}/></Step>}
+  {crop&&rows.length>0&&<Step n={6} title={c.history} c={c}><HistoryChart rows={rows.filter(r=>r.variety===v&&r.source_name===source)} keyOf={r=>`${r.market} · ${r.grade||'—'}`} c={c}/></Step>}
  </div>;}
 // Farmer-entered crop without official reports: save a draft plan with no price, never an invented one.
 function CustomCropPlan({crop,qty,c}:{crop:string;qty:number;c:C}){const [loc,setLoc]=useState('');const [done,setDone]=useState(false);
@@ -140,8 +143,8 @@ function MarketDetail({market,c,onClose}:{market:string;c:C;onClose:()=>void}){c
 
 /* ---------------- COMPARE ---------------- */
 export function ComparePage(){const c=useCopy();const cat=useCatalog();const [crop,setCrop]=useState('');const [variety,setVariety]=useState('');const [picked,setPicked]=useState<string[]>([]);const q=useCropReports(crop);const rows=q.data||[];
- const varieties=[...new Set(rows.map(r=>r.variety))];const v=variety||varieties[0]||'';const sub=rows.filter(r=>r.variety===v);const latest=latestByMarket(sub);const chosen=sub.filter(r=>picked.includes(marketKey(r)));const {wins,shared}=winDays(sub,picked);
- const lat=latestByMarket(chosen);const dates=new Set(lat.map(r=>r.date));
+ const varieties=[...new Set(rows.map(r=>r.variety))];const v=variety||varieties[0]||'';const ref=rows.find(r=>r.variety===v&&comparableReport(r));const sub=rows.filter(r=>r.variety===v&&comparableReport(r)&&r.source_name===ref?.source_name&&(r.grade||'')===(ref?.grade||''));const latest=latestByMarket(sub);const chosen=sub.filter(r=>picked.includes(marketKey(r)));const {wins,shared}=winDays(sub,picked);
+ const lat=latestByMarket(chosen);const dates=new Set(lat.map(r=>comparisonKey(r)));
  return <div className="ks-wrap"><div className="ks-page-head"><h1>{c.compare}</h1><p>{c.compareHint}</p></div>
   <div className="ks-searchbar"><CropPicker crops={cat.data?.commodities||[]} value={crop} onChange={x=>{setCrop(x);setPicked([]);setVariety('');}} placeholder={c.searchCrop}/>{varieties.length>1&&<select value={v} onChange={e=>{setVariety(e.target.value);setPicked([]);}} aria-label={c.variety}>{varieties.map(x=><option key={x}>{x}</option>)}</select>}</div>
   {!crop?<Notice>{c.chooseFirst}</Notice>:q.isLoading?<Loading c={c}/>:!latest.length?<Notice tone="warn">{c.noMarkets}</Notice>:<>
@@ -158,15 +161,18 @@ export function TrendsPage(){const c=useCopy();const {user}=useKrishi();const ca
  const recent=series.slice(-10).map(r=>r.modal_price),older=series.slice(-20,-10).map(r=>r.modal_price);const ra=priceStats(recent)?.mean,oa=priceStats(older)?.mean;const dir=ra&&oa?(ra-oa)/oa>0.02?'up':(ra-oa)/oa<-0.02?'down':'stable':null;
  async function forecast(){if(!sub[0])return;setFc({state:'busy'});try{const res=await run({data:{action:'forecast',payload:{horizon:h,filters:{state:sub[0].state,district:sub[0].district,market:m,commodity:crop,variety:v||'',source:sub[0].source_name}}}});if(!res.available)setFc({state:'service'});else if(!res.result||(res.result as Record<string,unknown>)['error'])setFc({state:'none'});else setFc({state:'ok',data:res.result as Record<string,unknown>});}catch{setFc({state:'none'});}}
  return <div className="ks-wrap"><div className="ks-page-head"><h1>{c.trends}</h1><p>{c.fcText}</p></div>
-  <div className="ks-searchbar"><CropPicker crops={cat.data?.commodities||[]} value={crop} onChange={x=>{setCrop(x);setMarket('');}} placeholder={c.searchCrop}/><select value={m} onChange={e=>{setMarket(e.target.value);setFc({state:'idle'});}} disabled={!markets.length} aria-label={c.chooseMarket}>{markets.map(x=><option key={x}>{x}</option>)}</select><div className="ks-seg" role="group" aria-label={c.period}>{[7,14,28].map(d=><button key={d} className={h===d?'on':''} onClick={()=>{setH(d);setFc({state:'idle'});}}>{d} {c.days}</button>)}</div></div>
+  <div className="ks-searchbar"><CropPicker crops={cat.data?.commodities||[]} value={crop} onChange={x=>{setCrop(x);setMarket('');setFc({state:'idle'});}} placeholder={c.searchCrop}/><select value={m} onChange={e=>{setMarket(e.target.value);setFc({state:'idle'});}} disabled={!markets.length} aria-label={c.chooseMarket}>{markets.map(x=><option key={x}>{x}</option>)}</select><div className="ks-seg" role="group" aria-label={c.period}>{[7,14,30].map(d=><Button variant="ghost" size="sm" key={d} className={h===d?'on':''} onClick={()=>{setH(d);setFc({state:'idle'});}}>{d} {c.days}</Button>)}</div></div>
   {!crop?<Notice>{c.chooseFirst}</Notice>:q.isLoading?<Loading c={c}/>:!series.length?<Notice tone="warn">{c.noMarkets}</Notice>:<>
    {dir&&<div className={`ks-trend ${dir}`}>{dir==='up'?<TrendingUp/>:dir==='down'?<TrendingDown/>:<Minus/>}<div><b>{c[dir]}</b><small>{c.actual}: {rupee(oa!)} → {rupee(ra!)} ({series.at(-1)?.date})</small></div></div>}
    <Section title={`${c.history} — ${m}`}><HistoryChart rows={series} keyOf={()=>c.actual} c={c}/></Section>
    <TrendForecast crop={crop} market={m} district={sub[0]?.district} h={h} c={c}/>
+   <Button disabled={!user||fc.state==='busy'} onClick={forecast}><TrendingUp/>{c.estimate} · {h} {c.days}</Button>
+   {!user&&<Notice>{c.fcSignIn}</Notice>}{fc.state==='service'&&<Notice tone="warn">{c.fcService}</Notice>}{fc.state==='none'&&<Notice tone="warn">{c.fcUnavailable}</Notice>}
+   {fc.state==='ok'&&typeof fc.data?.['forecast']==='number'&&<Notice>{c.estimate}: {rupee(fc.data['forecast'])} · {c.reportedOn}: {String(fc.data['latest_observation']||'—')} · {c.noGuarantee}</Notice>}
   </>}</div>;}
 
 function TrendForecast({crop,market,district,h,c}:{crop:string;market:string;district?:string|undefined;h:number;c:C}){const runs=useModelRuns();const run=findRun(runs.data,crop,market,district);const hr=run?.report.horizons[String(h/7)];
- return <Section title={`${c.estimate} · ${h} ${c.days}`}>{runs.isLoading?<Loading c={c}/>:!run?<Notice>{c.fcUnavailable} No validated model has been trained for {crop} at {market}. Trained markets are listed in Research Mode.</Notice>:!hr||hr.status!=='trained'?<Notice tone="warn">{hr?.reason||c.fcUnavailable}</Notice>:<><p className="ks-fine">{hr.selected} · test MAE ₹{Math.round(hr.test[hr.selected]?.MAE??0)} · sMAPE {(hr.test[hr.selected]?.sMAPE??0).toFixed(1)}% · {hr.baseline_beaten?'beats naive baseline':'baseline-level skill'}</p><ForecastBox h={hr}/><Link to="/research" className="ks-link">Model comparison<ArrowRight/></Link></>}<p className="ks-fine">{c.noGuarantee}</p></Section>;}
+  return <Section title={`${c.estimate} · ${h} ${c.days}`}>{runs.isLoading?<Loading c={c}/>:<Notice tone="warn">{c.fcUnavailable}</Notice>}{run&&<Link to="/research" className="ks-link">{c.history}<ArrowRight/></Link>}<p className="ks-fine">{c.noGuarantee}</p></Section>;}
 /* ---------------- PLAN ---------------- */
 export function PlanPage(){return <SellingPlans/>;}
 

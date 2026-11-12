@@ -46,6 +46,9 @@ use the editor.
 - Official publication runs through an authenticated scheduled callback and a service-role-only transactional batch RPC; only fixed official connector observations qualify, never uploaded source assertions.
 - Nearby discovery uses authenticated bounded Google Places searches and explicit on-demand Routes calls; provider places remain separate from price market identities until verified matching exists.
 - Python deployment uses one persistent-volume service process with atomic job files and SQLite online backups; local loopback pages remain isolated from its authenticated service endpoints.
+- Python container entrypoint is FastAPI with authenticated versioned endpoints and the compatible mounted Flask service; preserve the independent local Flask UI to avoid breaking Windows workflows.
+- Analytical history is activated through checksum/count/business-key validation on a persistent Parquet volume and queried with bounded DuckDB pagination; sandbox files alone never establish hosted availability.
+- Selling ranks require matching reporting date, crop, variety, grade, explicit quintal unit and source; uncertain geocoding is excluded from precise yard-distance ranking and road routing.
 - Research imports and training require server-verified roles plus restrictive import policies; no account is promoted automatically.
 - Current daily prices come from data.gov.in resource 9ef84268 (direct API when DATA_GOV_IN_API_KEY exists, else the GODL relay) via `src/lib/mandi-sync.server.ts` every 3 hours; every run is logged in agri_source_runs and success is recorded only when rows are stored.
 - Long history comes from the GODL variety-wise compilation via `local-system/data_engine/history_import.py`; commodity names are canonicalised (no space before "(") identically in both pipelines.

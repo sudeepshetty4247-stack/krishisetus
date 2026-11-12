@@ -1,5 +1,13 @@
 # KRISHISETU
 
+## Critical production resolution
+- [x] FastAPI service, honest readiness, authenticated model/history endpoints and deployment configuration; local HTTP history verified, missing-model forecasts reject.
+- [x] Re-acquired and activated all 24,656,469 genuine historical records with checksum/count/business-key checks; filtered API pagination/aggregation verified locally, not hosted.
+- [x] Compatible date/crop/variety/grade/unit/source selling ranks and uncertain-distance safeguards; selected nearby report retains its exact source identity.
+- [x] Preserve daily history, exponential retries, explicit persistence errors and schedule audit; new retention behaviour not yet exercised by a scheduled published run.
+- [x] 51 frontend + 50 Python regression tests; real current maize 20q expense/save/edit/reload/delete, GPS denial, 7/14/30 unavailable and history-unavailable browser checks; A–N report.
+- [ ] External Python HTTPS deployment, durable nationwide data transfer and current forecast acceptance — blocked by hosting/credentials and recent history.
+
 ## Final master implementation audit
 - [x] Rechecked hosted coverage/retrieval logs; existing artifact paths were absent in this sandbox, so re-executed genuine Hubli maize training and saved artifacts.
 - [x] Prepared 24,656,469 nationwide historical records (32 state/territory labels; 2021–21 Apr 2026) in bounded-memory state partitions; not published to the website.

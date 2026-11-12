@@ -29,7 +29,7 @@ async function getJson(url:string,init?:RequestInit):Promise<any>{
    last=`[${res.status}] ${(await res.text()).slice(0,300)}`;
    if(res.status!==429&&res.status<500)break;
   }catch(e){last=e instanceof Error?e.message:String(e);}
-  await new Promise(r=>setTimeout(r,800*(attempt+1)));
+  if(attempt<2)await new Promise(r=>setTimeout(r,800*2**attempt));
  }
  throw new Error(last||'request failed');
 }
@@ -90,13 +90,16 @@ export async function syncDailyMandi(opts:{date?:string|undefined}={}){
  const reportDate=records.reduce((m,r)=>r.date>m?r.date:m,'')||null;
  const status=stored>0?(errors.length?'partial':'success'):received?'failed':'no_records';
  const message=`${stored} reports stored from ${received} received${reportDate?` · latest market report ${reportDate}`:''}`;
- await supabaseAdmin.from('agri_source_runs').insert({source:DAILY_SOURCE,report_date:reportDate,started_at:started,finished_at:new Date().toISOString(),status,requested:received,received,stored,rejected:received-records.length,message,errors:errors.slice(0,50)});
+ const {error:runError}=await supabaseAdmin.from('agri_source_runs').insert({source:DAILY_SOURCE,report_date:reportDate,started_at:started,finished_at:new Date().toISOString(),status,requested:received,received,stored,rejected:received-records.length,message,errors:errors.slice(0,50)});
+ if(runError)errors.push(`ingestion log: ${runError.message}`);
  if(stored>0){
-  await supabaseAdmin.from('agri_sync_state').upsert({source:DAILY_SOURCE,status,last_success:new Date().toISOString(),updated_at:new Date().toISOString(),message,next_offset:0});
-  await supabaseAdmin.rpc('prune_official_reports',{p_source:DAILY_SOURCE,p_keep_days:21});
+  const {error:stateError}=await supabaseAdmin.from('agri_sync_state').upsert({source:DAILY_SOURCE,status,last_success:new Date().toISOString(),updated_at:new Date().toISOString(),message,next_offset:0});
+  if(stateError)errors.push(`sync status: ${stateError.message}`);
+  // Retain every verified daily observation. Source failures and newer snapshots must not erase history.
   const {error:sumErr}=await supabaseAdmin.rpc('refresh_agri_summary');if(sumErr)errors.push(`summary: ${sumErr.message}`);
  }else{
-  await supabaseAdmin.from('agri_sync_state').upsert({source:DAILY_SOURCE,status,updated_at:new Date().toISOString(),message:errors[0]??message,next_offset:0},{onConflict:'source',ignoreDuplicates:false});
+  const {error:stateError}=await supabaseAdmin.from('agri_sync_state').upsert({source:DAILY_SOURCE,status,updated_at:new Date().toISOString(),message:errors[0]??message,next_offset:0},{onConflict:'source',ignoreDuplicates:false});
+  if(stateError)errors.push(`sync status: ${stateError.message}`);
  }
- return {status,stored,received,rejected:received-records.length,reportDate,errors:errors.slice(0,10),message};
+ return {status:errors.length&&stored>0?'partial':status,stored,received,rejected:received-records.length,reportDate,errors:errors.slice(0,10),message};
 }
