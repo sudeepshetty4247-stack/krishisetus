@@ -1,5 +1,12 @@
 # KRISHISETU
 
+## Production implementation (current request)
+- [ ] Recheck linked CEDA and public official downloads; record actual access and licensing limitations.
+- [ ] Implement resumable historical source ingestion and persistent hosted publication of verified rows.
+- [ ] Add permission-based nearby discovery with verified locations and manual fallback.
+- [ ] Strengthen Python validation, forecast lookup, reliability gates and deployment/recovery.
+- [ ] Verify real-data flows where accessible; explicitly distinguish external deployment and source blockers.
+
 ## Current website completion
 - [x] Persistent hosted schema, owner-private CSV/XLSX imports, source checks and import history implemented.
 - [x] Eleven visible pages, national dataset filters, paginated reports, source-dated charts and Python action controls implemented.
