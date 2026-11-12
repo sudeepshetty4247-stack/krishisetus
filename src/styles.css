@@ -564,6 +564,7 @@ button, a, input, select { outline-offset: 4px; }
 .ks-ticker .up{color:var(--primary)}.ks-ticker .down{color:var(--destructive)}
 /* crop discovery panel */
 .ks-crop-panel{position:absolute;top:100%;left:0;right:0;z-index:40;margin-top:.3rem;background:var(--card);border:1px solid var(--border);border-radius:1rem;box-shadow:var(--shadow-lg,0 12px 32px -12px color-mix(in oklab,var(--primary) 35%,transparent));padding:.75rem;display:grid;gap:.6rem;max-height:min(70vh,460px);overflow:auto}
+.ks-quick .ks-crop-panel{position:static;margin-top:.3rem;max-height:320px;border-radius:8px;box-shadow:none;overscroll-behavior:contain}
 .ks-crop-panel small{display:flex;align-items:center;gap:.35rem;font-size:.78rem;font-weight:600;color:var(--muted-foreground);text-transform:uppercase;letter-spacing:.04em}
 .ks-crop-panel small svg{width:14px;height:14px}
 .ks-crop-browse,.ks-crop-manual{display:grid;gap:.5rem}
