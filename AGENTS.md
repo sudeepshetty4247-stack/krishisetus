@@ -37,3 +37,6 @@ use the editor.
 - Never seed agricultural prices or render evaluation metrics without a verified input dataset and an executed validation pipeline.
 - Keep the independent Flask/SQLite/Parquet source in `local-system`, outside the hosted application import graph; Python cannot execute in the Lovable hosted runtime.
 - Local research groups are source/market/commodity/variety-specific, with direct calendar-horizon targets and purged chronological validation; this prevents source mixing and future-target leakage.
+- Farmer pages live in `src/components/farmer/*` inside `AppShell`; research/admin pages reuse legacy `krishisetu.tsx` via `Layout` → `AppShell research`. Keeps farmer UX free of dataset/upload tooling.
+- Selling math lives in `src/lib/selling.ts` (mirrors `local-system/intelligence_engine/decisions.py`) and is covered by `src/test/selling.test.ts`; keep both formulas identical.
+- Farmer-facing copy is centralized in `src/lib/farmer-copy.ts` (English fallback for missing keys).

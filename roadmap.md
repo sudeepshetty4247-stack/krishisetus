@@ -25,3 +25,13 @@
 - [ ] Complete local feature parity, charts, full translations, maps, alerts and automatic retraining — source-dependent analytics and review remain unfinished.
 - [ ] Connect the existing preview to an available Python service without changing its design — hosted Lovable cannot execute Python; requires an externally reachable Python deployment or local execution.
 - [ ] Retrieve genuine source observations, execute model comparison and publish a reproducible research evaluation — requires authorized source access or a verified historical file.
+## Farmer-first rebuild (Nov 2026)
+- [x] Compact 5-item nav + More menu + mobile bottom bar; Farmer/Research modes share one dataset.
+- [x] New home (quick sell form, latest prices, same-day opportunity, how-it-works, trust).
+- [x] Guided Find Best Market: crop cards, quantity, starting market, per-market expenses, net ranking, break-even, save/download/share.
+- [x] Market Prices with detail sheet, Compare (2–5 markets), Price Trends, My Selling Plan, How It Works, About.
+- [x] CSV/Excel import moved to Research → Data quality only.
+- [x] Farmer pages translated in all 7 languages (research pages still en/kn only).
+- [ ] Real official prices — blocked: CEDA API key not provided; data.gov.in unreachable from sandbox.
+- [ ] Python forecasts/model metrics — blocked: no hosted Python service URL configured.
+- [ ] Market map / road distance — blocked: no verified market coordinates or routing source.

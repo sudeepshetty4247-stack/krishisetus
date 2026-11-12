@@ -500,3 +500,6 @@ button, a, input, select { outline-offset: 4px; }
  .ks-flow-step{grid-template-columns:1fr;padding:18px}.ks-flow-n{width:auto;height:auto;flex-direction:row;gap:6px;justify-content:flex-start;background:none;color:var(--leaf);font-size:15px}
  .ks-option-grid,.ks-plan-list{grid-template-columns:1fr}.ks-quick{padding:20px}.ks-price-value{font-size:30px}
 }
+.ks-app .ks-lang select{width:auto;height:36px;border:0;padding:0 4px;font-size:15px;font-weight:600;background:transparent}
+@media (max-width:1400px){.ks-brand small{display:none}}
+.ks-highlight span.ks-fresh{font-size:14px;font-weight:600}

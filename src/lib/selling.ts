@@ -22,5 +22,5 @@ export function sameDayOpportunity(rows:Report[]){const g=new Map<string,Report[
 export function priceStats(prices:number[]){if(!prices.length)return null;const mean=prices.reduce((a,b)=>a+b,0)/prices.length;const sd=Math.sqrt(prices.reduce((a,b)=>a+(b-mean)**2,0)/prices.length);return {mean,cv:prices.length>1?sd/mean:null};}
 /** Count, on dates where all chosen markets reported, how often each had the highest modal price. */
 export function winDays(rows:Report[],keys:string[]){const byDate=new Map<string,Map<string,number>>();for(const r of rows){const k=marketKey(r);if(!keys.includes(k))continue;const d=byDate.get(r.date)||new Map();d.set(k,r.modal_price);byDate.set(r.date,d);}
- const wins:Record<string,number>=Object.fromEntries(keys.map(k=>[k,0]));let shared=0;for(const d of byDate.values()){if(d.size!==keys.length)continue;shared++;const top=Math.max(...d.values());for(const [k,v]of d)if(v===top)wins[k]++;}return {wins,shared};}
+ const wins:Record<string,number>=Object.fromEntries(keys.map(k=>[k,0]));let shared=0;for(const d of byDate.values()){if(d.size!==keys.length)continue;shared++;const top=Math.max(...d.values());for(const [k,v]of d)if(v===top)wins[k]=(wins[k]||0)+1;}return {wins,shared};}
 export function freshnessDays(date:string,now=new Date()){return Math.max(0,Math.floor((now.getTime()-new Date(date+'T00:00:00').getTime())/86400000));}
