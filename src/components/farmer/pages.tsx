@@ -7,15 +7,14 @@ import {Button} from '@/components/ui/button';
 import heroImage from '@/assets/maize-field.jpg';
 import {useKrishi} from '../krishisetu-provider';
 import {useCopy} from './shell';
-import {useCatalog,useCoverageAll,useLatest,useCropReports,useMarketReports,useSourceChecks} from './data';
-import {latestByMarket,marketKey,rankOptions,sameDayOpportunity,priceStats,winDays,freshnessDays,zeroCosts,comparisonKey,comparableReport,type Costs,type Option} from '@/lib/selling';
+import {useCatalog,useCoverageAll,useLatest,useCropReports,useMarketReports} from './data';
+import {latestByMarket,marketKey,rankOptions,priceStats,winDays,zeroCosts,comparisonKey,comparableReport,type Costs,type Option} from '@/lib/selling';
 import type {Report} from '@/lib/agri-types';
 import {pythonAction} from '@/lib/agri.functions';
 import {NearbyMarkets} from './nearby';
 import {PriceTimestamps} from './price-timestamps';
 import {CropPicker} from './crop-picker';
-import {useModelRuns,useFilteredReports} from './data';
-import {findRun} from './model-lab';
+import {useFilteredReports} from './data';
 import {SellingPlans} from './selling-plan';
 import {saveSellingPlan} from '@/lib/plans';
 import {ageInIST,istTimestamp} from '@/lib/price-time';
@@ -32,34 +31,31 @@ function Loading({c}:{c:C}){return <div className="ks-loading">{c.loadingText}</
 /* ---------------- HOME ---------------- */
 // Live Indian time; rendered after hydration so server and browser markup match.
 function IstClock(){const [now,setNow]=useState<Date|null>(null);useEffect(()=>{setNow(new Date());const t=setInterval(()=>setNow(new Date()),1000);return ()=>clearInterval(t);},[]);if(!now)return null;return <span className="ks-clock"><Clock/>{new Intl.DateTimeFormat('en-IN',{timeZone:'Asia/Kolkata',weekday:'short',day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true}).format(now)} IST</span>;}
-export function FarmerHome(){const c=useCopy();const nav=useNavigate();const cat=useCatalog();const latest=useLatest(200);const cov=useCoverageAll();const checks=useSourceChecks();
- const [crop,setCrop]=useState('');const [qty,setQty]=useState('20');const [market,setMarket]=useState('');
- const crops=cat.data?.commodities||[];const markets=cat.data?.markets||[];const rows=latest.data||[];const cards=latestByMarket(rows).slice(0,6);const opp=sameDayOpportunity(rows);const okCheck=checks.data?.find(x=>x.status==='ok'||x.status==='success');
+export function FarmerHome(){const c=useCopy();const nav=useNavigate();const cat=useCatalog();const latest=useLatest(200);const cov=useCoverageAll();
+ const [crop,setCrop]=useState('');const [qty,setQty]=useState('20');
+ const crops=cat.data?.commodities||[];const homeReports=useCropReports(crop);const rows=crop?(homeReports.data||[]):latest.data||[];const cards=latestByMarket(rows).slice(0,6);
  return <>
   <section className="ks-hero"><img src={heroImage} alt="" className="ks-hero-img"/><div className="ks-wrap ks-hero-grid">
-   <div className="ks-hero-text"><div className="ks-eyebrow light">KRISHISETU · India · <IstClock/></div><h1>{c.heroTitle}</h1><p>{c.heroSub}</p></div>
-   <form className="ks-quick" onSubmit={e=>{e.preventDefault();void nav({to:'/find-market',search:{crop:crop||undefined,qty:Number(qty)||undefined,market:market||undefined}});}}>
+   <div className="ks-hero-text"><div className="ks-eyebrow light">KRISHISETU · India · <IstClock/></div><h1>KRISHISETU</h1><p>{c.homeIntro}</p></div>
+   <form className="ks-quick" onSubmit={e=>{e.preventDefault();void nav({to:'/find-market',search:{crop:crop||undefined,qty:Number(qty)||undefined,market:undefined}});}}>
     <h2><Scale/>{c.find}</h2>
     <div className="ks-quick-field">{c.qCrop}<CropPicker crops={crops} value={crop} onChange={setCrop} placeholder={c.searchCrop}/></div>
     <label>{c.qQty}<div className="ks-qty"><input type="number" min="0.1" step="0.1" inputMode="decimal" value={qty} onChange={e=>setQty(e.target.value)}/><span>{c.quintals}</span></div><small>{c.quintalHint}</small></label>
-    <label>{c.qLoc}<select value={market} onChange={e=>setMarket(e.target.value)} disabled={!markets.length}><option value="">{c.chooseMarket}</option>{markets.map(x=><option key={x}>{x}</option>)}</select></label>
-    <Button type="submit" variant="harvest" size="lg" className="ks-big-btn">{c.findBtn}<ArrowRight/></Button>
+    <Button type="submit" variant="harvest" size="lg" className="ks-big-btn" disabled={!crop||!(Number(qty)>0)}>{c.findBtn}<ArrowRight/></Button>
     {!crops.length&&!cat.isLoading&&<small className="ks-quick-note">{c.noCrops}</small>}
    </form></div></section>
   <div className="ks-wrap">
-   <NearbyMarkets/>
-   <Section title={c.latestTitle} eyebrow={c.freshNote} action={<Link to="/markets" className="ks-link">{c.prices}<ArrowRight/></Link>}>
-    {latest.isLoading?<Loading c={c}/>:latest.error?<Notice tone="error">{c.error}</Notice>:cards.length?<div className="ks-card-grid">{cards.map(r=><PriceCard key={r.id} r={r} c={c}/>)}</div>:<Notice tone="warn">{c.latestNone}</Notice>}
+   <Section title={crop?`${crop} · ${c.latestTitle}`:c.latestTitle} eyebrow={c.reportedOnly} action={<Link to="/markets" className="ks-link">{c.prices}<ArrowRight/></Link>}>
+    {(crop?homeReports.isLoading:latest.isLoading)?<Loading c={c}/>:(crop?homeReports.error:latest.error)?<Notice tone="error">{c.error}</Notice>:cards.length?<div className="ks-card-grid">{cards.map(r=><PriceCard key={r.id} r={r} c={c} onClick={()=>void nav({to:'/markets',search:{crop:r.commodity,market:r.market}})}/>)}</div>:<Notice tone="warn">{c.latestNone}</Notice>}
    </Section>
-   <Section title={c.oppTitle}>{opp?<div className="ks-opp"><div><p className="ks-lead">{c.oppText}</p><div className="ks-opp-row"><div><small>{opp.low.market}</small><b>{rupee(opp.low.modal_price)}</b></div><ArrowRight/><div className="hi"><small>{opp.high.market}</small><b>{rupee(opp.high.modal_price)}</b></div></div><Fresh date={opp.high.date} c={c}/></div><div className="ks-opp-figs"><div><small>{c.diff}</small><b>{rupee(opp.diff)}{c.perQuintal}</b></div><div><small>{c.grossDiff}</small><b>{rupee(opp.diff*20)}</b></div><small>{opp.high.commodity} · {opp.high.variety} · {c.source}: {opp.high.source_name}</small></div></div>:<Notice>{c.oppNone}</Notice>}</Section>
    <Section title={c.howTitle}><div className="ks-steps">{[c.how1,c.how2,c.how3].map((s,i)=><div key={s} className="ks-step"><span>{i+1}</span><p>{s}</p></div>)}</div></Section>
-   <Section title={c.trustTitle}><div className="ks-trust">
+   <details className="ks-disclosure"><summary>{c.trustTitle}</summary><div className="ks-trust">
     <div><ShieldCheck/><h3>{c.source}</h3><p>{[...new Set(rows.map(r=>r.source_name))].join(', ')||'CEDA / AGMARKNET · data.gov.in'}</p></div>
     <div><CalendarDays/><h3>{c.lastUpdate}</h3><p>{cov.data?.last_update?istTimestamp(cov.data.last_update):c.noUpdate}</p></div>
     <div><Database/><h3>{c.coverage}</h3><p>{cov.data?.records?`${cov.data.records.toLocaleString('en-IN')} ${c.records} · ${cov.data.earliest} → ${cov.data.latest}`:c.latestNone.split('.')[0]+'.'}</p></div>
     <div><IndianRupee/><h3>{c.calcTitle}</h3><p>{c.calcText}</p></div>
     <div><TrendingUp/><h3>{c.fcTitle}</h3><p>{c.fcText}</p></div>
-   </div></Section>
+   </div></details>
   </div></>;}
 
 /* ---------------- FIND BEST MARKET ---------------- */
@@ -85,32 +81,31 @@ export function FindMarketPage({initial}:{initial:{crop?:string|undefined;qty?:n
  const toSaved=():Saved=>({id:crypto.randomUUID(),savedAt:new Date().toISOString(),crop,variety:v,qty:q,start:startOpt?.report.market||'',rows:options.map(o=>({market:o.report.market,date:o.report.date,price:o.report.modal_price,gross:o.gross,expenses:o.expenses,net:o.net}))});
  const crops=cat.data?.commodities||[];
  return <div className="ks-wrap ks-flow">
-  <div className="ks-page-head"><h1>{c.find}</h1><p>{c.promise}</p></div>
-  <NearbyMarkets crop={crop||undefined} variety={v||undefined} onPick={(l,r)=>{setSelectedReport(r);setState(l.state);setVariety(r.variety);setStart(marketKey(l));}}/>
-  <Step n={1} title={c.sCrop} c={c}>{cat.isLoading?<Loading c={c}/>:crops.length?<CropPicker crops={crops} value={crop} onChange={x=>{setCrop(x);setStart('');setVariety('');}} placeholder={c.searchCrop}/>:<Notice tone="warn">{c.noCrops}</Notice>}</Step>
+  <div className="ks-page-head"><h1>{c.find}</h1><p>{c.sellingIntro}</p></div>
+  <div className="ks-sell-inputs"><Step n={1} title={c.sCrop} c={c}>{cat.isLoading?<Loading c={c}/>:crops.length?<CropPicker crops={crops} value={crop} onChange={x=>{setCrop(x);setStart('');setVariety('');}} placeholder={c.searchCrop}/>:<Notice tone="warn">{c.noCrops}</Notice>}</Step>
+  <Step n={2} title={c.sQty} c={c}><label className="ks-qty big"><input aria-label={c.qQty} type="number" min="0.1" step="0.1" inputMode="decimal" value={qty} onChange={e=>setQty(e.target.value)}/><span>{c.quintals}</span></label><small className="ks-hint">{c.quintalHint}</small>{!(q>0)&&<Notice tone="error">{c.qQty}</Notice>}</Step></div>
   {crop&&!cat.isLoading&&crops.length>0&&!crops.includes(crop)&&<CustomCropPlan crop={crop} qty={Number(qty)} c={c}/>}
-  <Step n={2} title={c.sQty} c={c}><label className="ks-qty big"><input aria-label={c.qQty} type="number" min="0.1" step="0.1" inputMode="decimal" value={qty} onChange={e=>setQty(e.target.value)}/><span>{c.quintals}</span></label><small className="ks-hint">{c.quintalHint}</small>{!(q>0)&&<Notice tone="error">{c.qQty}</Notice>}</Step>
-  {crop&&<Step n={3} title={c.sLoc} c={c}>{reports.isLoading?<Loading c={c}/>:!latest.length&&!rows.length?<Notice tone="warn">{c.noMarkets}</Notice>:<div className="ks-form-row">
+  {crop&&crops.includes(crop)&&<Step n={3} title={c.sLoc} c={c}>{reports.isLoading?<Loading c={c}/>:reports.error?<Notice tone="error">{c.error}</Notice>:!latest.length&&!rows.length?<Notice tone="warn">{c.noMarkets}</Notice>:<div className="ks-form-row">
    {varieties.length>1&&<label>{c.variety}<select value={v} onChange={e=>{setVariety(e.target.value);setStart('');}}>{varieties.map(x=><option key={x}>{x}</option>)}</select></label>}
    <label>{c.chooseState}<select value={state} onChange={e=>{setState(e.target.value);setStart('');}}><option value="">{c.any}</option>{states.map(x=><option key={x}>{x}</option>)}</select></label>
-   <label>{c.chooseMarket}<select value={startKey} onChange={e=>setStart(e.target.value)}><option value="">—</option>{allLatest.filter(r=>!state||r.state===state).map(r=><option key={marketKey(r)} value={marketKey(r)}>{r.market} ({r.district})</option>)}</select></label>
-  </div>}<Notice>{c.distanceNote}</Notice></Step>}
+   <label>{c.chooseMarket}<select value={startKey} onChange={e=>setStart(e.target.value)}><option value="">{c.chooseMarket}</option>{allLatest.filter(r=>!state||r.state===state).map(r=><option key={marketKey(r)} value={marketKey(r)}>{r.market} ({r.district})</option>)}</select></label>
+  </div>}{!startKey&&latest.length>0&&<Notice>{c.startPrompt}</Notice>}{startKey&&!startOpt&&<Notice tone="warn">{c.noCompatible}</Notice>}<details className="ks-disclosure ks-nearby-toggle"><summary><MapPin/>{c.nearbyOptional}</summary><NearbyMarkets crop={crop||undefined} variety={v||undefined} onPick={(l,r)=>{setSelectedReport(r);setState(l.state);setVariety(r.variety);setStart(marketKey(l));}}/></details></Step>}
   {crop&&startOpt&&q>0&&bestNet&&bestPrice&&<>
    <Step n={4} title={`${c.sMarkets} (${options.length})`} c={c}>
+    <div className="ks-result"><div><small>{c.yourResult} · {bestNet.report.date}</small><h3>{bestNet.report.market} — {rupee(bestNet.net)}</h3><p>{c.netSimple} · {c.noGuarantee}</p></div></div>
     {excluded>0&&<Notice tone="warn">{excluded} · {c.dateWarn}</Notice>}
     {ageInIST(bestNet.report.date)>7&&<Notice tone="warn">{c.reportedOn}: {bestNet.report.date} · {c.noGuarantee}</Notice>}
     <div className="ks-highlights"><Highlight icon={<Trophy/>} label={c.bestNet} o={bestNet} c={c} value={rupee(bestNet.net)}/><Highlight icon={<IndianRupee/>} label={c.bestPrice} o={bestPrice} c={c} value={`${rupee(bestPrice.report.modal_price)}${c.perQuintal}`}/></div>
     <div className="ks-option-grid">{options.map((o,i)=><OptionCard key={o.key} o={o} rank={i+1} c={c} costs={costs[o.key]||zeroCosts} setCost={(f,val)=>setCost(o.key,f,val)}/>)}</div>
     <small className="ks-hint">{c.costHint}</small>
    </Step>
-   <Step n={5} title={c.sResult} c={c}><div className="ks-result"><CheckCircle2/><div><p className="ks-lead">{ageInIST(bestNet.report.date)>7?`${c.reportedOn}: ${bestNet.report.date} · ${c.noGuarantee}`:c.resultText}</p><h3>{bestNet.report.market} — {rupee(bestNet.net)}</h3>
+   <details className="ks-disclosure"><summary>{c.resultDetails}</summary><Step n={5} title={c.sResult} c={c}><div className="ks-result"><CheckCircle2/><div><p className="ks-lead">{ageInIST(bestNet.report.date)>7?`${c.reportedOn}: ${bestNet.report.date} · ${c.noGuarantee}`:c.resultText}</p><h3>{bestNet.report.market} — {rupee(bestNet.net)}</h3>
     <p className="ks-why"><b>{c.why}</b> {bestNet.isStart?`${c.yourMarket}: ${rupee(bestNet.report.modal_price)}${c.perQuintal} × ${q} = ${rupee(bestNet.gross)} − ${rupee(bestNet.expenses)}.`:`${rupee(bestNet.report.modal_price)} vs ${rupee(startOpt.report.modal_price)}${c.perQuintal} (${c.yourMarket}) × ${q} ${c.quintals} = +${rupee(bestNet.gross-startOpt.gross)} ${c.gross}; ${c.expenses} ${rupee(bestNet.expenses)} vs ${rupee(startOpt.expenses)} → +${rupee(bestNet.advantage)} ${c.net}.`}</p>
     {!bestNet.sameDate&&<Notice tone="warn">{c.dateWarn}</Notice>}<p className="ks-fine">{c.noGuarantee}</p></div></div>
     <div className="ks-table-wrap"><table className="ks-table"><thead><tr><th>#</th><th>APMC</th><th>{c.reportedOn}</th><th>{c.price}</th><th>{c.gross}</th><th>{c.expenses}</th><th>{c.net}</th></tr></thead><tbody>{options.map((o,i)=><tr key={o.key} className={o.isStart?'start':''}><td>{i+1}</td><td>{o.report.market}{o.isStart&&<small> · {c.yourMarket}</small>}</td><td>{o.report.date}{!o.sameDate&&' ⚠'}</td><td>{rupee(o.report.modal_price)}</td><td>{rupee(o.gross)}</td><td>{rupee(o.expenses)}</td><td><b>{rupee(o.net)}</b></td></tr>)}</tbody></table></div>
-    <div className="ks-actions"><Button variant="default" size="lg" onClick={()=>{const s=toSaved();saveSellingPlan({id:s.id,savedAt:s.savedAt,crop,variety:v,quantity:q,unit:'quintal',location:startOpt.report.market,sellingDate:'',marketKey:bestNet.key,costs,reports:latest});localStorage.setItem('krishisetu-plans',JSON.stringify([s,...loadPlans()].slice(0,50)));setMsg(c.saved);}}><Save/>{c.save}</Button><Button variant="outline" size="lg" onClick={()=>downloadText(toSaved(),c)}><Download/>{c.download}</Button><Button variant="outline" size="lg" onClick={async()=>{const text=reportText(toSaved(),c);if(navigator.share){try{await navigator.share({title:'KRISHISETU',text});}catch{/* cancelled */}}else{await navigator.clipboard.writeText(text);setMsg(c.copied);}}}><Share2/>{c.share}</Button>{msg&&<span className="ks-ok"><CheckCircle2/>{msg}</span>}</div>
-   </Step></>}
-  {crop&&latest.length>0&&!startOpt&&<Notice>{c.chooseMarket}</Notice>}
-  {crop&&rows.length>0&&<Step n={6} title={c.history} c={c}><HistoryChart rows={rows.filter(r=>r.variety===v&&r.source_name===source)} keyOf={r=>`${r.market} · ${r.grade||'—'}`} c={c}/></Step>}
+   </Step></details><div className="ks-actions"><Button variant="default" size="lg" onClick={()=>{const s=toSaved();saveSellingPlan({id:s.id,savedAt:s.savedAt,crop,variety:v,quantity:q,unit:'quintal',location:startOpt.report.market,sellingDate:'',marketKey:bestNet.key,costs,reports:latest});localStorage.setItem('krishisetu-plans',JSON.stringify([s,...loadPlans()].slice(0,50)));setMsg(c.saved);}}><Save/>{c.save}</Button><Button variant="outline" size="lg" onClick={()=>downloadText(toSaved(),c)}><Download/>{c.download}</Button><Button variant="outline" size="lg" onClick={async()=>{const text=reportText(toSaved(),c);if(navigator.share){try{await navigator.share({title:'KRISHISETU',text});}catch{/* cancelled */}}else{await navigator.clipboard.writeText(text);setMsg(c.copied);}}}><Share2/>{c.share}</Button>{msg&&<span className="ks-ok"><CheckCircle2/>{msg}</span>}</div>
+   </>}
+  {crop&&startOpt&&rows.length>0&&<details className="ks-disclosure"><summary>{c.showHistory}</summary><HistoryChart rows={rows.filter(r=>r.variety===v&&r.source_name===source)} keyOf={r=>`${r.market} · ${r.grade||'—'}`} c={c}/></details>}
  </div>;}
 // Farmer-entered crop without official reports: save a draft plan with no price, never an invented one.
 function CustomCropPlan({crop,qty,c}:{crop:string;qty:number;c:C}){const [loc,setLoc]=useState('');const [done,setDone]=useState(false);
@@ -119,7 +114,7 @@ function Step({n,title,children,c}:{n:number;title:string;children:ReactNode;c:C
 function Highlight({icon,label,o,c,value}:{icon:ReactNode;label:string;o:Option;c:C;value:string}){return <div className="ks-highlight">{icon}<div><small>{label}</small><b>{o.report.market}</b><span>{value}</span><Fresh date={o.report.date} c={c}/></div></div>;}
 function OptionCard({o,rank,c,costs,setCost}:{o:Option;rank:number;c:C;costs:Costs;setCost:(f:keyof Costs,v:string)=>void}){return <article className={`ks-option ${rank===1?'best':''} ${o.isStart?'start':''}`}><header><span className="ks-rank">{rank}</span><div><h3>{o.report.market}</h3><small>{o.report.district}, {o.report.state}{o.isStart&&` · ${c.yourMarket}`}</small></div></header>
  <div className="ks-option-price">{rupee(o.report.modal_price)}<small>{c.perQuintal}</small></div><Fresh date={o.report.date} c={c}/>{!o.sameDate&&<p className="ks-warn-line"><AlertTriangle/>{c.dateWarn}</p>}
- <PriceTimestamps report={o.report}/>
+ <details className="ks-disclosure ks-price-disclosure"><summary>{c.priceDetails}</summary><PriceTimestamps report={o.report}/></details>
  <dl><dt>{c.gross}</dt><dd>{rupee(o.gross)}</dd><dt>{c.expenses}</dt><dd>− {rupee(o.expenses)}</dd><dt className="net">{c.net}</dt><dd className="net">{rupee(o.net)}</dd></dl>
  <div className="ks-costs">{(['transport','loading','unloading','other'] as const).map(f=><label key={f}>{f==='transport'?<Truck/>:null}{c[f]}<input type="number" min="0" inputMode="numeric" placeholder="₹ 0" value={costs[f]||''} onChange={e=>setCost(f,e.target.value)}/></label>)}</div>
  {!o.isStart&&<p className="ks-be">{o.breakEven!=null&&o.breakEven>0?<><b>{c.breakEven}: {rupee(o.breakEven)}</b><br/><small>{c.breakEvenText}</small></>:<small>{c.noBreakEven}</small>}</p>}
@@ -160,19 +155,17 @@ export function TrendsPage(){const c=useCopy();const {user}=useKrishi();const ca
  const run=useServerFn(pythonAction);const [fc,setFc]=useState<{state:'idle'|'busy'|'none'|'service'|'ok';data?:Record<string,unknown>}>({state:'idle'});
  const recent=series.slice(-10).map(r=>r.modal_price),older=series.slice(-20,-10).map(r=>r.modal_price);const ra=priceStats(recent)?.mean,oa=priceStats(older)?.mean;const dir=ra&&oa?(ra-oa)/oa>0.02?'up':(ra-oa)/oa<-0.02?'down':'stable':null;
  async function forecast(){if(!sub[0])return;setFc({state:'busy'});try{const res=await run({data:{action:'forecast',payload:{horizon:h,filters:{state:sub[0].state,district:sub[0].district,market:m,commodity:crop,variety:v||'',source:sub[0].source_name}}}});if(!res.available)setFc({state:'service'});else if(!res.result||(res.result as Record<string,unknown>)['error'])setFc({state:'none'});else setFc({state:'ok',data:res.result as Record<string,unknown>});}catch{setFc({state:'none'});}}
- return <div className="ks-wrap"><div className="ks-page-head"><h1>{c.trends}</h1><p>{c.fcText}</p></div>
+ return <div className="ks-wrap"><div className="ks-page-head"><h1>{c.trends}</h1><p>{c.forecastHelp}</p></div>
   <div className="ks-searchbar"><CropPicker crops={cat.data?.commodities||[]} value={crop} onChange={x=>{setCrop(x);setMarket('');setFc({state:'idle'});}} placeholder={c.searchCrop}/><select value={m} onChange={e=>{setMarket(e.target.value);setFc({state:'idle'});}} disabled={!markets.length} aria-label={c.chooseMarket}>{markets.map(x=><option key={x}>{x}</option>)}</select><div className="ks-seg" role="group" aria-label={c.period}>{[7,14,30].map(d=><Button variant="ghost" size="sm" key={d} className={h===d?'on':''} onClick={()=>{setH(d);setFc({state:'idle'});}}>{d} {c.days}</Button>)}</div></div>
   {!crop?<Notice>{c.chooseFirst}</Notice>:q.isLoading?<Loading c={c}/>:!series.length?<Notice tone="warn">{c.noMarkets}</Notice>:<>
-   {dir&&<div className={`ks-trend ${dir}`}>{dir==='up'?<TrendingUp/>:dir==='down'?<TrendingDown/>:<Minus/>}<div><b>{c[dir]}</b><small>{c.actual}: {rupee(oa!)} → {rupee(ra!)} ({series.at(-1)?.date})</small></div></div>}
+   {dir&&<div className={`ks-trend ${dir}`}>{dir==='up'?<TrendingUp/>:dir==='down'?<TrendingDown/>:<Minus/>}<div><b>{c[dir]}</b><small>{c.actual}: {rupee(oa??0)} → {rupee(ra??0)} ({series.at(-1)?.date})</small></div></div>}
    <Section title={`${c.history} — ${m}`}><HistoryChart rows={series} keyOf={()=>c.actual} c={c}/></Section>
-   <TrendForecast crop={crop} market={m} district={sub[0]?.district} h={h} c={c}/>
-   <Button disabled={!user||fc.state==='busy'} onClick={forecast}><TrendingUp/>{c.estimate} · {h} {c.days}</Button>
-   {!user&&<Notice>{c.fcSignIn}</Notice>}{fc.state==='service'&&<Notice tone="warn">{c.fcService}</Notice>}{fc.state==='none'&&<Notice tone="warn">{c.fcUnavailable}</Notice>}
+   
+   <Button variant="outline" disabled={!user||fc.state==='busy'} onClick={forecast}><TrendingUp/>{fc.state==='busy'?c.loadingText:c.forecastCheck} · {h} {c.days}</Button>
+   {!user&&<Notice>{c.fcSignIn}</Notice>}{(fc.state==='service'||fc.state==='none')&&<Notice tone="warn">{c.forecastHelp}</Notice>}
    {fc.state==='ok'&&typeof fc.data?.['forecast']==='number'&&<Notice>{c.estimate}: {rupee(fc.data['forecast'])} · {c.reportedOn}: {String(fc.data['latest_observation']||'—')} · {c.noGuarantee}</Notice>}
   </>}</div>;}
 
-function TrendForecast({crop,market,district,h,c}:{crop:string;market:string;district?:string|undefined;h:number;c:C}){const runs=useModelRuns();const run=findRun(runs.data,crop,market,district);const hr=run?.report.horizons[String(h/7)];
-  return <Section title={`${c.estimate} · ${h} ${c.days}`}>{runs.isLoading?<Loading c={c}/>:<Notice tone="warn">{c.fcUnavailable}</Notice>}{run&&<Link to="/research" className="ks-link">{c.history}<ArrowRight/></Link>}<p className="ks-fine">{c.noGuarantee}</p></Section>;}
 /* ---------------- PLAN ---------------- */
 export function PlanPage(){return <SellingPlans/>;}
 

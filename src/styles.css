@@ -317,7 +317,7 @@ button, a, input, select { outline-offset: 4px; }
 .ks-menu a,.ks-menu button{display:flex;gap:10px;align-items:center;padding:11px 12px;border-radius:9px;font-size:15.5px;color:var(--foreground);text-decoration:none;background:none;border:0;text-align:left;cursor:pointer}
 .ks-menu a:hover,.ks-menu button:hover{background:var(--secondary)}
 .ks-menu svg{width:18px;color:var(--leaf)}
-.ks-main{flex:1;padding-bottom:48px}
+.ks-main{padding-bottom:28px}
 .ks-research-bar{background:var(--primary);color:var(--primary-foreground)}
 .ks-research-bar .ks-wrap{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding-top:10px;padding-bottom:10px}
 .ks-research-bar a{color:var(--primary-foreground);opacity:.85;font-weight:600;font-size:15px;padding:4px 10px;border-radius:8px;text-decoration:none}
@@ -336,12 +336,16 @@ button, a, input, select { outline-offset: 4px; }
 .ks-hero{position:relative;overflow:hidden;color:var(--hero-foreground)}
 .ks-hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 60%}
 .ks-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(100deg,var(--hero-shade) 0%,var(--hero-shade) 35%,var(--hero-clear) 100%)}
-.ks-hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:1.1fr minmax(340px,460px);gap:40px;align-items:center;padding-top:48px;padding-bottom:48px}
+.ks-hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr);gap:24px;align-items:center;padding-top:28px;padding-bottom:28px}
 .ks-hero h1{font-size:clamp(30px,4vw,48px);line-height:1.25;font-weight:800;margin:10px 0 14px}
 .ks-hero p{font-size:clamp(16px,1.4vw,19px);line-height:1.7;max-width:600px;opacity:.94}
 .ks-eyebrow{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--leaf)}
 .ks-eyebrow.light{color:var(--harvest)}
-.ks-quick{background:var(--card);color:var(--foreground);border-radius:20px;padding:26px;box-shadow:var(--soft-shadow);display:flex;flex-direction:column;gap:14px}
+.ks-quick{background:var(--card);color:var(--foreground);border-radius:8px;padding:20px;box-shadow:var(--soft-shadow);display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr) auto;gap:14px;align-items:end}
+.ks-quick h2{grid-column:1/-1}
+.ks-quick>*{min-width:0}
+.ks-hero-text h1{font-size:40px}
+@media(max-width:760px){.ks-quick{grid-template-columns:minmax(0,1fr)}.ks-hero-text h1{font-size:30px}}
 .ks-quick h2{display:flex;gap:10px;align-items:center;font-size:22px;font-weight:800;color:var(--primary);margin:0}
 .ks-quick label,.ks-form-row label{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:15.5px}
 .ks-quick label small,.ks-hint{font-weight:400;color:var(--muted-foreground);font-size:14px}
@@ -354,12 +358,12 @@ button, a, input, select { outline-offset: 4px; }
 .ks-big-btn{height:56px;font-size:18px;font-weight:800;border-radius:14px}
 .ks-quick-note{color:var(--muted-foreground);font-size:14px}
 /* sections */
-.ks-section{margin-top:44px}
+.ks-section{margin-top:24px}
 .ks-section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:18px;flex-wrap:wrap}
 .ks-section h2{font-size:clamp(22px,2.2vw,28px);font-weight:800;margin:4px 0 0;color:var(--primary)}
 .ks-link{display:flex;gap:6px;align-items:center;font-weight:700;color:var(--primary)}
 .ks-link svg{width:18px}
-.ks-page-head{padding:32px 0 20px}
+.ks-page-head{padding:24px 0 12px}
 .ks-page-head h1{font-size:clamp(28px,3vw,40px);font-weight:800;color:var(--primary);margin:0}
 .ks-page-head p{font-size:17px;color:var(--muted-foreground);max-width:800px;margin-top:6px}
 .ks-notice{display:flex;gap:12px;align-items:flex-start;padding:16px 18px;border-radius:14px;background:var(--secondary);color:var(--secondary-foreground);font-size:16px;margin:10px 0}
@@ -403,12 +407,33 @@ button, a, input, select { outline-offset: 4px; }
 .ks-trust h3{font-size:17px;font-weight:800;margin:8px 0 4px}
 .ks-trust p{font-size:15px;color:var(--muted-foreground)}
 /* flow */
-.ks-flow{display:flex;flex-direction:column;gap:18px}
-.ks-flow-step{display:grid;grid-template-columns:64px 1fr;gap:18px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px}
-.ks-flow-n{display:flex;flex-direction:column;align-items:center;justify-content:center;width:60px;height:60px;border-radius:16px;background:var(--primary);color:var(--primary-foreground);font-weight:800;font-size:24px;line-height:1}
+.ks-flow{display:flex;flex-direction:column;gap:16px;max-width:1200px}
+.ks-flow-step{display:block;border-top:1px solid var(--border);padding:18px 0;background:transparent;border-radius:0}
+.ks-flow-n{display:none}
 .ks-flow-n small{font-size:11px;font-weight:600;opacity:.8}
 .ks-flow-body{min-width:0}
-.ks-flow-body h2{font-size:22px;font-weight:800;margin:0 0 14px;color:var(--primary)}
+.ks-flow-body h2{font-size:20px;font-weight:800;margin:0 0 10px;color:var(--primary)}
+.ks-sell-inputs{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:24px}
+.ks-sell-inputs>*{min-width:0}
+.ks-disclosure{border-top:1px solid var(--border);margin-top:16px;padding-top:12px;min-width:0}
+.ks-disclosure>summary{display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:600;color:var(--primary);padding:8px 0;list-style:none}
+.ks-disclosure>summary::after{content:'+';margin-left:auto;font-size:22px}
+.ks-disclosure[open]>summary::after{content:'−'}
+.ks-disclosure>summary:focus-visible{outline:2px solid var(--ring);outline-offset:2px}
+.ks-price-disclosure{font-size:14px;margin-top:0;order:2}
+.ks-price-disclosure>summary{font-size:14px;font-weight:500}
+.ks-nearby-toggle .ks-section{margin-top:8px}
+.ks-nearby-toggle .ks-nearby>h2{display:none}
+.ks-flow .ks-result{margin-bottom:12px;border-radius:8px;padding:16px}
+.ks-flow .ks-highlights{margin-bottom:12px}
+.ks-flow .ks-option{border-radius:8px;background:var(--card)}
+.ks-flow .ks-option-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))}
+.ks-flow .ks-option header{display:grid;grid-template-columns:auto minmax(0,1fr)}
+.ks-flow .ks-option header>div{min-width:0;overflow-wrap:anywhere}
+.ks-flow .ks-option h3{font-size:18px}
+.ks-flow .ks-qty.big input{height:50px;font-size:22px;max-width:160px}
+.ks-flow .ks-qty.big span{font-size:16px}
+@media(max-width:600px){.ks-sell-inputs{grid-template-columns:minmax(0,1fr);gap:0}.ks-flow .ks-flow-step{padding:12px 0}.ks-flow .ks-page-head{padding-bottom:4px}.ks-flow .ks-flow-n{display:none}.ks-disclosure>summary{white-space:normal;line-height:1.5}}
 .ks-crop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
 .ks-crop{display:flex;flex-direction:column;align-items:center;gap:8px;padding:18px 10px;border-radius:16px;border:2px solid var(--border);background:var(--background);font-size:16.5px;font-weight:700;cursor:pointer;color:var(--foreground)}
 .ks-crop svg{width:30px;height:30px;color:var(--harvest)}

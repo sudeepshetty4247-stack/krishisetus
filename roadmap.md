@@ -1,5 +1,10 @@
 # KRISHISETU
 
+## Farmer usability simplification
+- [x] Compact crop/quantity/location sequence, optional nearby search, clear result and empty states.
+- [x] Remove unrelated home windfalls; simplify forecast availability and source/history details.
+- [x] Verified real maize 20q/₹1,900 expenses/₹58,460 net, plan save/edit/reload/delete, custom draft and 1080/390 layouts; 52 regression tests pass.
+
 ## Critical production resolution
 - [x] FastAPI service, honest readiness, authenticated model/history endpoints and deployment configuration; local HTTP history verified, missing-model forecasts reject.
 - [x] Re-acquired and activated all 24,656,469 genuine historical records with checksum/count/business-key checks; filtered API pagination/aggregation verified locally, not hosted.
