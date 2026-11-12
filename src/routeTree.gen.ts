@@ -10,16 +10,30 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ComparisonRouteImport } from './routes/comparison'
+import { Route as CropIntelligenceRouteImport } from './routes/crop-intelligence'
 import { Route as DataQualityRouteImport } from './routes/data-quality'
 import { Route as ForecastRouteImport } from './routes/forecast'
 import { Route as HelpRouteImport } from './routes/help'
 import { Route as MarketsRouteImport } from './routes/markets'
+import { Route as OpportunitiesRouteImport } from './routes/opportunities'
 import { Route as ResearchRouteImport } from './routes/research'
 import { Route as SellingAssistantRouteImport } from './routes/selling-assistant'
+import { Route as SourcesRouteImport } from './routes/sources'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ComparisonRoute = ComparisonRouteImport.update({
+  id: '/comparison',
+  path: '/comparison',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CropIntelligenceRoute = CropIntelligenceRouteImport.update({
+  id: '/crop-intelligence',
+  path: '/crop-intelligence',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DataQualityRoute = DataQualityRouteImport.update({
@@ -42,6 +56,11 @@ const MarketsRoute = MarketsRouteImport.update({
   path: '/markets',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OpportunitiesRoute = OpportunitiesRouteImport.update({
+  id: '/opportunities',
+  path: '/opportunities',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResearchRoute = ResearchRouteImport.update({
   id: '/research',
   path: '/research',
@@ -52,73 +71,106 @@ const SellingAssistantRoute = SellingAssistantRouteImport.update({
   path: '/selling-assistant',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SourcesRoute = SourcesRouteImport.update({
+  id: '/sources',
+  path: '/sources',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/comparison': typeof ComparisonRoute
+  '/crop-intelligence': typeof CropIntelligenceRoute
   '/data-quality': typeof DataQualityRoute
   '/forecast': typeof ForecastRoute
   '/help': typeof HelpRoute
   '/markets': typeof MarketsRoute
+  '/opportunities': typeof OpportunitiesRoute
   '/research': typeof ResearchRoute
   '/selling-assistant': typeof SellingAssistantRoute
+  '/sources': typeof SourcesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/comparison': typeof ComparisonRoute
+  '/crop-intelligence': typeof CropIntelligenceRoute
   '/data-quality': typeof DataQualityRoute
   '/forecast': typeof ForecastRoute
   '/help': typeof HelpRoute
   '/markets': typeof MarketsRoute
+  '/opportunities': typeof OpportunitiesRoute
   '/research': typeof ResearchRoute
   '/selling-assistant': typeof SellingAssistantRoute
+  '/sources': typeof SourcesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/comparison': typeof ComparisonRoute
+  '/crop-intelligence': typeof CropIntelligenceRoute
   '/data-quality': typeof DataQualityRoute
   '/forecast': typeof ForecastRoute
   '/help': typeof HelpRoute
   '/markets': typeof MarketsRoute
+  '/opportunities': typeof OpportunitiesRoute
   '/research': typeof ResearchRoute
   '/selling-assistant': typeof SellingAssistantRoute
+  '/sources': typeof SourcesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/comparison'
+    | '/crop-intelligence'
     | '/data-quality'
     | '/forecast'
     | '/help'
     | '/markets'
+    | '/opportunities'
     | '/research'
     | '/selling-assistant'
+    | '/sources'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/comparison'
+    | '/crop-intelligence'
     | '/data-quality'
     | '/forecast'
     | '/help'
     | '/markets'
+    | '/opportunities'
     | '/research'
     | '/selling-assistant'
+    | '/sources'
   id:
     | '__root__'
     | '/'
+    | '/comparison'
+    | '/crop-intelligence'
     | '/data-quality'
     | '/forecast'
     | '/help'
     | '/markets'
+    | '/opportunities'
     | '/research'
     | '/selling-assistant'
+    | '/sources'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ComparisonRoute: typeof ComparisonRoute
+  CropIntelligenceRoute: typeof CropIntelligenceRoute
   DataQualityRoute: typeof DataQualityRoute
   ForecastRoute: typeof ForecastRoute
   HelpRoute: typeof HelpRoute
   MarketsRoute: typeof MarketsRoute
+  OpportunitiesRoute: typeof OpportunitiesRoute
   ResearchRoute: typeof ResearchRoute
   SellingAssistantRoute: typeof SellingAssistantRoute
+  SourcesRoute: typeof SourcesRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -128,6 +180,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/comparison': {
+      id: '/comparison'
+      path: '/comparison'
+      fullPath: '/comparison'
+      preLoaderRoute: typeof ComparisonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/crop-intelligence': {
+      id: '/crop-intelligence'
+      path: '/crop-intelligence'
+      fullPath: '/crop-intelligence'
+      preLoaderRoute: typeof CropIntelligenceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/data-quality': {
@@ -158,6 +224,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MarketsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/opportunities': {
+      id: '/opportunities'
+      path: '/opportunities'
+      fullPath: '/opportunities'
+      preLoaderRoute: typeof OpportunitiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/research': {
       id: '/research'
       path: '/research'
@@ -172,17 +245,28 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SellingAssistantRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sources': {
+      id: '/sources'
+      path: '/sources'
+      fullPath: '/sources'
+      preLoaderRoute: typeof SourcesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ComparisonRoute: ComparisonRoute,
+  CropIntelligenceRoute: CropIntelligenceRoute,
   DataQualityRoute: DataQualityRoute,
   ForecastRoute: ForecastRoute,
   HelpRoute: HelpRoute,
   MarketsRoute: MarketsRoute,
+  OpportunitiesRoute: OpportunitiesRoute,
   ResearchRoute: ResearchRoute,
   SellingAssistantRoute: SellingAssistantRoute,
+  SourcesRoute: SourcesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

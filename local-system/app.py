@@ -20,6 +20,8 @@ def create_app(data_dir=None, testing=False):
 
     @app.before_request
     def protect():
+        if request.path.startswith('/service/'):
+            return None
         # Binding to loopback is not enough: prevent browser DNS rebinding and cross-site writes.
         host=request.host.split(':')[0]
         if host not in ('127.0.0.1','localhost','[::1]'): return jsonify(error='Local host required'),403
@@ -125,6 +127,8 @@ def create_app(data_dir=None, testing=False):
     @app.get('/api/explain')
     def explanation(): return jsonify(explain(store,request.args.get('model_id',''),int(request.args.get('horizon',7))))
 
+    from backend_service import install_service
+    install_service(app,store.root)
     return app
 
 if __name__=='__main__':
