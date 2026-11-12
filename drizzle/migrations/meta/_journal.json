@@ -64,6 +64,13 @@
       "when": 1794511093538,
       "tag": "0008_scheduled_private_alert_evaluation",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1794512090878,
+      "tag": "0009_isolate_malformed_alerts_and_match_price_identity",
+      "breakpoints": true
     }
   ]
 }

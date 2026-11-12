@@ -105,19 +105,18 @@ async function performDailySync(opts:{date?:string|undefined}){
   if(!succeeded)break;
  }
  const reportDate=records.reduce((m,r)=>r.date>m?r.date:m,'')||null;
- const status=stored>0?(errors.length?'partial':'success'):received?'failed':'no_records';
- const message=`${stored} reports stored from ${received} received${reportDate?` · latest market report ${reportDate}`:''}`;
- const {error:runError}=await supabaseAdmin.from('agri_source_runs').insert({source:DAILY_SOURCE,report_date:reportDate,started_at:started,finished_at:new Date().toISOString(),status,requested:received,received,stored,rejected:received-valid.length,duplicates,message,errors:errors.slice(0,50)});
- if(runError)errors.push(`ingestion log: ${runError.message}`);
  if(stored>0){
-  const {error:stateError}=await supabaseAdmin.from('agri_sync_state').upsert({source:DAILY_SOURCE,status,last_success:new Date().toISOString(),updated_at:new Date().toISOString(),message,next_offset:0});
-  if(stateError)errors.push(`sync status: ${stateError.message}`);
   // Retain every verified daily observation. Source failures and newer snapshots must not erase history.
   const {error:sumErr}=await supabaseAdmin.rpc('refresh_agri_summary');if(sumErr)errors.push(`summary: ${sumErr.message}`);
   const {error:alertError}=await supabaseAdmin.rpc('evaluate_farmer_alerts');if(alertError)errors.push('Account alert evaluation failed');
- }else{
-  const {error:stateError}=await supabaseAdmin.from('agri_sync_state').upsert({source:DAILY_SOURCE,status,updated_at:new Date().toISOString(),message:errors[0]??message,next_offset:0},{onConflict:'source',ignoreDuplicates:false});
-  if(stateError)errors.push(`sync status: ${stateError.message}`);
  }
- return {status:errors.length&&stored>0?'partial':status,stored,received,rejected:received-records.length,reportDate,errors:errors.slice(0,10),message};
+ const status=stored>0?(errors.length||stored!==records.length?'partial':'success'):received?'failed':'no_records';
+ const message=`${status}: ${stored} reports stored from ${received} received${reportDate?` · latest market report ${reportDate}`:''}${errors.length?` · ${errors[0]}`:''}`;
+ const finished=new Date().toISOString();
+ const {error:stateError}=await supabaseAdmin.from('agri_sync_state').upsert({source:DAILY_SOURCE,status,...(status==='success'?{last_success:finished}:{}),updated_at:finished,message,next_offset:0},{onConflict:'source',ignoreDuplicates:false});
+ if(stateError)errors.push(`sync status: ${stateError.message}`);
+ const finalStatus=errors.length&&stored>0?'partial':status;
+ const {error:runError}=await supabaseAdmin.from('agri_source_runs').insert({source:DAILY_SOURCE,report_date:reportDate,started_at:started,finished_at:finished,status:finalStatus,requested:received,received,stored,rejected:received-valid.length,duplicates,message,errors:errors.slice(0,50)});
+ if(runError)errors.push(`ingestion log: ${runError.message}`);
+ return {status:errors.length&&stored>0?'partial':finalStatus,stored,received,rejected:received-valid.length,duplicates,reportDate,errors:errors.slice(0,10),message};
 }

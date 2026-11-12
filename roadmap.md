@@ -1,5 +1,11 @@
 # KRISHISETU
 
+## Remaining critical completion — 13 November IST
+- [ ] 1–4: verify available deployment access; connect persistent Python/history/artifacts/current forecasts only with a real host and eligible data.
+- [ ] 5: verify nationwide yard source/matching without inventing coordinates.
+- [ ] 6: exercise full real ingestion, repair timeouts/status reporting, verify private records/alerts, complete remaining farmer translations and check recovery.
+- [ ] 7: publish authorized repairs and test the actual hosted website; report verified results and external blockers.
+
 ## Phase-by-phase transformation
 - [x] Phase 1: inspect architecture, connections, schedules and baseline tests (52 website + 50 Python).
 - [x] Phase 2 local checks: reconciled 24,656,469 rows and SHA-256; bounded APIs retained. Online transfer blocked by missing persistent host.
