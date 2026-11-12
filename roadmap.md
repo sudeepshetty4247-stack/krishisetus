@@ -1,5 +1,11 @@
 # KRISHISETU
 
+## Dynamic academic comparison follow-up
+- [x] Remove the comparison table; retain eight readable charts and independent metric winners.
+- [x] Replace bundled default results with online preserved evaluations; add URL-backed crop, variety, geography, algorithm, dataset and horizon filters and verified refresh.
+- [x] Test actual online filter/refresh/chart flows and desktop/mobile without changing farmer pages; 72 website tests pass.
+- [ ] New evaluation execution and deployed inference for other groups require the disconnected persistent Python service; unavailable metrics remain explicit.
+
 ## Academic model comparison dashboard
 - [x] Re-evaluate six algorithms on 758 genuine Hubli Local maize reports, preserving previous experiments and recording directional metrics and full-precision aligned predictions.
 - [x] Replace only the comparison page with readable metric charts, results, independent winners, dataset context and optional technical details.

@@ -1,3 +1,14 @@
+## Latest follow-up — online dynamic comparison, 12 November 2026
+- The page no longer imports bundled evaluation results. A public read-only server query retrieves all 13 saved Cloud experiments with bounded pagination and explicit errors; refresh re-fetches records and checks the signed-in registry.
+- Preserved a new online seven-day academic maize record (758 reports / 218 weeks), using actual re-executed regression and direction metrics. Previous experiments unchanged. The local full-precision report and selected binaries remain available, but are not deployed inference.
+- Removed the table completely. Eight separate charts, independent metric winners, baseline comparison and simple algorithm explanations remain. Optional crop/variety/location/dataset filters reduce presentation clutter.
+- Crop, variety, state, district, market, dataset, algorithm, experiment, horizon and split selections are URL-backed; reloading retains selections. Comparing a different crop never borrows maize direction metrics.
+- Verified all controls and manual refresh against actual online records, three regression/five direction charts, old-record missing classification, desktop/390px layout, no runtime errors, and 72 website tests. No farmer page changed.
+- The new online academic record currently contains seven-day test direction metrics only; other saved records/horizons without direction show Not available. Other old experiments retain genuine 7/14/28 regression results. New training, live inference and 30-day evaluation remain blocked by disconnected persistent Python hosting and eligible daily history. Refresh retrieves evaluations; it does not train models.
+- Running preview verified, not newly published.
+
+## Preserved previous execution report
+
 # Academic model comparison — verified historical research
 
 ## What changed

@@ -1,5 +1,5 @@
 import {expect,it} from 'vitest';
-import {metricWinners,directionWinners,evaluationRows,type EvaluationRow} from '@/lib/model-comparison';
+import {metricWinners,directionWinners,evaluationRows,filterExperiments,comparisonOptions,type EvaluationRow} from '@/lib/model-comparison';
 import evidence from '@/data/academic-comparison.json';
 import type {ModelRun} from '@/components/farmer/data';
 const rows=[{algorithm:'Naive',validation:{MAE:140,RMSE:145,sMAPE:5,R2:.47,n:30},test:{MAE:94.30,RMSE:136.4,sMAPE:4.83,R2:.47,n:30}},{algorithm:'SARIMA',validation:{MAE:130.7476,RMSE:141,sMAPE:4.9,R2:.48,n:30},test:{MAE:97.29,RMSE:134.64,sMAPE:4.98,R2:.483,n:30}}] as EvaluationRow[];
@@ -24,3 +24,12 @@ it('preserves undefined Naive precision and uses continuous-score chance AUC',()
  expect(naive?.direction?.test?.ROC_AUC).toBe(.5);expect(naive?.direction?.test?.increase).toBe(16);expect(naive?.direction?.test?.decrease).toBe(16);
 });
 it('returns no classification winners for old regression-only experiments',()=>expect(directionWinners(rows,'test','Accuracy')).toEqual([]));
+it('filters actual experiments by crop, variety, location and dataset without borrowing results',()=>{
+ const maize=evidence as unknown as ModelRun;const onion={...maize,id:'onion',commodity:'Onion',variety:'Puna',district:'Other',market:'Other',dataset_version:'other'};
+ expect(filterExperiments([maize,onion],{commodity:'Maize',variety:'Local',state:'Karnataka',district:'Dharwad',market:'Hubli (Amaragol)',dataset_version:maize.dataset_version})).toEqual([maize]);
+ expect(filterExperiments([maize,onion],{commodity:'Onion',variety:'Local'})).toEqual([]);
+});
+it('derives variety options from saved evaluations for the selected crop',()=>{
+ const maize=evidence as unknown as ModelRun;
+ expect(comparisonOptions([maize,{...maize,commodity:'Onion',variety:'Puna'}],{commodity:'Maize'},'variety')).toEqual(['Local']);
+});

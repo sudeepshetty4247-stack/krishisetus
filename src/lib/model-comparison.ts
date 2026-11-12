@@ -17,6 +17,9 @@ export function directionWinners(rows:EvaluationRow[],split:'validation'|'test',
  return valid.filter(r=>Math.abs(Number(r.direction?.[split]?.[metric])-best)<1e-12).map(r=>r.algorithm);
 }
 export const algorithmLabel=(name:string)=>name==='Seasonal naive'?'Seasonal Naive':name;
+export type ComparisonFilters=Partial<Record<'commodity'|'variety'|'state'|'district'|'market'|'dataset_version',string>>;
+export function filterExperiments(runs:ModelRun[],filters:ComparisonFilters){return runs.filter(r=>Object.entries(filters).every(([key,value])=>!value||r[key as keyof ComparisonFilters]===value));}
+export function comparisonOptions(runs:ModelRun[],filters:ComparisonFilters,key:keyof ComparisonFilters){const other={...filters};delete other[key];return [...new Set(filterExperiments(runs,other).map(r=>r[key]))].sort();}
 export const modelExplanations:Record<string,string>={
  Naive:'Predicts the latest observed price. A simple baseline every other model must be compared against.',
  'Seasonal naive':'Uses a previous seasonal price pattern. This weekly experiment looks back 52 weeks, with a past-only fallback.',
