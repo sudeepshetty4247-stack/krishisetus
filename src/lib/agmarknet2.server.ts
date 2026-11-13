@@ -9,7 +9,8 @@ export const AGM2_SOURCE='AGMARKNET 2.0 last-week price';
 export const AGM2_URL='https://agmarknet.gov.in/home';
 const BASE='https://api.agmarknet.gov.in/v1';
 export const AGM2_HEADERS={accept:'application/json, text/plain, */*',origin:'https://agmarknet.gov.in',referer:'https://agmarknet.gov.in/','user-agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36'};
-export const AGM2_BATCH=30;
+// The scheduler cancels the worker a few seconds after calling it, so each run handles a small batch quickly.
+export const AGM2_BATCH=12;
 
 type Filters={state_data:{state_id:number;state_name:string}[];market_data:{id:number;mkt_name:string;state_id:number|null;district_id:number|null}[];cmdt_data:{cmdt_id:number;cmdt_name:string}[]};
 export type Agm2Index={state:Map<string,number>;market:Map<string,number>;commodity:Map<string,{id:number;name:string}>};
@@ -42,17 +43,22 @@ export function parseLastWeek(resp:any,t:Target,commodityName:string,retrievedAt
  }
  return {records,skipped};
 }
-let filterCache:{at:number;ix:Agm2Index}|null=null;
-async function get(path:string,timeoutMs=8000){
+async function get(path:string,timeoutMs=4000){
  const res=await fetch(`${BASE}${path}`,{headers:AGM2_HEADERS,signal:AbortSignal.timeout(timeoutMs)});
  const text=await res.text();
  if(!res.ok)throw new Error(`HTTP ${res.status}: ${text.slice(0,160)}`);
  return JSON.parse(text);
 }
-async function index(){
- if(filterCache&&Date.now()-filterCache.at<6*3600000)return filterCache.ix;
- const f=await get('/daily-price-arrival/filters',10000);if(!f?.data?.market_data)throw new Error('filters response has no market list');
- filterCache={at:Date.now(),ix:buildIndex(f.data)};return filterCache.ix;
+type Compact={s:Record<string,number>;m:Record<string,number>;c:Record<string,[number,string]>};
+const toCompact=(ix:Agm2Index):Compact=>({s:Object.fromEntries(ix.state),m:Object.fromEntries(ix.market),c:Object.fromEntries([...ix.commodity].map(([k,v])=>[k,[v.id,v.name]]))});
+const fromCompact=(c:Compact):Agm2Index=>({state:new Map(Object.entries(c.s)),market:new Map(Object.entries(c.m)),commodity:new Map(Object.entries(c.c).map(([k,v])=>[k,{id:v[0],name:v[1]}]))});
+// The AGMARKNET 2.0 id list (~4,200 markets) is cached in agri_summary for a day so each minute run skips the large download.
+async function index(db:any):Promise<{ix:Agm2Index;refreshed:boolean}>{
+ const {data}=await db.from('agri_summary').select('value,updated_at').eq('key','agm2_index').maybeSingle();
+ if(data?.value?.m&&Date.now()-Date.parse(data.updated_at)<24*3600000)return {ix:fromCompact(data.value),refreshed:false};
+ const f=await get('/daily-price-arrival/filters',6000);if(!f?.data?.market_data)throw new Error('filters response has no market list');
+ const ix=buildIndex(f.data);await db.from('agri_summary').upsert({key:'agm2_index',value:toCompact(ix),updated_at:new Date().toISOString()},{onConflict:'key'});
+ return {ix,refreshed:true};
 }
 
 export async function syncAgmarknet2(){
@@ -69,18 +75,18 @@ async function run(db:any){
  const {data:targets,error:tErr}=await db.rpc('agmarknet2_targets',{p_offset:offset,p_limit:AGM2_BATCH});
  if(tErr)errors.push(`targets: ${tErr.message}`);
  const list:(Target&{total:number})[]=targets||[];const total=Number(list[0]?.total)||0;
- let ix:Agm2Index|null=null;try{ix=await index();}catch(e){errors.push(`filters: ${e instanceof Error?e.message:e}`);}
+ let ix:Agm2Index|null=null,refreshed=false;try{const r=await index(db);ix=r.ix;refreshed=r.refreshed;}catch(e){errors.push(`filters: ${e instanceof Error?e.message:e}`);}
  const records:DailyRecord[]=[];let requested=0,unmatched=0,failed=0,skipped=0;
- if(ix){let i=0;await Promise.all(Array.from({length:10},async()=>{while(i<list.length){const t=list[i++]!;const id=resolveTarget(ix!,t);if(!id){unmatched++;continue;}requested++;
+ if(ix&&!refreshed){let i=0;await Promise.all(Array.from({length:AGM2_BATCH},async()=>{while(i<list.length){const t=list[i++]!;const id=resolveTarget(ix!,t);if(!id){unmatched++;continue;}requested++;
   try{const d=await get(`/prices-and-arrivals/commodity-price/lastweek?marketId=${id.marketId}&stateId=${id.stateId}&commodityId=${id.commodityId}&includeExcel=false`);const p=parseLastWeek(d,t,id.commodityName,started,today);records.push(...p.records);skipped+=p.skipped;}
   catch(e){failed++;if(errors.length<20)errors.push(`${t.market}/${t.commodity}: ${e instanceof Error?e.message:e}`);}}}));}
  let stored=0;
  for(let k=0;k<records.length;k+=50){const {data,error}=await db.rpc('publish_official_reports',{records:records.slice(k,k+50),p_source:AGM2_SOURCE,p_url:AGM2_URL,p_dataset:`api.agmarknet.gov.in commodity-price/lastweek targets ${offset}-${offset+list.length} of ${total}`});if(error){errors.push(`store: ${error.message}`);break;}stored+=Number(data)||0;}
  const reportDate=records.reduce((m,r)=>r.date>m?r.date:m,'')||null;
- if(stored>0){const {error:e}=await db.rpc('refresh_agri_summary');if(e)errors.push(`summary: ${e.message}`);await db.rpc('evaluate_farmer_alerts');}
+ // Summary and alert refresh run as separate database schedules; they are too slow for this short worker.
  const allFailed=requested>0&&failed===requested;
- const status=stored>0?(failed||errors.length?'partial':'success'):allFailed||!ix||tErr?'failed':'no_records';
- const next=allFailed||!ix?offset:nextOfficialOffset(offset,list.length,total);
+ const status=stored>0?(failed||errors.length?'partial':'success'):refreshed&&!errors.length?'index_refreshed':allFailed||!ix||tErr?'failed':'no_records';
+ const next=allFailed||!ix||refreshed?offset:nextOfficialOffset(offset,list.length,total);
  const message=`${status}: ${stored} reports stored · ${requested} market/crop requests (${failed} failed, ${unmatched} not in AGMARKNET 2.0 list) · targets ${offset}-${offset+list.length} of ${total}${reportDate?` · latest market report ${reportDate}`:''}${errors[0]?` · ${errors[0]}`:''}`;
  const finished=new Date().toISOString();
  await db.from('agri_sync_state').upsert({source:AGM2_SOURCE,status,...(stored>0?{last_success:finished}:{}),updated_at:finished,message,next_offset:next},{onConflict:'source'});
