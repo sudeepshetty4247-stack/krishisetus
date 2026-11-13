@@ -1,5 +1,8 @@
 # KRISHISETU
 
+## New workspace integrations
+- [ ] Set up fresh CEDA Agricultural Data and Google Maps Platform app connections in the new workspace; old connection references are no longer valid.
+
 ## Model optimization and reliability — 13 November
 - [ ] Re-execute eight model candidates on preserved genuine historical observations; tune only on chronological validation, retain prior experiments, save/load artifacts and report actual test metrics against the 85% target.
 - [ ] Publish verified evaluation records and update dynamic charts, independent winners and recommendations without replacing farmer features.
