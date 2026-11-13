@@ -6,7 +6,7 @@ import {Navigation,MapPin,Scale,IndianRupee,TrendingUp,ClipboardList,ArrowRight}
 import {Button} from '@/components/ui/button';
 import hero from '@/assets/maize-field.jpg';
 import {searchPublicLocations,identifyPublicLocation} from '@/lib/public-location.functions';
-import {distanceKm,verifiedYard,type Coordinates} from '@/lib/geography';
+import {distanceKm,verifiedYard,nearestYards,RADIUS_OPTIONS,currentNearbyReports,type Coordinates} from '@/lib/geography';
 import {supabase} from '@/integrations/supabase/client';
 import {latestByMarket,marketKey,comparableReport,comparisonKey} from '@/lib/selling';
 import type {Report} from '@/lib/agri-types';
@@ -26,16 +26,17 @@ export function LocationHome(){
  const [busy,setBusy]=useState(false),[error,setError]=useState(''),[crop,setCrop]=useState(''),[variety,setVariety]=useState(''),[qty,setQty]=useState(''),[radius,setRadius]=useState(50),[picked,setPicked]=useState<string[]>([]);
  const generation=useRef(0);
  useEffect(()=>{const seq=++generation.current;setPlaces([]);setBusy(false);if(text.trim().length<3||origin?.label===text)return;const timer=setTimeout(async()=>{setBusy(true);try{const r=await search({data:{query:text,language:lang}});if(seq!==generation.current)return;setPlaces(r.places);setError(r.available?'':lc.error);}catch{if(seq===generation.current)setError(lc.error);}finally{if(seq===generation.current)setBusy(false);}},450);return()=>clearTimeout(timer);},[text,lang,origin?.label,search,lc.error]);
- const near=useMemo(()=>origin?(locations.data||[]).filter(l=>verifiedYard(l)&&distanceKm(origin,l)<=radius):[],[origin,locations.data,radius]);
- const prices=useQuery({enabled:!!origin&&!!crop,queryKey:['home-location-prices',origin,crop,near.map(m=>marketKey(m)).join('|')],queryFn:async()=>{
+ const near=useMemo(()=>origin?nearestYards(origin,locations.data||[],radius):[],[origin,locations.data,radius]);
+ const prices=useQuery({enabled:!!origin&&!!crop&&!locations.isLoading,staleTime:30000,refetchInterval:30000,queryKey:['home-location-prices',origin,crop,radius,near.map(m=>marketKey(m)).join('|')],queryFn:async()=>{
   if(!origin)return [] as Report[];
   let q=supabase.from('agri_reports').select('*').eq('official',true).eq('suspicious',false).eq('commodity',crop).order('date',{ascending:false}).limit(1000);
+  const since=new Date(Date.now()-7*86400000+5.5*3600000).toISOString().slice(0,10);q=q.gte('date',since);
   // Coordinates and district fallback are separate: a district report is never labelled a nearby yard.
   if(near.length)q=q.in('market',near.map(m=>m.market));else if(origin.district)q=q.eq('district',origin.district);else return [] as Report[];
-  if(origin.state)q=q.eq('state',origin.state);
-  const {data,error}=await q;if(error)throw error;const reports=(data||[]) as unknown as Report[];return near.length?reports.filter(r=>near.some(l=>marketKey(l)===marketKey(r))):reports;
+  if(!near.length&&origin.state)q=q.eq('state',origin.state);
+  const {data,error}=await q;if(error)throw error;const reports=currentNearbyReports((data||[]) as unknown as Report[]);return near.length?reports.filter(r=>near.some(l=>marketKey(l)===marketKey(r))):reports;
  }});
- const varieties=[...new Set((prices.data||[]).map(r=>r.variety))];const rows=latestByMarket((prices.data||[]).filter(r=>!variety||r.variety===variety)).slice(0,12);
+ const varieties=[...new Set((prices.data||[]).map(r=>r.variety))];const kmFor=(r:Report)=>{const l=near.find(x=>marketKey(x)===marketKey(r));return l&&origin?distanceKm(origin,l):Infinity;};const rows=latestByMarket((prices.data||[]).filter(r=>!variety||r.variety===variety)).sort((a,b)=>kmFor(a)-kmFor(b)).slice(0,24);
  const selected=rows.filter(r=>picked.includes(r.id));const first=selected[0];const canCompare=selected.length>=2&&!!first&&selected.every(r=>comparableReport(r)&&comparisonKey(r)===comparisonKey(first));
  function choose(p:Place){setOrigin({...p,label:p.name,gps:false});setText(p.name);setPlaces([]);setPicked([]);setVariety('');setError('');}
  function locate(){setError('');if(!navigator.geolocation){setError(lc.denied);return;}setBusy(true);navigator.geolocation.getCurrentPosition(async p=>{
@@ -53,7 +54,7 @@ export function LocationHome(){
    {busy&&<p role="status">{lc.loading}</p>}{error&&<p role="alert" className="ks-notice warn">{error}</p>}
   </div></section>
   <div className="ks-wrap">
-   <section className="ks-section"><div className="ks-section-head"><h2><MapPin className="inline"/> {origin?.label||lc.find}</h2>{origin&&<label>{lc.radius}<select aria-label={lc.radius} value={radius} onChange={e=>setRadius(Number(e.target.value))}>{[25,50,100,200].map(x=><option key={x} value={x}>{x} {lc.km}</option>)}</select></label>}</div>{rows.some(r=>ageInIST(r.date)>7)&&<p className="ks-fine">{c.reportedOnly} · {c.dateWarn}</p>}
+   <section className="ks-section"><div className="ks-section-head"><h2><MapPin className="inline"/> {origin?.label||lc.find}</h2>{origin&&<label>{lc.radius}<select aria-label={lc.radius} value={radius} onChange={e=>setRadius(Number(e.target.value))}>{RADIUS_OPTIONS.map(x=><option key={x} value={x}>{x} {lc.km}</option>)}</select></label>}</div>{rows.some(r=>ageInIST(r.date)>7)&&<p className="ks-fine">{c.reportedOnly} · {c.dateWarn}</p>}
     <div className="ks-home-crop-row"><label>{c.qCrop}<CropPicker crops={catalogue.data?.commodities||[]} value={crop} onChange={x=>{setCrop(x);setVariety('');setPicked([]);}} placeholder={c.searchCrop}/></label><label>{c.variety}<select aria-label={c.variety} disabled={!varieties.length} value={variety} onChange={e=>{setVariety(e.target.value);setPicked([]);}}><option value="">{c.variety}</option>{varieties.map(v=><option key={v}>{v}</option>)}</select></label><label>{c.qQty}<small>{c.optionalQuantity}</small><div className="ks-qty"><input aria-label={c.qQty} type="number" min="0.1" step="0.1" value={qty} onChange={e=>setQty(e.target.value)}/><span>{c.quintals}</span></div></label></div>
     {!origin?<p className="ks-fine">{lc.manual} · {lc.locate}</p>:!crop?<p className="ks-notice">{c.chooseFirst}</p>:prices.isLoading?<p role="status">{lc.loading}</p>:prices.error?<p role="alert">{c.error}</p>:!rows.length?<p className="ks-notice">{c.noMarkets}</p>:<>
      <div className="ks-card-grid">{rows.map(r=>{const loc=near.find(l=>marketKey(l)===marketKey(r));const km=loc&&origin&&verifiedYard(loc)?distanceKm(origin,loc):null;const checked=picked.includes(r.id);return <article className="ks-option ks-home-market" key={r.id}><h3>{r.market}</h3><small>{r.district}, {r.state}</small>{km!==null&&<p>{km.toFixed(1)} {lc.km} · {origin.gps?'GPS':'Town centre'} · {lang==='kn'?'ನೇರ ರೇಖೆ':'straight line'}</p>}{!loc&&<small>{lang==='kn'?'ಜಿಲ್ಲೆಯ ವರದಿ; ಹತ್ತಿರದ ದೂರ ಪರಿಶೀಲಿಸಿಲ್ಲ':'District report · nearby distance not verified'}</small>}<p>{r.commodity} · {r.variety}</p><b className="ks-option-price">{money(r.modal_price)}<small>{c.perQuintal}</small></b><p className="ks-minmax">{c.min} {money(r.min_price)} · {c.max} {money(r.max_price)}</p><p className="ks-fine">{c.reportedOn} {r.date}</p><details className="ks-home-source"><summary>{c.source}</summary><PriceTimestamps report={r}/><small>{r.source_name}</small></details><label className="ks-home-pick"><input type="checkbox" checked={checked} disabled={!checked&&(!comparableReport(r)||picked.length>=5||(first&&comparisonKey(first)!==comparisonKey(r)))} onChange={()=>setPicked(p=>checked?p.filter(id=>id!==r.id):[...p,r.id])}/>{c.compare}</label><Button variant="outline" onClick={()=>void nav({to:'/find-market',search:{crop:r.commodity,qty:optionalPriceQuantity(qty),market:marketKey(r),reportId:r.id}})}><IndianRupee/>{c.find}</Button></article>;})}</div>

@@ -1,4 +1,4 @@
-import {useEffect,useId,useMemo,useState} from 'react';
+import {useEffect,useId,useMemo,useRef,useState} from 'react';
 import {Search,Wheat,X,PenLine,History,Star,CheckCircle2,Link2,Sprout} from 'lucide-react';
 import {searchCommodities} from '@/lib/commodity-search';
 import {byCategory,categories,pickerCopy,pushRecent,readRecent,recognise,type Category} from '@/lib/crop-catalogue';
@@ -9,6 +9,8 @@ const POPULAR=['Maize','Bengal Gram(Gram)(Whole)','Onion','Tomato','Paddy(Common
 export function CropPicker({crops,value,onChange,placeholder,label,allowCustom=true}:{crops:string[];value:string;onChange:(v:string)=>void;placeholder:string;label?:string;allowCustom?:boolean}){
  const {lang}=useKrishi();const p=pickerCopy(lang);const id=useId();
  const [q,setQ]=useState('');const [open,setOpen]=useState(false);const [cat,setCat]=useState<Category|''>('');const [manual,setManual]=useState(false);const [recent,setRecent]=useState<string[]>([]);
+ const root=useRef<HTMLDivElement>(null);
+ useEffect(()=>{if(!open)return;const close=(e:PointerEvent)=>{if(root.current&&!root.current.contains(e.target as Node))setOpen(false);};document.addEventListener('pointerdown',close);return()=>document.removeEventListener('pointerdown',close);},[open]);
  useEffect(()=>setRecent(readRecent()),[]);
  const grouped=useMemo(()=>byCategory(crops),[crops]);
  const matches=useMemo(()=>q?searchCommodities(crops,q,10):[],[crops,q]);
@@ -16,7 +18,7 @@ export function CropPicker({crops,value,onChange,placeholder,label,allowCustom=t
  const pick=(v:string)=>{onChange(v);pushRecent(v);setRecent(readRecent());setOpen(false);setQ('');setManual(false);setCat('');};
  if(value){const known=crops.includes(value);return <div className={`ks-crop-picked ${known?'':'custom'}`}><Wheat/><div><b>{value}</b><small className={`ks-crop-status ${known?'ok':'custom'}`}>{known?<><CheckCircle2/>{p.official} · {p.hasData}</>:<><Sprout/>{p.custom}</>}</small></div><button type="button" aria-label={p.change} onClick={()=>{onChange('');setOpen(true);}}><X/></button></div>;}
  const chip=(m:string,icon?:React.ReactNode)=><button key={m} type="button" className="ks-crop-chipbtn" onClick={()=>pick(m)}>{icon}{m}</button>;
- return <div className="ks-crop-picker">{label&&<span className="ks-crop-picker-label">{label}</span>}
+ return <div ref={root} className="ks-crop-picker">{label&&<span className="ks-crop-picker-label">{label}</span>}
   <div className="ks-crop-input">{manual?<PenLine/>:<Search/>}<input role="combobox" aria-expanded={open} aria-controls={id} aria-label={manual?p.manualHint:placeholder} placeholder={manual?p.manualHint:placeholder} value={q} onChange={e=>{setQ(e.target.value);setOpen(true);}} onFocus={()=>setOpen(true)} onKeyDown={e=>{if(e.key==='Escape')setOpen(false);if(e.key==='Enter'){e.preventDefault();if(manual&&q.trim())pick(rec?.match&&rec.status==='official'?rec.match:q.trim());else if(matches[0])pick(matches[0]);}}}/>{(q||manual)&&<button type="button" aria-label="Clear" onClick={()=>{setQ('');setManual(false);}}><X/></button>}</div>
   {open&&<div id={id} role="listbox" className="ks-crop-panel">
    {manual?<div className="ks-crop-manual">

@@ -1,5 +1,10 @@
 # KRISHISETU
 
+## Crop search and nearby prices
+- [x] Close crop panel on outside pointer clicks and Escape; outside-click browser check passed.
+- [x] Extend distance choices to 300/500/1000 km, nearest verified yards first, including across state borders; bounded to 150 yards and 24 visible results.
+- [x] Refresh selected crop/radius prices every 30 seconds and exclude reports older than seven days. Eight tests passed; Dharwad maize showed Haliyala at 28.5 km, ₹3,000 reported 12 Nov, and 14 recent results at 300 km.
+
 ## Clear market dates and optional quantity
 - [x] Simplify market status with highlighted report/fetch dates and source; restore latest available price strip without relabeling older prices. Desktop status and phone overflow checked.
 - [x] Leave homepage quantity blank and optional for price browsing; 11 tests passed and empty, non-required input verified in browser.
