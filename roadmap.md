@@ -1,5 +1,13 @@
 # KRISHISETU
 
+## India-wide crop-yield correction
+- [ ] Acquire and audit authentic production/area data and environmental sources; preserve raw provenance and explicit unavailable sources.
+- [ ] Implement yield-only cleaning, historical cutoff features, temporal and unseen-district evaluation, tuning and saved inference artifacts.
+- [ ] Train Random Forest, XGBoost, CatBoost and a baseline on identical splits; publish measured coverage, metrics and crop-specific errors.
+- [ ] Integrate yield comparison and supported-combination prediction while retaining historical market-price research.
+- [ ] Verify datasets, trained artifacts, API, dashboard and regressions; document deployment blockers separately.
+- [ ] Prior comprehensive viva handbook remains unfinished; superseded for this turn by the requested actual ML rebuild.
+
 ## Nationwide model coverage and Python-service reconnection
 - [x] Tell the user where to find the Python HTTPS service URL and shared token; do not request or expose them in chat. Deployment records indicate the prior service was never deployed, so an existing URL may not exist.
 - [ ] Reconnect and verify the existing persistent Python history service once its HTTPS URL and matching token are securely supplied; confirm the nationwide dataset checksum, coverage and dates before training.
