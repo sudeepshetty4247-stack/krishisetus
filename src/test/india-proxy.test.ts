@@ -12,7 +12,7 @@ beforeAll(async()=>{
   if(failNext>0){failNext--;res.writeHead(503);return res.end('busy');}
   const off=Number(u.searchParams.get('offset'));const lim=Number(u.searchParams.get('limit'));
   const all=[...Array.from({length:3},(_,i)=>rec(i)),rec(0),{...rec(9),modal_price:''}];
-  res.writeHead(200,{'content-type':'application/json'});res.end(JSON.stringify({total:all.length,records:all.slice(off,off+lim)}));});
+  res.writeHead(200,{"content-type":"application/json"});return res.end(JSON.stringify({total:all.length,records:all.slice(off,off+lim)}));});
  await new Promise<void>(r=>up.listen(0,r));
  Object.assign(process.env,{UPSTREAM_BASE:`http://127.0.0.1:${(up.address() as AddressInfo).port}`,DATA_GOV_IN_API_KEY:'KEY',PROXY_TOKEN:TOKEN,UPSTREAM_ATTEMPTS:'3',CACHE_TTL_MS:'60000'});
  // @ts-expect-error plain JS module outside the app
