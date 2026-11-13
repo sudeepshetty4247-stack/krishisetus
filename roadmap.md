@@ -1,5 +1,8 @@
 # KRISHISETU
 
+## Today-only homepage price strip
+- [x] Show only genuine reports matching today's IST date, refresh automatically, and show an explicit waiting state when none exist. Seven tests passed; homepage waiting state verified. Source runs at 06:08/06:09 UTC stored 65/67 older reports; today's reports remain unavailable.
+
 ## Minute checks and CEDA clarification
 - [x] Confirmed relay HTTP 530 and direct official API connection failure. CEDA setup was declined again; no authorized CEDA retrieval can be verified.
 - [x] Changed the existing managed mandi retrieval schedule from three-hourly to every minute; retained authenticated callback and ingestion lease to prevent overlapping downloads. Configuration verified, not successful delivery or new prices.

@@ -16,7 +16,7 @@ period:'Forecast period',days:'days',fcUnavailable:'No forecast is shown: no Pyt
 error:'Something went wrong while loading. Please try again.',loadingText:'Loading…',chooseFirst:'Choose a crop first.',
 researchSub:'Advanced data, Python model laboratory, data quality and sources. Uses the same data as Farmer Mode.',lab:'Model lab',quality:'Data quality',sourcesNav:'Sources',analysis:'Crop analysis',opportunities:'Opportunities',
 aboutText:'KRISHISETU helps Indian farmers decide where to sell. It shows official reported mandi prices with their reporting dates, compares markets, and calculates what you could take home after your own expense estimates. Dharwad, Karnataka is the first detailed research area.',freshNote:'Mandi prices are the latest published official reports, not live second-by-second prices.'};
-type Copy=typeof en;
+type Copy=typeof en & {noTodayReports?:string};
 const kn:Copy={home:'ಮುಖಪುಟ',find:'ಉತ್ತಮ ಮಾರುಕಟ್ಟೆ ಹುಡುಕಿ',prices:'ಮಾರುಕಟ್ಟೆ ಬೆಲೆಗಳು',trends:'ಬೆಲೆ ಪ್ರವೃತ್ತಿ',plan:'ನನ್ನ ಮಾರಾಟ ಯೋಜನೆ',more:'ಇನ್ನಷ್ಟು',compare:'ಮಾರುಕಟ್ಟೆ ಹೋಲಿಕೆ',how:'ಇದು ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ',about:'ಕೃಷಿಸೇತು ಬಗ್ಗೆ',research:'ಸಂಶೋಧನಾ ವಿಭಾಗ',farmerMode:'ರೈತ ವಿಭಾಗ',language:'ಭಾಷೆ',
 heroTitle:'ನಿಮ್ಮ ಬೆಳೆಗೆ ಉತ್ತಮ ಮಾರುಕಟ್ಟೆ ಹುಡುಕಿ',heroSub:'ನಿಮ್ಮ ಬೆಳೆಗೆ ವಿವಿಧ ಮಾರುಕಟ್ಟೆಗಳ ಬೆಲೆ ಹೋಲಿಸಿ, ಸಾಗಣೆ ವೆಚ್ಚ ಲೆಕ್ಕ ಹಾಕಿ, ಉತ್ತಮ ಮಾರಾಟದ ಆಯ್ಕೆಯನ್ನು ಕಂಡುಕೊಳ್ಳಿ.',promise:'ನಿಮ್ಮ ಮಾರುಕಟ್ಟೆ ತಿಳಿಯಿರಿ. ಆಯ್ಕೆಗಳನ್ನು ಹೋಲಿಸಿ. ಜಾಣ ಮಾರಾಟ ನಿರ್ಧಾರ ಮಾಡಿ.',
 qCrop:'ಯಾವ ಬೆಳೆ ಮಾರಾಟ ಮಾಡಬೇಕು?',qQty:'ನಿಮ್ಮ ಬಳಿ ಎಷ್ಟು ಉತ್ಪನ್ನವಿದೆ?',qLoc:'ಎಲ್ಲಿಂದ ಮಾರಾಟ ಮಾಡುತ್ತೀರಿ?',quintalHint:'1 ಕ್ವಿಂಟಾಲ್ = 100 ಕಿಲೋಗ್ರಾಂ',quintals:'ಕ್ವಿಂಟಾಲ್',findBtn:'ಉತ್ತಮ ಮಾರುಕಟ್ಟೆ ಹುಡುಕಿ',chooseCrop:'ಬೆಳೆ ಆಯ್ಕೆಮಾಡಿ',chooseState:'ರಾಜ್ಯ ಆಯ್ಕೆಮಾಡಿ',chooseDistrict:'ಜಿಲ್ಲೆ ಆಯ್ಕೆಮಾಡಿ',chooseMarket:'ನಿಮ್ಮ ಸಾಮಾನ್ಯ ಮಾರುಕಟ್ಟೆ',any:'ಯಾವುದಾದರೂ',
@@ -131,7 +131,16 @@ ta:{createPlan:'விற்பனைத் திட்டம் உருவ�
 ml:{createPlan:'വിൽപ്പന പദ്ധതി സൃഷ്ടിക്കുക',editPlan:'തിരുത്തുക',sellingDate:'പ്രതീക്ഷിക്കുന്ന വിൽപ്പന തീയതി',planTitle:'വിൽപ്പന പദ്ധതി',unitLabel:'അളവിന്റെ ഏകകം',startLocation:'ആരംഭ ഗ്രാമം / പട്ടണം / സ്ഥലം',sellingMarket:'വിൽപ്പന വിപണി',planRequired:'വിള, പൂജ്യത്തേക്കാൾ കൂടുതലുള്ള അളവ്, ആരംഭ സ്ഥലം നൽകുക.',draftPlan:'കരട് പദ്ധതി: പരിശോധിച്ച റിപ്പോർട്ട് ഇല്ലാത്തതിനാൽ വിലയും അറ്റമൂല്യവും സൃഷ്ടിച്ചിട്ടില്ല.'},
 mr:{createPlan:'विक्री योजना तयार करा',editPlan:'बदला',sellingDate:'अपेक्षित विक्री दिनांक',planTitle:'विक्री योजना',unitLabel:'एकक',startLocation:'सुरुवातीचे गाव / शहर / ठिकाण',sellingMarket:'विक्री बाजार',planRequired:'पीक, शून्यापेक्षा जास्त प्रमाण आणि सुरुवातीचे ठिकाण नोंदवा.',draftPlan:'मसुदा योजना: सत्यापित अहवाल नाही, त्यामुळे भाव आणि निव्वळ मूल्य बनवलेले नाही.'}};
 const all:Record<Language,Partial<Copy>>={en,kn,hi,te,ta,ml,mr};
+const noTodayReports:Record<Language,string>={
+ en:'No verified reports for today yet. Waiting for official publication.',
+ kn:'ಇಂದಿನ ಪರಿಶೀಲಿತ ವರದಿಗಳು ಇನ್ನೂ ಬಂದಿಲ್ಲ. ಅಧಿಕೃತ ಪ್ರಕಟಣೆಗಾಗಿ ಕಾಯಲಾಗುತ್ತಿದೆ.',
+ hi:'आज की सत्यापित रिपोर्ट अभी नहीं आई। आधिकारिक प्रकाशन की प्रतीक्षा है।',
+ te:'ఈరోజు ధృవీకరించిన నివేదికలు ఇంకా రాలేదు. అధికారిక ప్రచురణ కోసం వేచి ఉంది.',
+ ta:'இன்றைய சரிபார்க்கப்பட்ட அறிக்கைகள் இன்னும் வரவில்லை. அதிகாரப்பூர்வ வெளியீட்டுக்காகக் காத்திருக்கிறது.',
+ ml:'ഇന്നത്തെ പരിശോധിച്ച റിപ്പോർട്ടുകൾ ഇതുവരെ വന്നിട്ടില്ല. ഔദ്യോഗിക പ്രസിദ്ധീകരണത്തിനായി കാത്തിരിക്കുന്നു.',
+ mr:'आजचे सत्यापित अहवाल अद्याप आलेले नाहीत. अधिकृत प्रकाशनाची प्रतीक्षा आहे.'
+};
 export type FarmerCopy=Copy;
-export function farmerCopy(lang:Language){return {...en,...all[lang],...simple[lang],...planWords[lang]};}
+export function farmerCopy(lang:Language){return {...en,...all[lang],...simple[lang],...planWords[lang],noTodayReports:noTodayReports[lang]};}
 export const copyKeys=Object.keys(en) as (keyof Copy)[];
 export function missingKeys(lang:Language){return copyKeys.filter(k=>!(k in all[lang]));}

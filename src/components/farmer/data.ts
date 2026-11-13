@@ -15,7 +15,7 @@ export const AGM2_SOURCE='AGMARKNET 2.0 last-week price';
 export const PRICE_SOURCES=[AGM2_SOURCE,DAILY_SOURCE];
 export const HISTORY_SOURCE='data.gov.in variety-wise history';
 export type TickerRow={state:string;district:string;market:string;commodity:string;variety:string;grade:string;source_name:string;date:string;modal_price:number;retrieved_at:string;prev_date:string;prev_price:number;change:number;pct:number};
-export function useTicker(){return useQuery({queryKey:['f-ticker'],staleTime:300000,queryFn:async()=>(await summary<TickerRow[]>('ticker'))??[]});}
+export function useTicker(){return useQuery({queryKey:['f-ticker'],staleTime:30000,refetchInterval:30000,queryFn:async()=>(await summary<TickerRow[]>('ticker'))??[]});}
 // Server-side filtered latest reports so national daily volumes (~15k rows/day) are never truncated client-side.
 export function useFilteredReports(f:{commodity?:string|undefined;search?:string|undefined;state?:string|undefined;district?:string|undefined;market?:string|undefined},limit=600){const {user}=useKrishi();return useQuery({queryKey:['f-filtered',user,f,limit],queryFn:async()=>{let q=supabase.from('agri_reports').select('*').order('date',{ascending:false}).order('modal_price',{ascending:false}).limit(limit);
  if(f.commodity)q=q.eq('commodity',f.commodity);else if(f.search)q=q.ilike('commodity',`%${f.search.replace(/[%_,()]/g,' ').trim()}%`);
