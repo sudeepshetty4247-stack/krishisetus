@@ -173,6 +173,10 @@ def create_service(root=None):
         if not path.is_file():raise HTTPException(404,detail='Training job not found for this account')
         return json.loads(path.read_text())
 
+    from yield_engine.api import yield_router
+    yield_root=Path(os.environ.get('KRISHI_YIELD_ROOT',str(root/'yield-output')))
+    app.include_router(yield_router(yield_root),dependencies=[Depends(authorize)])
+
     # Preserve the existing analytics/train/job/forecast protocol. Flask's local-only pages stay host-protected.
     from app import create_app
     app.mount('/',WSGIMiddleware(create_app(root)))

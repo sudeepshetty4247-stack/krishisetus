@@ -6,16 +6,21 @@ from .features import make_splits,FEATURES,CATEGORICAL
 from .evaluation import metrics,subgroup_report
 from .tuning import tune,SEARCH
 from .models import build
-from .artifacts import save_model,write_json
+from .artifacts import save_model,load_model,write_json
 from .acquisition import digest
 
 def train(master_path,output):
     out=Path(output);out.mkdir(parents=True,exist_ok=True);master=pd.read_parquet(master_path)
-    train,val,test=make_splits(master)
+    parts=sorted(out.glob('train-part-*.parquet'))
+    if parts and (out/'validation.parquet').exists() and (out/'test.parquet').exists():
+        train=pd.concat([pd.read_parquet(p) for p in parts],ignore_index=True)
+        val=pd.read_parquet(out/'validation.parquet');test=pd.read_parquet(out/'test.parquet')
+    else:train,val,test=make_splits(master)
     # No geographic selection uses test yields. Require five earlier observed years only.
     combos=train.groupby(CATEGORICAL).year.nunique();keys=set(combos[combos>=5].index)
     train=train.loc[pd.MultiIndex.from_frame(train[CATEGORICAL]).isin(keys)].copy();val=val.loc[pd.MultiIndex.from_frame(val[CATEGORICAL]).isin(keys)].copy();test=test.loc[pd.MultiIndex.from_frame(test[CATEGORICAL]).isin(keys)].copy()
-    train.to_parquet(out/'train.parquet',index=False);val.to_parquet(out/'validation.parquet',index=False);test.to_parquet(out/'test.parquet',index=False)
+    for i,start in enumerate(range(0,len(train),100000)):train.iloc[start:start+100000].to_parquet(out/f'train-part-{i:02}.parquet',index=False)
+    val.to_parquet(out/'validation.parquet',index=False);test.to_parquet(out/'test.parquet',index=False)
     report={'objective':'District-season crop yield regression','unit':'tonnes/hectare','dataset_sha256':digest(master_path),'features':FEATURES,'cutoff':'January 1 of crop start year; published crop/weather history at least two years old','protocol':'Train 1997–2016; validation 2017–2019; unseen final test 2020–2022. Validation historical targets frozen at 2016; test frozen at 2019. No current area, production or target input.','split_rows':{'train':len(train),'validation':len(val),'test':len(test)},'models':[]}
     finaltrain=pd.concat([train,val],ignore_index=True);winner=None;bestmae=float('inf')
     for name in SEARCH:
@@ -38,8 +43,7 @@ def train(master_path,output):
     params=next(x['parameters'] for x in report['models'] if x['name']==winner);gm=build(winner,params);gm.fit(geo_train[FEATURES],geo_train.yield_t_ha)
     report['unseen_district_test']={'held_districts':len(held),'training_rows':len(geo_train),'test':metrics(geo_test.yield_t_ha,np.maximum(0,gm.predict(geo_test[FEATURES]))),'basis':'Deterministic 20% district holdout, selected temporal model parameters fixed; held district crop target history removed'}
     best=next(x for x in report['models'] if x['name']==winner)
-    import joblib
-    fm=joblib.load(out/best['artifact']['file']);pre=fm.regressor_.named_steps['preprocess'];reg=fm.regressor_.named_steps['model'];names=pre.get_feature_names_out()
+    fm=load_model(out/best['artifact']['file'],best['artifact']['sha256']);pre=fm.regressor_.named_steps['preprocess'];reg=fm.regressor_.named_steps['model'];names=pre.get_feature_names_out()
     importance=getattr(reg,'feature_importances_',None)
     report['feature_importance']=sorted([{'feature':str(n),'importance':float(v)} for n,v in zip(names,importance)],key=lambda x:-x['importance'])[:30] if importance is not None else []
     # Save only combinations supported by earlier training, not every observed district/crop.

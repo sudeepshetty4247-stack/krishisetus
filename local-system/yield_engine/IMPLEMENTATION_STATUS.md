@@ -1,4 +1,4 @@
-# India-wide crop-yield rebuild — partial implementation
+# India-wide crop-yield rebuild — executed research models
 
 ## Executed and saved
 - Official Directorate of Economics and Statistics state-by-state reports retrieved directly from `https://data.desagri.gov.in/report/crop/horizontal_crop_vertical_year`, using the public reporting page and its session-bound form. 400,379 nonempty raw observations; 379,864 cleaned observations.
@@ -18,10 +18,29 @@ Eligible partitions: training through 2016; validation 2017–2019; final test 2
 
 Completed baseline: log-target mean regression, final test **38,142 observations**, R² **−0.0584797631**, MAE **4.4468495206 t/ha**, RMSE **14.1755577957 t/ha**, MAPE **151.0747449%** (188 zero targets excluded), sMAPE **80.5955034%**. This weak baseline is not a usable selected model. Cross-crop aggregate errors are dominated by differing yield scales; per-crop results are saved in the evaluation report.
 
-Random Forest training was interrupted before a completed candidate/checkpoint; XGBoost and CatBoost were not executed. No tree result, selected winner, feature importance, completed geographic test or nationwide production prediction is claimed.
+## Completed model comparison
 
-## Not complete
-The existing hosted dashboard and prediction API are unchanged. New yield inference/API/dashboard integration, complete tuning, unseen-district evaluation and artifact load/predict verification remain unfinished. Existing external Python service deployment remains unconfigured. Sandbox datasets alone do not establish hosted availability. Historical coverage does not support predicting 2026 or arbitrary future years.
+All four models were trained on the same 254,156 training, 41,203 validation and 38,142 final-test observations. Two validation-only parameter configurations were evaluated for each tree model. Final artifacts refit training plus validation only; final test years remain unseen during fitting and selection.
+
+| Model | Test R² | MAE t/ha | RMSE t/ha | MAPE % |
+|---|---:|---:|---:|---:|
+| Baseline | -0.058480 | 4.446850 | 14.175558 | 151.074745 |
+| Random Forest | 0.864230 | 1.082599 | 5.076929 | 31.044829 |
+| XGBoost | 0.870219 | 1.043326 | 4.963696 | 29.441214 |
+| CatBoost | 0.866542 | 1.045930 | 5.033506 | 30.301708 |
+
+XGBoost selected by lowest validation MAE (1.469686 t/ha), not by test score. R² 0.870 is explained variance, **not 87% prediction accuracy**. Validation R² is only 0.214; extreme official observations (e.g. Srikakulam onion 2017, 8,140 tonnes / 2 hectares = 4,070 t/ha) remain in evaluation rather than being deleted to inflate scores. Test/validation distribution differences must be disclosed. This is a limited two-configuration search, not exhaustive optimization.
+
+Crop-specific XGBoost test R²: Wheat 0.793139; Maize 0.717064; Rice 0.217669; Onion 0.684483; Sugarcane 0.546448. The strong overall score does not imply strong performance for every crop. Test coverage: 32 historical state labels, 639 district identities, 49 crops and six seasons.
+
+Separate deterministic district holdout: 131 districts, 7,445 test observations; XGBoost R² 0.546889, MAE 2.535379 t/ha. Held district target-history features removed; geographic performance is weaker. Feature importance is saved and is not causal evidence. Random Forest uses dense ordinal categorical IDs for computational tractability; boosting uses one-hot categories. No scaling is needed for these trees. All models use training-fitted median numeric imputation and log1p yield targets.
+
+All four artifacts reloaded, full test predictions and all regression metrics independently recomputed to tolerance 1e-6. Python service authenticated predictions verified for Karnataka/Udupi/Rice, Punjab/Ludhiana/Wheat and Maharashtra/Pune/Maize (2021). Unsupported 2026 requests rejected; anonymous prediction calls rejected. 24 focused Python tests and 108 existing website tests passed. Desktop/mobile comparison, filters, preserved historical research and zero page errors verified.
+
+## Integration and remaining limitations
+The primary model-comparison page now displays actual yield results and coverage, with the previous price experiment behind a separate switch. Authenticated `/v1/yield/predict`, `/coverage` and `/report` endpoints mount inside the existing Python service, protected by its existing token boundary. Browser calls use the authenticated hosted proxy. Set KRISHI_YIELD_ROOT to the saved yield-output directory on the Python host.
+
+Online inference remains blocked by the previously missing deployed Python URL/token; the successful local service tests do not claim a hosted connection. No arbitrary future forecast or 2026 yield is supported. Predictions are explicitly historical pre-season hindcasts for exact evaluated 2020–2022 rows, using saved feature inputs but never actual target/production. Soil, irrigation, release-vintage verification and recent-data forecasts remain unavailable. The separate viva handbook remains unfinished.
 
 ## Reproduce
 Install the existing Python requirements plus `scipy`, `shapely`, `lxml`, `beautifulsoup4` for this pipeline. Run from the repository root:
@@ -31,4 +50,4 @@ PYTHONPATH=local-system python -m pytest local-system/tests/test_yield_engine.py
 PYTHONPATH=local-system python -m yield_engine --dataset local-system/yield-output/processed/master.parquet --output local-system/yield-output
 ```
 
-Windows: set `PYTHONPATH=local-system` before the same Python commands. Dataset acquisition additionally requires Playwright/Chromium on the acquisition workstation only. `acquisition.acquire_production` saves report tables, not session tokens. `download_environment` records actual files and checksums. Training reruns are not needed merely to inspect the saved baseline checkpoint, but inference is not yet implemented.
+Windows: set `PYTHONPATH=local-system` before the same Python commands. Dataset acquisition additionally requires Playwright/Chromium on the acquisition workstation only. `acquisition.acquire_production` saves report tables, not session tokens. `download_environment` records actual files and checksums. Training reruns are not needed merely to inspect the saved baseline checkpoint, and inference loads the saved artifacts without retraining.

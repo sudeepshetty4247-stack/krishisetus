@@ -1,0 +1,47 @@
+{
+  "seed": 42,
+  "search": {
+    "Baseline": [
+      {}
+    ],
+    "Random Forest": [
+      {
+        "max_depth": 14,
+        "min_samples_leaf": 5
+      },
+      {
+        "max_depth": 22,
+        "min_samples_leaf": 3
+      }
+    ],
+    "XGBoost": [
+      {
+        "max_depth": 5,
+        "subsample": 0.85,
+        "colsample_bytree": 0.9
+      },
+      {
+        "max_depth": 8,
+        "subsample": 0.85,
+        "colsample_bytree": 0.9
+      }
+    ],
+    "CatBoost": [
+      {
+        "depth": 6,
+        "l2_leaf_reg": 5
+      },
+      {
+        "depth": 8,
+        "l2_leaf_reg": 8
+      }
+    ]
+  },
+  "python_model_unit": "tonnes/hectare",
+  "training_end": 2019,
+  "test_start": 2020,
+  "test_end": 2022,
+  "geographic_holdout_hash_modulus": 5,
+  "source": "Government DES official reports",
+  "artifacts_trusted_local_only": true
+}

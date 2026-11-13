@@ -1,11 +1,12 @@
 # KRISHISETU
 
 ## India-wide crop-yield correction
+- [x] Completed all four experiments on the single verified DES/IMD master dataset; XGBoost test R² 0.870219, MAE 1.043326 t/ha, selected by validation MAE; no accuracy percentage claimed.
 - [x] Acquired official DES production tables: 400,379 raw / 379,864 cleaned records, 37 historical state/UT labels, 748 state–district identities, 50 tonne-unit crops, six seasons, 1997–2022. IMD rainfall/min/max temperature files retrieved for 1995–2021; rainfall joins 309,555 rows, temperature 130,495. SoilGrids timed out; no soil features claimed.
 - [ ] Implement yield-only cleaning, historical cutoff features, temporal and unseen-district evaluation, tuning and saved inference artifacts.
-- [ ] Train Random Forest, XGBoost, CatBoost and a baseline on identical splits; baseline completed and saved, tree training stopped before completion. No new winner or complete comparison claimed.
-- [ ] Integrate yield comparison and supported-combination prediction while retaining historical market-price research.
-- [ ] Verify datasets, trained artifacts, API, dashboard and regressions; document deployment blockers separately.
+- [x] Trained Random Forest, XGBoost, CatBoost and baseline; saved models, preprocessing, full predictions, feature importance and crop/state metrics. Unseen-district R² 0.546889.
+- [x] Integrated yield comparison and authenticated historical prediction API; retained separate historical market-price research. Online inference still requires deployed Python service URL/token.
+- [x] Reloaded all artifacts and recomputed metrics; authenticated API predictions across three states verified; 24 Python and 108 website tests pass; desktop/mobile comparison verified. Hosted end-to-end prediction blocked by missing deployed Python connection.
 - [ ] Prior comprehensive viva handbook remains unfinished; superseded for this turn by the requested actual ML rebuild.
 
 ## Nationwide model coverage and Python-service reconnection

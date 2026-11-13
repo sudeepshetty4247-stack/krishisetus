@@ -1,0 +1,17 @@
+{
+  "sha256": "3fd1abf26ad70ca816b1c85b6c71ac6fc6a2a798403336a1b62fa73219199990",
+  "parts": [
+    {
+      "file": "random-forest.joblib.part-00",
+      "sha256": "21dfe95eb24445db02a5e27bc38957f910e0cc472ed8c4f83e42044c58dd6777"
+    },
+    {
+      "file": "random-forest.joblib.part-01",
+      "sha256": "6a6c05d16ce5bc9ccb99b296d4f629809022df9926e8d3d1a31f0dbfbd715749"
+    },
+    {
+      "file": "random-forest.joblib.part-02",
+      "sha256": "37ca20605341cbfcb9ab108db69ee07b4b93a6af43c324ff30eb20fffa0f6efa"
+    }
+  ]
+}

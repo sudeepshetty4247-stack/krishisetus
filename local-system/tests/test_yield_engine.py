@@ -25,3 +25,11 @@ def test_zero_yields_remain_and_mape_exclusions_counted():
 
 def test_conflicting_duplicate_keys_excluded():
  c,r=clean(pd.DataFrame([row(2000,2),row(2000,3),row(2001,1)]));assert c.year.tolist()==[2001];assert r['conflicting_keys']==1
+
+def test_prediction_rejects_unsupported_year_and_location():
+ from pathlib import Path
+ from yield_engine.prediction import YieldPredictor
+ import pytest
+ p=YieldPredictor(Path(__file__).parents[1]/'yield-output')
+ with pytest.raises(ValueError,match='not covered'):p.predict('Karnataka','Udupi','Rice','Kharif',2026)
+ with pytest.raises(ValueError,match='not covered'):p.predict('Unknown state','Unknown district','Rice','Kharif',2021)
