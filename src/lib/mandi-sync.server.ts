@@ -21,15 +21,15 @@ export function normaliseRecord(raw:unknown,retrievedAt:string,today:string):Dai
  const suspicious=r.min_price!==null&&r.max_price!==null&&r.max_price>r.min_price*4;
  return {...r,retrieved_at:retrievedAt,suspicious};
 }
-async function getJson(url:string,init?:RequestInit):Promise<any>{
+async function getJson(url:string,init?:RequestInit,attempts=3,timeoutMs=20000):Promise<any>{
  let last='';
- for(let attempt=0;attempt<3;attempt++){
-  try{const res=await fetch(url,{...init,signal:AbortSignal.timeout(20000)});
+ for(let attempt=0;attempt<attempts;attempt++){
+  try{const res=await fetch(url,{...init,signal:AbortSignal.timeout(timeoutMs)});
    if(res.ok)return await res.json();
    last=`[${res.status}] ${(await res.text()).slice(0,300)}`;
    if(res.status!==429&&res.status<500)break;
   }catch(e){last=e instanceof Error?e.message:String(e);}
-  if(attempt<2)await new Promise(r=>setTimeout(r,800*2**attempt));
+  if(attempt<attempts-1)await new Promise(r=>setTimeout(r,800*2**attempt));
  }
  throw new Error(last||'request failed');
 }
@@ -38,17 +38,16 @@ async function pool<T,R>(items:T[],size:number,fn:(t:T)=>Promise<R>):Promise<R[]
  await Promise.all(Array.from({length:Math.min(size,items.length)},async()=>{while(i<items.length){const k=i++;const item=items[k];if(item!==undefined)out[k]=await fn(item);}}));
  return out;
 }
-async function fromOfficial(key:string,errors:string[]):Promise<{rows:unknown[];dataset:string}|null>{
- const rows:unknown[]=[];let offset=0,total=Infinity;
+// Workers are cancelled shortly after the scheduler call, so each run downloads ONE page from the saved offset
+// and the next minute continues; a full national cycle completes over successive runs, then restarts at 0.
+export const OFFICIAL_PAGE=1000;
+export function nextOfficialOffset(offset:number,got:number,total:number){const n=offset+got;return got===0||n>=total?0:n;}
+async function fromOfficial(key:string,offset:number,errors:string[]):Promise<{rows:unknown[];dataset:string;next:number;total:number}|null>{
  try{
-  while(offset<total&&offset<60000){
-   const d=await getJson(`${OFFICIAL}?api-key=${encodeURIComponent(key)}&format=json&limit=1000&offset=${offset}`);
-   const recs:any[]=Array.isArray(d.records)?d.records:[];total=Number(d.total)||0;
-   rows.push(...recs.map(r=>({date:toIso(r.arrival_date),state:r.state,district:r.district,market:r.market,commodity:r.commodity,variety:r.variety,grade:r.grade,min_price:r.min_price,max_price:r.max_price,modal_price:r.modal_price})));
-   if(!recs.length)break;offset+=recs.length;
-  }
-   if(offset<total)errors.push(`data.gov.in: bounded download stopped at ${offset}/${total}; coverage is incomplete`);
-   return {rows,dataset:`data.gov.in API ${new Date().toISOString().slice(0,10)}`};
+  const d=await getJson(`${OFFICIAL}?api-key=${encodeURIComponent(key)}&format=json&limit=${OFFICIAL_PAGE}&offset=${offset}`,undefined,1,8000);
+  const recs:any[]=Array.isArray(d.records)?d.records:[];const total=Number(d.total)||0;
+  const rows=recs.map(r=>({date:toIso(r.arrival_date),state:r.state,district:r.district,market:r.market,commodity:r.commodity,variety:r.variety,grade:r.grade,min_price:r.min_price,max_price:r.max_price,modal_price:r.modal_price}));
+  return {rows,dataset:`data.gov.in API ${new Date().toISOString().slice(0,10)} rows ${offset}-${offset+recs.length} of ${total}`,next:nextOfficialOffset(offset,recs.length,total),total};
  }catch(e){errors.push(`data.gov.in API: ${e instanceof Error?e.message:e}`);return null;}
 }
 function toIso(v:unknown){const m=/^(\d{2})\/(\d{2})\/(\d{4})$/.exec(String(v??''));return m?`${m[3]}-${m[2]}-${m[1]}`:String(v??'');}
@@ -84,10 +83,10 @@ async function performDailySync(opts:{date?:string|undefined}){
  const {supabaseAdmin}=await import('@/integrations/supabase/client.server');
  const started=new Date().toISOString(),errors:string[]=[];
  const today=new Date(Date.now()+5.5*3600000).toISOString().slice(0,10);
- let fetched:{rows:unknown[];dataset:string}|null=null;
+ let fetched:{rows:unknown[];dataset:string;next?:number}|null=null;let startOffset=0;
  const key=process.env['DATA_GOV_IN_API_KEY'];
- if(key&&!opts.date)fetched=await fromOfficial(key,errors);
- if(!fetched||!fetched.rows.length){try{fetched=await fromRelay(opts.date,errors);}catch(e){errors.push(`relay: ${e instanceof Error?e.message:e}`);}}
+ if(key&&!opts.date){const {data:st}=await supabaseAdmin.from('agri_sync_state').select('next_offset').eq('source',DAILY_SOURCE).maybeSingle();startOffset=Number(st?.next_offset)||0;fetched=await fromOfficial(key,startOffset,errors);}
+ if(!fetched){try{fetched=await fromRelay(opts.date,errors);}catch(e){errors.push(`relay: ${e instanceof Error?e.message:e}`);}}
  const received=fetched?.rows.length??0;
  const valid=(fetched?.rows??[]).map(r=>normaliseRecord(r,started,today)).filter((r):r is DailyRecord=>!!r);
  const unique=new Map<string,DailyRecord>();
@@ -113,7 +112,7 @@ async function performDailySync(opts:{date?:string|undefined}){
  const status=stored>0?(errors.length||stored!==records.length?'partial':'success'):received||errors.length?'failed':'no_records';
  const message=`${status}: ${stored} reports stored from ${received} received${reportDate?` · latest market report ${reportDate}`:''}${errors.length?` · ${errors[0]}`:''}`;
  const finished=new Date().toISOString();
- const {error:stateError}=await supabaseAdmin.from('agri_sync_state').upsert({source:DAILY_SOURCE,status,...(status==='success'?{last_success:finished}:{}),updated_at:finished,message,next_offset:0},{onConflict:'source',ignoreDuplicates:false});
+ const {error:stateError}=await supabaseAdmin.from('agri_sync_state').upsert({source:DAILY_SOURCE,status,...(status==='success'?{last_success:finished}:{}),updated_at:finished,message,next_offset:fetched?.next===undefined?0:(stored>0||!fetched.rows.length?fetched.next:startOffset)},{onConflict:'source',ignoreDuplicates:false});
  if(stateError)errors.push(`sync status: ${stateError.message}`);
  const finalStatus=errors.length&&stored>0?'partial':status;
  const {error:runError}=await supabaseAdmin.from('agri_source_runs').insert({source:DAILY_SOURCE,report_date:reportDate,started_at:started,finished_at:finished,status:finalStatus,requested:received,received,stored,rejected:received-valid.length,duplicates,message,errors:errors.slice(0,50)});

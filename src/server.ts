@@ -51,6 +51,13 @@ export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
       const handler = await getServerEntry();
+      // The scheduler drops its call after a few seconds, cancelling slow price downloads. Acknowledge the
+      // scheduled price job at once and finish it in the background; the route still authenticates the caller.
+      const waitUntil = (ctx as { waitUntil?: (p: Promise<unknown>) => void } | null)?.waitUntil;
+      if (typeof waitUntil === "function" && request.method === "POST" && new URL(request.url).pathname === "/api/public/jobs/mandi-sync") {
+        waitUntil.call(ctx, Promise.resolve(handler.fetch(request, env, ctx)).then(async (r) => { if (!r.ok) console.error(`mandi-sync background ${r.status}: ${(await r.text()).slice(0, 300)}`); }).catch((e) => console.error("mandi-sync background failed", e)));
+        return Response.json({ accepted: true }, { status: 202 });
+      }
       const response = await handler.fetch(request, env, ctx);
       return await normalizeCatastrophicSsrResponse(response);
     } catch (error) {
