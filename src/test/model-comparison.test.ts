@@ -1,6 +1,7 @@
 import {expect,it} from 'vitest';
 import {evaluatedAlgorithms,metricWinners,directionWinners,evaluationRows,filterExperiments,comparisonOptions,type EvaluationRow} from '@/lib/model-comparison';
 import evidence from '@/data/academic-comparison.json';
+import optimized from '@/data/optimized-comparison.json';
 import type {ModelRun} from '@/components/farmer/data';
 const rows=[{algorithm:'Naive',validation:{MAE:140,RMSE:145,sMAPE:5,R2:.47,n:30},test:{MAE:94.30,RMSE:136.4,sMAPE:4.83,R2:.47,n:30}},{algorithm:'SARIMA',validation:{MAE:130.7476,RMSE:141,sMAPE:4.9,R2:.48,n:30},test:{MAE:97.29,RMSE:134.64,sMAPE:4.98,R2:.483,n:30}}] as EvaluationRow[];
 it('keeps the Hubli validation selection distinct from the final test MAE winner',()=>{expect(metricWinners(rows,'validation','MAE')).toEqual(['SARIMA']);expect(metricWinners(rows,'test','MAE')).toEqual(['Naive']);});
@@ -38,4 +39,11 @@ it('includes optional algorithms only when actual evaluations contain them',()=>
  const extended={...old,report:{...old.report,horizons:{'1':{...h,test:{...h.test,LightGBM:h.test['Naive'],CatBoost:h.test['Naive']}}}}} as ModelRun;
  expect(evaluatedAlgorithms(old)).toHaveLength(6);expect(evaluatedAlgorithms(extended)).toEqual(['Naive','Seasonal naive','Random Forest','XGBoost','ARIMA','SARIMA','LightGBM','CatBoost']);
  expect(evaluationRows([extended])).toHaveLength(8);
+});
+it('reports the genuine optimized result below the requested 85 percent without forcing the target',()=>{
+ const rows=evaluationRows([optimized as unknown as ModelRun]).filter(r=>r.horizon===7);
+ expect(rows).toHaveLength(8);expect(rows.every(r=>r.test?.n===33)).toBe(true);
+ expect(Math.max(...rows.map(r=>r.direction?.test?.Accuracy??0))).toBe(.71875);
+ expect(directionWinners(rows,'test','Accuracy')).toEqual(['SARIMA']);
+ expect(metricWinners(rows,'test','MAE')).toEqual(['Naive']);
 });

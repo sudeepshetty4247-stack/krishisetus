@@ -13,6 +13,10 @@ def main():
     files = sorted((root/'runtime/optimization/raw').glob('*.parquet'))
     if len(files) != 6:
         raise ValueError('Six checksummed genuine yearly source files required')
+    checksums=json.loads((root/'runtime/optimization/raw/checksums.json').read_text())
+    for source in files:
+        if hashlib.sha256(source.read_bytes()).hexdigest() != checksums.get(source.name):
+            raise ValueError('Historical source checksum mismatch: '+source.name)
     con = duckdb.connect(config={'memory_limit':'512MB','threads':'2'})
     frame = con.execute("""SELECT trim(State) state,trim(District) district,trim(Market) market,
        trim(Commodity) commodity,trim(Variety) variety,trim(Grade) grade,cast(Arrival_Date as DATE) date,
@@ -47,6 +51,8 @@ def main():
     run={**previous,'id':run_id,'created_at':stamp,'run_version':'optimized-walk-forward-v1','artifact_path':str(path.relative_to(root)), 'report':report}
     (out/(run_id+'.json')).write_text(json.dumps(run,indent=2,allow_nan=False))
     (out/'latest.json').write_text(json.dumps(run,allow_nan=False))
+    # Retain executed evidence across sandbox restarts; the dashboard still reads Cloud, not this file.
+    (root.parent/'src/data/optimized-comparison.json').write_text(json.dumps(run,indent=2,allow_nan=False))
     print(json.dumps({'id':run_id,'artifact_load_verified':True,'horizons':{h:{'selected':v['selected'],'test':v['test'],'direction':v['direction']['test']} for h,v in entries.items()}},indent=2))
 
 if __name__ == '__main__':main()

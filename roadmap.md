@@ -1,12 +1,14 @@
 # KRISHISETU
 
 ## New workspace integrations
-- [ ] Set up fresh CEDA Agricultural Data and Google Maps Platform app connections in the new workspace; old connection references are no longer valid.
+- [x] Google Maps Platform freshly connected in the new workspace; confirmed linked. Live Google provider checks require an authorized origin.
+- [ ] CEDA Agricultural Data setup declined; remains unlinked. User must complete the connection card when ready; old workspace references are invalid.
 
 ## Model optimization and reliability — 13 November
-- [ ] Re-execute eight model candidates on preserved genuine historical observations; tune only on chronological validation, retain prior experiments, save/load artifacts and report actual test metrics against the 85% target.
-- [ ] Publish verified evaluation records and update dynamic charts, independent winners and recommendations without replacing farmer features.
-- [ ] Run model, application, location, selling, isolation, ingestion and recovery tests; verify populated desktop/mobile comparison and farmer flows.
+- [x] Re-executed eight models on 758 genuine Hubli maize reports/218 weeks with validation-only tuning; 24 artifacts loaded/predicted and all metrics independently recomputed. Best accuracy 71.875%, not 85%.
+- [x] Published preserved optimized 7-day summary as the 14th Cloud experiment; eight algorithms/nine charts/refresh/mobile verified. Full 7/14/28 predictions retained as executed source evidence, not hardcoded dashboard input.
+- [ ] Complete online optimized 14/28-day summaries and durable artifacts; historical results exist locally but only optimized 7-day summary is published.
+- [x] 73 website and 63 Python tests pass; online comparison, manual Dharwad and permission-granted automatic GPS checked; account service correctly unavailable. Full deployed acceptance and two-account/translation review not complete.
 - [ ] External completion: persistent HTTPS Python host/access and matching secure service token, durable national history transfer, eligible recent daily series and authoritative nationwide yard directory remain required; do not claim deployment or current forecasts without them.
 
 ## Dynamic academic comparison follow-up
