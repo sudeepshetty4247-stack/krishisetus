@@ -1,5 +1,9 @@
 # KRISHISETU
 
+## Two focused display changes — 13 November
+- [x] Clarified today's IST date, unchanged actual report date and last successful retrieval time; successful AGMARKNET storage verified, but no 13 November records are stored and the public last-week endpoint ends on 11 November. Current-day publication needs a permitted current-day source, not date relabeling.
+- [x] Added three measured yield comparison graphs beside the existing table; 25 focused tests pass and desktop/mobile show no page errors or overflow.
+
 ## India-wide crop-yield correction
 - [x] Completed all four experiments on the single verified DES/IMD master dataset; XGBoost test R² 0.870219, MAE 1.043326 t/ha, selected by validation MAE; no accuracy percentage claimed.
 - [x] Acquired official DES production tables: 400,379 raw / 379,864 cleaned records, 37 historical state/UT labels, 748 state–district identities, 50 tonne-unit crops, six seasons, 1997–2022. IMD rainfall/min/max temperature files retrieved for 1995–2021; rainfall joins 309,555 rows, temperature 130,495. SoilGrids timed out; no soil features claimed.
