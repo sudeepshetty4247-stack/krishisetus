@@ -1,5 +1,9 @@
 # KRISHISETU
 
+## Minute checks and CEDA clarification
+- [ ] Verify authorized CEDA access and distinguish newly published reports from continuous trading prices; no fabricated live feed.
+- [ ] Configure requested minute checks safely after source access is available; current bulk relay is down and direct official connection setup was interrupted.
+
 ## Final focused simplification
 - [x] Reduced research navigation to Model Performance & Comparison; legacy URLs/services retained, /research redirects.
 - [x] Retrained three models plus Naive; 12 local artifacts loaded. Published full aligned 7-day predictions as 15th experiment; three charts and one eligible aggregate verified. SARIMA accuracy 71.875%, not 85%.
