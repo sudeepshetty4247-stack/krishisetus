@@ -1,0 +1,4 @@
+CREATE OR REPLACE FUNCTION public.acquire_ingestion_lease(p_source text, p_lease_id uuid)
+ RETURNS boolean LANGUAGE plpgsql SECURITY DEFINER SET search_path TO 'public'
+AS $function$ DECLARE acquired boolean; BEGIN INSERT INTO public.ingestion_leases(source,lease_id,expires_at) VALUES(p_source,p_lease_id,now()+interval '3 minutes') ON CONFLICT(source) DO UPDATE SET lease_id=excluded.lease_id,expires_at=excluded.expires_at WHERE ingestion_leases.expires_at<now(); GET DIAGNOSTICS acquired=ROW_COUNT; RETURN acquired; END; $function$;
+DELETE FROM public.ingestion_leases WHERE source='data.gov.in daily mandi';

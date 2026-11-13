@@ -71,6 +71,13 @@
       "when": 1794512090878,
       "tag": "0009_isolate_malformed_alerts_and_match_price_identity",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1794544546875,
+      "tag": "0010_short_ingestion_lease",
+      "breakpoints": true
     }
   ]
 }
