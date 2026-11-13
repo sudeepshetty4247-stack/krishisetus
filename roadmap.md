@@ -157,3 +157,4 @@
 - [x] Crop discovery: categories, recent, popular, manual entry with suggestions; custom crops saved without prices.
 - [x] Price alerts (on-device) and live IST clock.
 - [ ] Hosted Python forecasting service (needs an external Python host; Lovable cannot run Python).
+- [ ] Find alternative official price source (CEDA card errors; data.gov.in unreachable from hosted servers)
