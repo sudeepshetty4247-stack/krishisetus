@@ -141,6 +141,7 @@ const noTodayReports:Record<Language,string>={
  mr:'आजचे सत्यापित अहवाल अद्याप आलेले नाहीत. अधिकृत प्रकाशनाची प्रतीक्षा आहे.'
 };
 export type FarmerCopy=Copy;
-export function farmerCopy(lang:Language){return {...en,...all[lang],...simple[lang],...planWords[lang],noTodayReports:noTodayReports[lang]};}
+const optionalQuantity:Record<Language,string>={en:'Optional · for selling calculations only',kn:'ಐಚ್ಛಿಕ · ಮಾರಾಟ ಲೆಕ್ಕಾಚಾರಕ್ಕೆ ಮಾತ್ರ',hi:'वैकल्पिक · केवल बिक्री गणना के लिए',te:'ఐచ్ఛికం · అమ్మకం లెక్కలకు మాత్రమే',ta:'விருப்பம் · விற்பனை கணக்குகளுக்கு மட்டும்',ml:'ഐച്ഛികം · വിൽപ്പന കണക്കുകൾക്ക് മാത്രം',mr:'ऐच्छिक · फक्त विक्री गणनेसाठी'};
+export function farmerCopy(lang:Language){return {...en,...all[lang],...simple[lang],...planWords[lang],noTodayReports:noTodayReports[lang],optionalQuantity:optionalQuantity[lang]};}
 export const copyKeys=Object.keys(en) as (keyof Copy)[];
 export function missingKeys(lang:Language){return copyKeys.filter(k=>!(k in all[lang]));}

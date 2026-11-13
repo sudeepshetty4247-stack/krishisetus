@@ -1,5 +1,10 @@
 # KRISHISETU
 
+## Clear market dates and optional quantity
+- [x] Simplify market status with highlighted report/fetch dates and source; restore latest available price strip without relabeling older prices. Desktop status and phone overflow checked.
+- [x] Leave homepage quantity blank and optional for price browsing; 11 tests passed and empty, non-required input verified in browser.
+- [ ] Activate a second price source: no CEDA connection exists in this workspace; data.gov.in backup requires a deployed India proxy URL. Keep sources separate because prices/dates/varieties can differ.
+
 ## Today-only homepage price strip
 - [x] Show only genuine reports matching today's IST date, refresh automatically, and show an explicit waiting state when none exist. Seven tests passed; homepage waiting state verified. Source runs at 06:08/06:09 UTC stored 65/67 older reports; today's reports remain unavailable.
 
