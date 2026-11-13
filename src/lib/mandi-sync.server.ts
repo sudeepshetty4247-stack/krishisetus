@@ -58,7 +58,7 @@ async function fromRelay(date:string|undefined,errors:string[]):Promise<{rows:un
  const version=String(list.meta?.source?.version??'unknown');
  const q=(extra:string)=>`${RELAY}?limit=1000${date?`&date=${date}`:''}${extra}`;
  const rows:unknown[]=[];
- await pool(names,8,async name=>{
+ await pool(names,6,async name=>{
   try{const d=await getJson(q(`&commodity=${encodeURIComponent(name)}`));
    const recs=d.data??[];
    if(Number(d.meta?.total)>recs.length){
@@ -94,10 +94,10 @@ async function performDailySync(opts:{date?:string|undefined}){
  for(const r of valid){const id=JSON.stringify([r.state,r.district,r.market,r.commodity,r.variety,r.grade,r.date]);const prev=unique.get(id);if(prev&&prev.modal_price!==r.modal_price)errors.push('Conflicting duplicate official price observation');else unique.set(id,r);}
  const records=[...unique.values()];const duplicates=valid.length-records.length;
  let stored=0;
- for(let i=0;fetched&&i<records.length;i+=100){
+ for(let i=0;fetched&&i<records.length;i+=25){
   let succeeded=false;
   for(let attempt=0;attempt<3;attempt++){
-   const {data,error}=await supabaseAdmin.rpc('publish_official_reports',{records:records.slice(i,i+100) as never,p_source:DAILY_SOURCE,p_url:DAILY_URL,p_dataset:fetched.dataset});
+   const {data,error}=await supabaseAdmin.rpc('publish_official_reports',{records:records.slice(i,i+25) as never,p_source:DAILY_SOURCE,p_url:DAILY_URL,p_dataset:fetched.dataset});
    if(!error){stored+=Number(data)||0;succeeded=true;break;}
    if(attempt===2)errors.push(`store: ${error.message}`);
    else await new Promise(resolve=>setTimeout(resolve,400*2**attempt));
@@ -110,7 +110,7 @@ async function performDailySync(opts:{date?:string|undefined}){
   const {error:sumErr}=await supabaseAdmin.rpc('refresh_agri_summary');if(sumErr)errors.push(`summary: ${sumErr.message}`);
   const {error:alertError}=await supabaseAdmin.rpc('evaluate_farmer_alerts');if(alertError)errors.push('Account alert evaluation failed');
  }
- const status=stored>0?(errors.length||stored!==records.length?'partial':'success'):received?'failed':'no_records';
+ const status=stored>0?(errors.length||stored!==records.length?'partial':'success'):received||errors.length?'failed':'no_records';
  const message=`${status}: ${stored} reports stored from ${received} received${reportDate?` · latest market report ${reportDate}`:''}${errors.length?` · ${errors[0]}`:''}`;
  const finished=new Date().toISOString();
  const {error:stateError}=await supabaseAdmin.from('agri_sync_state').upsert({source:DAILY_SOURCE,status,...(status==='success'?{last_success:finished}:{}),updated_at:finished,message,next_offset:0},{onConflict:'source',ignoreDuplicates:false});

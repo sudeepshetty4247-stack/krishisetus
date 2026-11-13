@@ -66,7 +66,7 @@ def predict(series, X, y, origins, targets, indices, horizon, name, config):
         raise ValueError('Non-finite predictions; candidate excluded, not patched')
     return result
 
-def optimize(series):
+def optimize(series, algorithms=ALGORITHMS):
     _, _, first, _ = design(series, 1)
     if len(first) < 100:
         raise ValueError('At least 100 usable historical origins required')
@@ -82,7 +82,7 @@ def optimize(series):
                  'evaluation_periods':{'test_origins':[date(o[masks['test']][0]),date(o[masks['test']][-1])],
                                        'test_targets':[date(t[masks['test']][0]),date(t[masks['test']][-1])]}}
         artifacts[h] = {}
-        for name in ALGORITHMS:
+        for name in algorithms:
             configs = ([{}] if name in ('Naive','Seasonal naive') else
                        [{'order':order,'window':0} for order in ((1,1,1),(2,1,0),(0,1,1))] if name in ('ARIMA','SARIMA') else
                        [{'depth':depth,'window':window} for depth,window in ((3,0),(5,0),(3,156))])
@@ -111,7 +111,7 @@ def optimize(series):
             else:
                 mask = training_indices(t,o,len(series),config['window'])
                 artifacts[h][name] = build(name,config).fit(X[mask],y[mask])
-        selected = min(entry['validation'],key=lambda n:(entry['validation'][n]['MAE'],entry['validation'][n]['RMSE']))
+        selected = min((n for n in entry['validation'] if n!='Naive'),key=lambda n:(entry['validation'][n]['MAE'],entry['validation'][n]['RMSE']))
         entry.update(selected=selected,selection_reason='Validation-only tuned MAE; final test never used for selection.',
                      baseline_beaten=entry['test'][selected]['MAE'] < entry['test']['Naive']['MAE'])
         report[str(h)] = entry

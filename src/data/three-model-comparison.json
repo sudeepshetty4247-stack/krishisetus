@@ -1,0 +1,4903 @@
+{
+  "id": "446a89c0-9c5b-4c9e-a9fd-0469faae5887",
+  "created_at": "2026-11-13T03:58:38.085084+00:00",
+  "run_version": "focused-three-model-v1",
+  "dataset_version": "69f1ad1d241cd24c",
+  "source_name": "data.gov.in variety-wise history",
+  "state": "Karnataka",
+  "district": "Dharwad",
+  "market": "Hubli (Amaragol)",
+  "commodity": "Maize",
+  "variety": "Local",
+  "grade": "daily median across reported grades",
+  "frequency": "weekly mean of daily median modal price (INR/quintal)",
+  "observations": 218,
+  "period_start": "2021-01-01",
+  "period_end": "2026-04-16",
+  "status": "historical_evaluated",
+  "artifact_path": "runtime/optimization/446a89c0-9c5b-4c9e-a9fd-0469faae5887.joblib",
+  "report": {
+    "group": {
+      "state": "Karnataka",
+      "district": "Dharwad",
+      "market": "Hubli (Amaragol)",
+      "commodity": "Maize",
+      "variety": "Local"
+    },
+    "source": "data.gov.in variety-wise history",
+    "frequency": "weekly mean of daily median modal price (INR/quintal)",
+    "observed_weeks": 218,
+    "daily_reports": 758,
+    "raw_rows": 758,
+    "period": [
+      "2021-01-01",
+      "2026-04-16"
+    ],
+    "train_period": [
+      "2020-12-28",
+      "2024-01-08"
+    ],
+    "validation_period": [
+      "2024-01-15",
+      "2024-09-30"
+    ],
+    "test_period": [
+      "2024-10-07",
+      "2026-04-13"
+    ],
+    "dataset_version": "69f1ad1d241cd24c",
+    "features": [
+      "lag_1",
+      "lag_2",
+      "lag_3",
+      "lag_4",
+      "lag_8",
+      "lag_13",
+      "lag_52",
+      "mean_4",
+      "mean_8",
+      "mean_13",
+      "std_4",
+      "std_8",
+      "std_13",
+      "change_1",
+      "change_4",
+      "week_sin",
+      "week_cos",
+      "month",
+      "lag_52_missing",
+      "return_1",
+      "return_4",
+      "trend_8",
+      "relative_volatility_8",
+      "distance_mean_13"
+    ],
+    "horizons": {
+      "1": {
+        "status": "trained",
+        "horizon_weeks": 1,
+        "horizon_days": 7,
+        "validation": {
+          "Naive": {
+            "MAE": 135.00215053763438,
+            "RMSE": 178.94810309737997,
+            "sMAPE": 5.94211362564991,
+            "R2": 0.3104359355329407,
+            "n": 31
+          },
+          "Random Forest": {
+            "MAE": 131.70510612287578,
+            "RMSE": 167.38295310274106,
+            "sMAPE": 5.935064960798308,
+            "R2": 0.396686735089647,
+            "n": 31
+          },
+          "XGBoost": {
+            "MAE": 140.92750467279902,
+            "RMSE": 177.16779706212455,
+            "sMAPE": 6.3815922223213954,
+            "R2": 0.32408825529201246,
+            "n": 31
+          },
+          "SARIMA": {
+            "MAE": 130.74760888532685,
+            "RMSE": 164.41379614407853,
+            "sMAPE": 5.7686655464053755,
+            "R2": 0.4179008885282951,
+            "n": 31
+          }
+        },
+        "test": {
+          "Naive": {
+            "MAE": 94.29797979797979,
+            "RMSE": 136.3962802621841,
+            "sMAPE": 4.833778069866336,
+            "R2": 0.46950365393823135,
+            "n": 33
+          },
+          "Random Forest": {
+            "MAE": 120.65071742982109,
+            "RMSE": 156.5397053754363,
+            "sMAPE": 6.230806061741718,
+            "R2": 0.3012426841101522,
+            "n": 33
+          },
+          "XGBoost": {
+            "MAE": 115.87738665956441,
+            "RMSE": 144.3656903368113,
+            "sMAPE": 5.982892378623674,
+            "R2": 0.4057005510166224,
+            "n": 33
+          },
+          "SARIMA": {
+            "MAE": 97.28787495845019,
+            "RMSE": 134.64078936284014,
+            "sMAPE": 4.980128710300477,
+            "R2": 0.4830713035509311,
+            "n": 33
+          }
+        },
+        "direction": {
+          "validation": {
+            "Naive": {
+              "n": 31,
+              "increase": 16,
+              "decrease": 15,
+              "unchanged_excluded": 0,
+              "missing_excluded": 0,
+              "predicted_unchanged": 31,
+              "Accuracy": 0.4838709677419355,
+              "Precision": null,
+              "Recall": 0.0,
+              "F1": 0.0,
+              "ROC_AUC": 0.5
+            },
+            "Random Forest": {
+              "n": 31,
+              "increase": 16,
+              "decrease": 15,
+              "unchanged_excluded": 0,
+              "missing_excluded": 0,
+              "predicted_unchanged": 0,
+              "Accuracy": 0.5483870967741935,
+              "Precision": 0.625,
+              "Recall": 0.3125,
+              "F1": 0.4166666666666667,
+              "ROC_AUC": 0.6000000000000001
+            },
+            "XGBoost": {
+              "n": 31,
+              "increase": 16,
+              "decrease": 15,
+              "unchanged_excluded": 0,
+              "missing_excluded": 0,
+              "predicted_unchanged": 0,
+              "Accuracy": 0.5806451612903226,
+              "Precision": 0.7142857142857143,
+              "Recall": 0.3125,
+              "F1": 0.43478260869565216,
+              "ROC_AUC": 0.575
+            },
+            "SARIMA": {
+              "n": 31,
+              "increase": 16,
+              "decrease": 15,
+              "unchanged_excluded": 0,
+              "missing_excluded": 0,
+              "predicted_unchanged": 0,
+              "Accuracy": 0.5483870967741935,
+              "Precision": 0.5833333333333334,
+              "Recall": 0.4375,
+              "F1": 0.5,
+              "ROC_AUC": 0.6166666666666667
+            }
+          },
+          "test": {
+            "Naive": {
+              "n": 32,
+              "increase": 16,
+              "decrease": 16,
+              "unchanged_excluded": 1,
+              "missing_excluded": 0,
+              "predicted_unchanged": 32,
+              "Accuracy": 0.5,
+              "Precision": null,
+              "Recall": 0.0,
+              "F1": 0.0,
+              "ROC_AUC": 0.5
+            },
+            "Random Forest": {
+              "n": 32,
+              "increase": 16,
+              "decrease": 16,
+              "unchanged_excluded": 1,
+              "missing_excluded": 0,
+              "predicted_unchanged": 0,
+              "Accuracy": 0.6875,
+              "Precision": 0.65,
+              "Recall": 0.8125,
+              "F1": 0.7222222222222222,
+              "ROC_AUC": 0.70703125
+            },
+            "XGBoost": {
+              "n": 32,
+              "increase": 16,
+              "decrease": 16,
+              "unchanged_excluded": 1,
+              "missing_excluded": 0,
+              "predicted_unchanged": 0,
+              "Accuracy": 0.6875,
+              "Precision": 0.6875,
+              "Recall": 0.6875,
+              "F1": 0.6875,
+              "ROC_AUC": 0.71875
+            },
+            "SARIMA": {
+              "n": 32,
+              "increase": 16,
+              "decrease": 16,
+              "unchanged_excluded": 1,
+              "missing_excluded": 0,
+              "predicted_unchanged": 0,
+              "Accuracy": 0.71875,
+              "Precision": 0.6842105263157895,
+              "Recall": 0.8125,
+              "F1": 0.7428571428571429,
+              "ROC_AUC": 0.7578125
+            }
+          }
+        },
+        "all_predictions": {
+          "Naive": [
+            {
+              "origin": "2024-10-07",
+              "week": "2024-10-14",
+              "current": 2271.0,
+              "actual": 1868.6666666666667,
+              "predicted": 2271.0
+            },
+            {
+              "origin": "2024-10-14",
+              "week": "2024-10-21",
+              "current": 1868.6666666666667,
+              "actual": 1872.6,
+              "predicted": 1868.6666666666667
+            },
+            {
+              "origin": "2024-10-21",
+              "week": "2024-10-28",
+              "current": 1872.6,
+              "actual": 1763.0,
+              "predicted": 1872.6
+            },
+            {
+              "origin": "2024-10-28",
+              "week": "2024-11-04",
+              "current": 1763.0,
+              "actual": 2140.3333333333335,
+              "predicted": 1763.0
+            },
+            {
+              "origin": "2024-11-04",
+              "week": "2024-11-11",
+              "current": 2140.3333333333335,
+              "actual": 2110.8333333333335,
+              "predicted": 2140.3333333333335
+            },
+            {
+              "origin": "2024-11-11",
+              "week": "2024-11-18",
+              "current": 2110.8333333333335,
+              "actual": 2144.0,
+              "predicted": 2110.8333333333335
+            },
+            {
+              "origin": "2024-11-18",
+              "week": "2024-11-25",
+              "current": 2144.0,
+              "actual": 1970.2,
+              "predicted": 2144.0
+            },
+            {
+              "origin": "2024-11-25",
+              "week": "2024-12-02",
+              "current": 1970.2,
+              "actual": 2116.5,
+              "predicted": 1970.2
+            },
+            {
+              "origin": "2024-12-02",
+              "week": "2024-12-09",
+              "current": 2116.5,
+              "actual": 2067.8,
+              "predicted": 2116.5
+            },
+            {
+              "origin": "2024-12-09",
+              "week": "2024-12-16",
+              "current": 2067.8,
+              "actual": 2142.75,
+              "predicted": 2067.8
+            },
+            {
+              "origin": "2024-12-16",
+              "week": "2024-12-23",
+              "current": 2142.75,
+              "actual": 2104.5,
+              "predicted": 2142.75
+            },
+            {
+              "origin": "2024-12-23",
+              "week": "2024-12-30",
+              "current": 2104.5,
+              "actual": 2213.4,
+              "predicted": 2104.5
+            },
+            {
+              "origin": "2024-12-30",
+              "week": "2025-01-06",
+              "current": 2213.4,
+              "actual": 2202.0,
+              "predicted": 2213.4
+            },
+            {
+              "origin": "2025-01-06",
+              "week": "2025-01-13",
+              "current": 2202.0,
+              "actual": 2224.5,
+              "predicted": 2202.0
+            },
+            {
+              "origin": "2025-01-13",
+              "week": "2025-01-20",
+              "current": 2224.5,
+              "actual": 2079.25,
+              "predicted": 2224.5
+            },
+            {
+              "origin": "2025-01-20",
+              "week": "2025-01-27",
+              "current": 2079.25,
+              "actual": 2054.6666666666665,
+              "predicted": 2079.25
+            },
+            {
+              "origin": "2025-01-27",
+              "week": "2025-02-03",
+              "current": 2054.6666666666665,
+              "actual": 2116.75,
+              "predicted": 2054.6666666666665
+            },
+            {
+              "origin": "2025-02-03",
+              "week": "2025-02-10",
+              "current": 2116.75,
+              "actual": 2016.0,
+              "predicted": 2116.75
+            },
+            {
+              "origin": "2025-02-10",
+              "week": "2025-02-17",
+              "current": 2016.0,
+              "actual": 2041.2,
+              "predicted": 2016.0
+            },
+            {
+              "origin": "2025-02-17",
+              "week": "2025-02-24",
+              "current": 2041.2,
+              "actual": 2050.0,
+              "predicted": 2041.2
+            },
+            {
+              "origin": "2025-12-29",
+              "week": "2026-01-05",
+              "current": 1975.0,
+              "actual": 1975.0,
+              "predicted": 1975.0
+            },
+            {
+              "origin": "2026-01-05",
+              "week": "2026-01-12",
+              "current": 1975.0,
+              "actual": 1837.5,
+              "predicted": 1975.0
+            },
+            {
+              "origin": "2026-01-12",
+              "week": "2026-01-19",
+              "current": 1837.5,
+              "actual": 1858.0,
+              "predicted": 1837.5
+            },
+            {
+              "origin": "2026-01-19",
+              "week": "2026-01-26",
+              "current": 1858.0,
+              "actual": 2057.5,
+              "predicted": 1858.0
+            },
+            {
+              "origin": "2026-01-26",
+              "week": "2026-02-02",
+              "current": 2057.5,
+              "actual": 1842.0,
+              "predicted": 2057.5
+            },
+            {
+              "origin": "2026-02-02",
+              "week": "2026-02-09",
+              "current": 1842.0,
+              "actual": 1700.0,
+              "predicted": 1842.0
+            },
+            {
+              "origin": "2026-02-09",
+              "week": "2026-02-16",
+              "current": 1700.0,
+              "actual": 1709.6666666666667,
+              "predicted": 1700.0
+            },
+            {
+              "origin": "2026-02-16",
+              "week": "2026-02-23",
+              "current": 1709.6666666666667,
+              "actual": 1727.0,
+              "predicted": 1709.6666666666667
+            },
+            {
+              "origin": "2026-03-09",
+              "week": "2026-03-16",
+              "current": 1707.5,
+              "actual": 1583.0,
+              "predicted": 1707.5
+            },
+            {
+              "origin": "2026-03-16",
+              "week": "2026-03-23",
+              "current": 1583.0,
+              "actual": 1600.0,
+              "predicted": 1583.0
+            },
+            {
+              "origin": "2026-03-23",
+              "week": "2026-03-30",
+              "current": 1600.0,
+              "actual": 1790.5,
+              "predicted": 1600.0
+            },
+            {
+              "origin": "2026-03-30",
+              "week": "2026-04-06",
+              "current": 1790.5,
+              "actual": 1704.0,
+              "predicted": 1790.5
+            },
+            {
+              "origin": "2026-04-06",
+              "week": "2026-04-13",
+              "current": 1704.0,
+              "actual": 1700.0,
+              "predicted": 1704.0
+            }
+          ],
+          "Random Forest": [
+            {
+              "origin": "2024-10-07",
+              "week": "2024-10-14",
+              "current": 2271.0,
+              "actual": 1868.6666666666667,
+              "predicted": 2372.2696518817165
+            },
+            {
+              "origin": "2024-10-14",
+              "week": "2024-10-21",
+              "current": 1868.6666666666667,
+              "actual": 1872.6,
+              "predicted": 1985.6870214492005
+            },
+            {
+              "origin": "2024-10-21",
+              "week": "2024-10-28",
+              "current": 1872.6,
+              "actual": 1763.0,
+              "predicted": 2023.7798985863315
+            },
+            {
+              "origin": "2024-10-28",
+              "week": "2024-11-04",
+              "current": 1763.0,
+              "actual": 2140.3333333333335,
+              "predicted": 1961.374425920264
+            },
+            {
+              "origin": "2024-11-04",
+              "week": "2024-11-11",
+              "current": 2140.3333333333335,
+              "actual": 2110.8333333333335,
+              "predicted": 2053.0685448743006
+            },
+            {
+              "origin": "2024-11-11",
+              "week": "2024-11-18",
+              "current": 2110.8333333333335,
+              "actual": 2144.0,
+              "predicted": 2061.358244397838
+            },
+            {
+              "origin": "2024-11-18",
+              "week": "2024-11-25",
+              "current": 2144.0,
+              "actual": 1970.2,
+              "predicted": 2074.493803318437
+            },
+            {
+              "origin": "2024-11-25",
+              "week": "2024-12-02",
+              "current": 1970.2,
+              "actual": 2116.5,
+              "predicted": 2003.9988439226076
+            },
+            {
+              "origin": "2024-12-02",
+              "week": "2024-12-09",
+              "current": 2116.5,
+              "actual": 2067.8,
+              "predicted": 2066.170511174841
+            },
+            {
+              "origin": "2024-12-09",
+              "week": "2024-12-16",
+              "current": 2067.8,
+              "actual": 2142.75,
+              "predicted": 2071.3197451478486
+            },
+            {
+              "origin": "2024-12-16",
+              "week": "2024-12-23",
+              "current": 2142.75,
+              "actual": 2104.5,
+              "predicted": 2081.194280885654
+            },
+            {
+              "origin": "2024-12-23",
+              "week": "2024-12-30",
+              "current": 2104.5,
+              "actual": 2213.4,
+              "predicted": 2070.008568619262
+            },
+            {
+              "origin": "2024-12-30",
+              "week": "2025-01-06",
+              "current": 2213.4,
+              "actual": 2202.0,
+              "predicted": 2167.84863373091
+            },
+            {
+              "origin": "2025-01-06",
+              "week": "2025-01-13",
+              "current": 2202.0,
+              "actual": 2224.5,
+              "predicted": 2107.223744034966
+            },
+            {
+              "origin": "2025-01-13",
+              "week": "2025-01-20",
+              "current": 2224.5,
+              "actual": 2079.25,
+              "predicted": 2154.1763265418717
+            },
+            {
+              "origin": "2025-01-20",
+              "week": "2025-01-27",
+              "current": 2079.25,
+              "actual": 2054.6666666666665,
+              "predicted": 2023.9766426486271
+            },
+            {
+              "origin": "2025-01-27",
+              "week": "2025-02-03",
+              "current": 2054.6666666666665,
+              "actual": 2116.75,
+              "predicted": 2060.6215153154
+            },
+            {
+              "origin": "2025-02-03",
+              "week": "2025-02-10",
+              "current": 2116.75,
+              "actual": 2016.0,
+              "predicted": 2074.7299554745637
+            },
+            {
+              "origin": "2025-02-10",
+              "week": "2025-02-17",
+              "current": 2016.0,
+              "actual": 2041.2,
+              "predicted": 2052.4451951145475
+            },
+            {
+              "origin": "2025-02-17",
+              "week": "2025-02-24",
+              "current": 2041.2,
+              "actual": 2050.0,
+              "predicted": 2061.9207717644977
+            },
+            {
+              "origin": "2025-12-29",
+              "week": "2026-01-05",
+              "current": 1975.0,
+              "actual": 1975.0,
+              "predicted": 2028.5504165275504
+            },
+            {
+              "origin": "2026-01-05",
+              "week": "2026-01-12",
+              "current": 1975.0,
+              "actual": 1837.5,
+              "predicted": 2035.4286767892559
+            },
+            {
+              "origin": "2026-01-12",
+              "week": "2026-01-19",
+              "current": 1837.5,
+              "actual": 1858.0,
+              "predicted": 1941.8087624817078
+            },
+            {
+              "origin": "2026-01-19",
+              "week": "2026-01-26",
+              "current": 1858.0,
+              "actual": 2057.5,
+              "predicted": 1919.9346394700053
+            },
+            {
+              "origin": "2026-01-26",
+              "week": "2026-02-02",
+              "current": 2057.5,
+              "actual": 1842.0,
+              "predicted": 2043.5804436596018
+            },
+            {
+              "origin": "2026-02-02",
+              "week": "2026-02-09",
+              "current": 1842.0,
+              "actual": 1700.0,
+              "predicted": 1891.8030398337587
+            },
+            {
+              "origin": "2026-02-09",
+              "week": "2026-02-16",
+              "current": 1700.0,
+              "actual": 1709.6666666666667,
+              "predicted": 1872.148924729425
+            },
+            {
+              "origin": "2026-02-16",
+              "week": "2026-02-23",
+              "current": 1709.6666666666667,
+              "actual": 1727.0,
+              "predicted": 1873.2443476131584
+            },
+            {
+              "origin": "2026-03-09",
+              "week": "2026-03-16",
+              "current": 1707.5,
+              "actual": 1583.0,
+              "predicted": 1856.4644243007858
+            },
+            {
+              "origin": "2026-03-16",
+              "week": "2026-03-23",
+              "current": 1583.0,
+              "actual": 1600.0,
+              "predicted": 1852.9451400306318
+            },
+            {
+              "origin": "2026-03-23",
+              "week": "2026-03-30",
+              "current": 1600.0,
+              "actual": 1790.5,
+              "predicted": 1816.737348109473
+            },
+            {
+              "origin": "2026-03-30",
+              "week": "2026-04-06",
+              "current": 1790.5,
+              "actual": 1704.0,
+              "predicted": 1817.019130348495
+            },
+            {
+              "origin": "2026-04-06",
+              "week": "2026-04-13",
+              "current": 1704.0,
+              "actual": 1700.0,
+              "predicted": 1792.3887367716097
+            }
+          ],
+          "XGBoost": [
+            {
+              "origin": "2024-10-07",
+              "week": "2024-10-14",
+              "current": 2271.0,
+              "actual": 1868.6666666666667,
+              "predicted": 2243.73681640625
+            },
+            {
+              "origin": "2024-10-14",
+              "week": "2024-10-21",
+              "current": 1868.6666666666667,
+              "actual": 1872.6,
+              "predicted": 2043.39990234375
+            },
+            {
+              "origin": "2024-10-21",
+              "week": "2024-10-28",
+              "current": 1872.6,
+              "actual": 1763.0,
+              "predicted": 2065.31201171875
+            },
+            {
+              "origin": "2024-10-28",
+              "week": "2024-11-04",
+              "current": 1763.0,
+              "actual": 2140.3333333333335,
+              "predicted": 1998.0186767578125
+            },
+            {
+              "origin": "2024-11-04",
+              "week": "2024-11-11",
+              "current": 2140.3333333333335,
+              "actual": 2110.8333333333335,
+              "predicted": 2004.0057373046875
+            },
+            {
+              "origin": "2024-11-11",
+              "week": "2024-11-18",
+              "current": 2110.8333333333335,
+              "actual": 2144.0,
+              "predicted": 2039.7034912109375
+            },
+            {
+              "origin": "2024-11-18",
+              "week": "2024-11-25",
+              "current": 2144.0,
+              "actual": 1970.2,
+              "predicted": 2079.619873046875
+            },
+            {
+              "origin": "2024-11-25",
+              "week": "2024-12-02",
+              "current": 1970.2,
+              "actual": 2116.5,
+              "predicted": 2029.344970703125
+            },
+            {
+              "origin": "2024-12-02",
+              "week": "2024-12-09",
+              "current": 2116.5,
+              "actual": 2067.8,
+              "predicted": 2095.201416015625
+            },
+            {
+              "origin": "2024-12-09",
+              "week": "2024-12-16",
+              "current": 2067.8,
+              "actual": 2142.75,
+              "predicted": 2082.957275390625
+            },
+            {
+              "origin": "2024-12-16",
+              "week": "2024-12-23",
+              "current": 2142.75,
+              "actual": 2104.5,
+              "predicted": 2140.283447265625
+            },
+            {
+              "origin": "2024-12-23",
+              "week": "2024-12-30",
+              "current": 2104.5,
+              "actual": 2213.4,
+              "predicted": 2094.931396484375
+            },
+            {
+              "origin": "2024-12-30",
+              "week": "2025-01-06",
+              "current": 2213.4,
+              "actual": 2202.0,
+              "predicted": 2170.653076171875
+            },
+            {
+              "origin": "2025-01-06",
+              "week": "2025-01-13",
+              "current": 2202.0,
+              "actual": 2224.5,
+              "predicted": 2141.442626953125
+            },
+            {
+              "origin": "2025-01-13",
+              "week": "2025-01-20",
+              "current": 2224.5,
+              "actual": 2079.25,
+              "predicted": 2196.22216796875
+            },
+            {
+              "origin": "2025-01-20",
+              "week": "2025-01-27",
+              "current": 2079.25,
+              "actual": 2054.6666666666665,
+              "predicted": 2052.90869140625
+            },
+            {
+              "origin": "2025-01-27",
+              "week": "2025-02-03",
+              "current": 2054.6666666666665,
+              "actual": 2116.75,
+              "predicted": 1999.5257568359375
+            },
+            {
+              "origin": "2025-02-03",
+              "week": "2025-02-10",
+              "current": 2116.75,
+              "actual": 2016.0,
+              "predicted": 2062.308837890625
+            },
+            {
+              "origin": "2025-02-10",
+              "week": "2025-02-17",
+              "current": 2016.0,
+              "actual": 2041.2,
+              "predicted": 2059.57275390625
+            },
+            {
+              "origin": "2025-02-17",
+              "week": "2025-02-24",
+              "current": 2041.2,
+              "actual": 2050.0,
+              "predicted": 2021.111328125
+            },
+            {
+              "origin": "2025-12-29",
+              "week": "2026-01-05",
+              "current": 1975.0,
+              "actual": 1975.0,
+              "predicted": 2007.379638671875
+            },
+            {
+              "origin": "2026-01-05",
+              "week": "2026-01-12",
+              "current": 1975.0,
+              "actual": 1837.5,
+              "predicted": 2033.4676513671875
+            },
+            {
+              "origin": "2026-01-12",
+              "week": "2026-01-19",
+              "current": 1837.5,
+              "actual": 1858.0,
+              "predicted": 2019.25341796875
+            },
+            {
+              "origin": "2026-01-19",
+              "week": "2026-01-26",
+              "current": 1858.0,
+              "actual": 2057.5,
+              "predicted": 1937.395751953125
+            },
+            {
+              "origin": "2026-01-26",
+              "week": "2026-02-02",
+              "current": 2057.5,
+              "actual": 1842.0,
+              "predicted": 2008.966064453125
+            },
+            {
+              "origin": "2026-02-02",
+              "week": "2026-02-09",
+              "current": 1842.0,
+              "actual": 1700.0,
+              "predicted": 1851.353271484375
+            },
+            {
+              "origin": "2026-02-09",
+              "week": "2026-02-16",
+              "current": 1700.0,
+              "actual": 1709.6666666666667,
+              "predicted": 1888.856201171875
+            },
+            {
+              "origin": "2026-02-16",
+              "week": "2026-02-23",
+              "current": 1709.6666666666667,
+              "actual": 1727.0,
+              "predicted": 1866.1636962890625
+            },
+            {
+              "origin": "2026-03-09",
+              "week": "2026-03-16",
+              "current": 1707.5,
+              "actual": 1583.0,
+              "predicted": 1879.1148681640625
+            },
+            {
+              "origin": "2026-03-16",
+              "week": "2026-03-23",
+              "current": 1583.0,
+              "actual": 1600.0,
+              "predicted": 1749.3564453125
+            },
+            {
+              "origin": "2026-03-23",
+              "week": "2026-03-30",
+              "current": 1600.0,
+              "actual": 1790.5,
+              "predicted": 1674.677001953125
+            },
+            {
+              "origin": "2026-03-30",
+              "week": "2026-04-06",
+              "current": 1790.5,
+              "actual": 1704.0,
+              "predicted": 1714.64404296875
+            },
+            {
+              "origin": "2026-04-06",
+              "week": "2026-04-13",
+              "current": 1704.0,
+              "actual": 1700.0,
+              "predicted": 1722.0670166015625
+            }
+          ],
+          "SARIMA": [
+            {
+              "origin": "2024-10-07",
+              "week": "2024-10-14",
+              "current": 2271.0,
+              "actual": 1868.6666666666667,
+              "predicted": 2317.4441386080607
+            },
+            {
+              "origin": "2024-10-14",
+              "week": "2024-10-21",
+              "current": 1868.6666666666667,
+              "actual": 1872.6,
+              "predicted": 2013.7728626014868
+            },
+            {
+              "origin": "2024-10-21",
+              "week": "2024-10-28",
+              "current": 1872.6,
+              "actual": 1763.0,
+              "predicted": 1968.9574146894581
+            },
+            {
+              "origin": "2024-10-28",
+              "week": "2024-11-04",
+              "current": 1763.0,
+              "actual": 2140.3333333333335,
+              "predicted": 1858.975974327129
+            },
+            {
+              "origin": "2024-11-04",
+              "week": "2024-11-11",
+              "current": 2140.3333333333335,
+              "actual": 2110.8333333333335,
+              "predicted": 2088.0232476927004
+            },
+            {
+              "origin": "2024-11-11",
+              "week": "2024-11-18",
+              "current": 2110.8333333333335,
+              "actual": 2144.0,
+              "predicted": 2084.666146920983
+            },
+            {
+              "origin": "2024-11-18",
+              "week": "2024-11-25",
+              "current": 2144.0,
+              "actual": 1970.2,
+              "predicted": 2115.526889294196
+            },
+            {
+              "origin": "2024-11-25",
+              "week": "2024-12-02",
+              "current": 1970.2,
+              "actual": 2116.5,
+              "predicted": 2004.8068284110902
+            },
+            {
+              "origin": "2024-12-02",
+              "week": "2024-12-09",
+              "current": 2116.5,
+              "actual": 2067.8,
+              "predicted": 2094.1464672135376
+            },
+            {
+              "origin": "2024-12-09",
+              "week": "2024-12-16",
+              "current": 2067.8,
+              "actual": 2142.75,
+              "predicted": 2067.967266513004
+            },
+            {
+              "origin": "2024-12-16",
+              "week": "2024-12-23",
+              "current": 2142.75,
+              "actual": 2104.5,
+              "predicted": 2119.0891356461957
+            },
+            {
+              "origin": "2024-12-23",
+              "week": "2024-12-30",
+              "current": 2104.5,
+              "actual": 2213.4,
+              "predicted": 2100.481076791215
+            },
+            {
+              "origin": "2024-12-30",
+              "week": "2025-01-06",
+              "current": 2213.4,
+              "actual": 2202.0,
+              "predicted": 2175.8617595870055
+            },
+            {
+              "origin": "2025-01-06",
+              "week": "2025-01-13",
+              "current": 2202.0,
+              "actual": 2224.5,
+              "predicted": 2180.043789100412
+            },
+            {
+              "origin": "2025-01-13",
+              "week": "2025-01-20",
+              "current": 2224.5,
+              "actual": 2079.25,
+              "predicted": 2202.3750591800126
+            },
+            {
+              "origin": "2025-01-20",
+              "week": "2025-01-27",
+              "current": 2079.25,
+              "actual": 2054.6666666666665,
+              "predicted": 2109.340197016901
+            },
+            {
+              "origin": "2025-01-27",
+              "week": "2025-02-03",
+              "current": 2054.6666666666665,
+              "actual": 2116.75,
+              "predicted": 2082.580610161473
+            },
+            {
+              "origin": "2025-02-03",
+              "week": "2025-02-10",
+              "current": 2116.75,
+              "actual": 2016.0,
+              "predicted": 2116.4361064904588
+            },
+            {
+              "origin": "2025-02-10",
+              "week": "2025-02-17",
+              "current": 2016.0,
+              "actual": 2041.2,
+              "predicted": 2046.854832738293
+            },
+            {
+              "origin": "2025-02-17",
+              "week": "2025-02-24",
+              "current": 2041.2,
+              "actual": 2050.0,
+              "predicted": 2054.36904860216
+            },
+            {
+              "origin": "2025-12-29",
+              "week": "2026-01-05",
+              "current": 1975.0,
+              "actual": 1975.0,
+              "predicted": 1988.4860726834258
+            },
+            {
+              "origin": "2026-01-05",
+              "week": "2026-01-12",
+              "current": 1975.0,
+              "actual": 1837.5,
+              "predicted": 1984.0328250748044
+            },
+            {
+              "origin": "2026-01-12",
+              "week": "2026-01-19",
+              "current": 1837.5,
+              "actual": 1858.0,
+              "predicted": 1884.7841775797908
+            },
+            {
+              "origin": "2026-01-19",
+              "week": "2026-01-26",
+              "current": 1858.0,
+              "actual": 2057.5,
+              "predicted": 1883.7576562805405
+            },
+            {
+              "origin": "2026-01-26",
+              "week": "2026-02-02",
+              "current": 2057.5,
+              "actual": 1842.0,
+              "predicted": 2011.657759246342
+            },
+            {
+              "origin": "2026-02-02",
+              "week": "2026-02-09",
+              "current": 1842.0,
+              "actual": 1700.0,
+              "predicted": 1877.9519767909244
+            },
+            {
+              "origin": "2026-02-09",
+              "week": "2026-02-16",
+              "current": 1700.0,
+              "actual": 1709.6666666666667,
+              "predicted": 1766.311618800909
+            },
+            {
+              "origin": "2026-02-16",
+              "week": "2026-02-23",
+              "current": 1709.6666666666667,
+              "actual": 1727.0,
+              "predicted": 1751.6098837386874
+            },
+            {
+              "origin": "2026-03-09",
+              "week": "2026-03-16",
+              "current": 1707.5,
+              "actual": 1583.0,
+              "predicted": 1724.087638569471
+            },
+            {
+              "origin": "2026-03-16",
+              "week": "2026-03-23",
+              "current": 1583.0,
+              "actual": 1600.0,
+              "predicted": 1631.0605484414202
+            },
+            {
+              "origin": "2026-03-23",
+              "week": "2026-03-30",
+              "current": 1600.0,
+              "actual": 1790.5,
+              "predicted": 1627.3450237240245
+            },
+            {
+              "origin": "2026-03-30",
+              "week": "2026-04-06",
+              "current": 1790.5,
+              "actual": 1704.0,
+              "predicted": 1748.663026489105
+            },
+            {
+              "origin": "2026-04-06",
+              "week": "2026-04-13",
+              "current": 1704.0,
+              "actual": 1700.0,
+              "predicted": 1703.0349069761257
+            }
+          ]
+        },
+        "tuning": {
+          "Naive": {
+            "selected_config": {},
+            "candidate_validation": [
+              {
+                "config": {},
+                "MAE": 135.00215053763438,
+                "RMSE": 178.94810309737997,
+                "sMAPE": 5.94211362564991,
+                "R2": 0.3104359355329407,
+                "n": 31
+              }
+            ],
+            "objective": "Validation MAE, RMSE tie-break; no test selection"
+          },
+          "Random Forest": {
+            "selected_config": {
+              "depth": 3,
+              "window": 0
+            },
+            "candidate_validation": [
+              {
+                "config": {
+                  "depth": 3,
+                  "window": 0
+                },
+                "MAE": 131.70510612287578,
+                "RMSE": 167.38295310274106,
+                "sMAPE": 5.935064960798308,
+                "R2": 0.396686735089647,
+                "n": 31
+              },
+              {
+                "config": {
+                  "depth": 5,
+                  "window": 0
+                },
+                "MAE": 135.20894573352905,
+                "RMSE": 170.83651416509593,
+                "sMAPE": 6.108777952892343,
+                "R2": 0.37153394520365235,
+                "n": 31
+              },
+              {
+                "config": {
+                  "depth": 3,
+                  "window": 156
+                },
+                "MAE": 131.70510612287583,
+                "RMSE": 167.3829531027411,
+                "sMAPE": 5.935064960798311,
+                "R2": 0.39668673508964647,
+                "n": 31
+              }
+            ],
+            "objective": "Validation MAE, RMSE tie-break; no test selection"
+          },
+          "XGBoost": {
+            "selected_config": {
+              "depth": 3,
+              "window": 0
+            },
+            "candidate_validation": [
+              {
+                "config": {
+                  "depth": 3,
+                  "window": 0
+                },
+                "MAE": 140.92750467279902,
+                "RMSE": 177.16779706212455,
+                "sMAPE": 6.3815922223213954,
+                "R2": 0.32408825529201246,
+                "n": 31
+              },
+              {
+                "config": {
+                  "depth": 5,
+                  "window": 0
+                },
+                "MAE": 144.03946677587362,
+                "RMSE": 182.79891852573365,
+                "sMAPE": 6.55752634464471,
+                "R2": 0.2804389171037348,
+                "n": 31
+              },
+              {
+                "config": {
+                  "depth": 3,
+                  "window": 156
+                },
+                "MAE": 140.92750467279902,
+                "RMSE": 177.16779706212455,
+                "sMAPE": 6.3815922223213954,
+                "R2": 0.32408825529201246,
+                "n": 31
+              }
+            ],
+            "objective": "Validation MAE, RMSE tie-break; no test selection"
+          },
+          "SARIMA": {
+            "selected_config": {
+              "order": [
+                1,
+                1,
+                1
+              ],
+              "window": 0
+            },
+            "candidate_validation": [
+              {
+                "config": {
+                  "order": [
+                    1,
+                    1,
+                    1
+                  ],
+                  "window": 0
+                },
+                "MAE": 130.74760888532685,
+                "RMSE": 164.41379614407853,
+                "sMAPE": 5.7686655464053755,
+                "R2": 0.4179008885282951,
+                "n": 31
+              },
+              {
+                "config": {
+                  "order": [
+                    2,
+                    1,
+                    0
+                  ],
+                  "window": 0
+                },
+                "MAE": 132.45934440765097,
+                "RMSE": 169.0132226828493,
+                "sMAPE": 5.839906777594889,
+                "R2": 0.3848772517559953,
+                "n": 31
+              },
+              {
+                "config": {
+                  "order": [
+                    0,
+                    1,
+                    1
+                  ],
+                  "window": 0
+                },
+                "MAE": 132.22816810232234,
+                "RMSE": 167.3809536974068,
+                "sMAPE": 5.853329530586033,
+                "R2": 0.3967011482725098,
+                "n": 31
+              }
+            ],
+            "objective": "Validation MAE, RMSE tie-break; no test selection"
+          }
+        },
+        "failures": {},
+        "samples": {
+          "train": 95,
+          "validation": 31,
+          "test": 33
+        },
+        "evaluation_periods": {
+          "test_origins": [
+            "2024-10-07",
+            "2026-04-06"
+          ],
+          "test_targets": [
+            "2024-10-14",
+            "2026-04-13"
+          ]
+        },
+        "selected": "SARIMA",
+        "selection_reason": "Validation-only tuned MAE; final test never used for selection.",
+        "baseline_beaten": false
+      },
+      "2": {
+        "status": "trained",
+        "horizon_weeks": 2,
+        "horizon_days": 14,
+        "validation": {
+          "Naive": {
+            "MAE": 161.8038888888889,
+            "RMSE": 210.84282431426215,
+            "sMAPE": 7.24631033524318,
+            "R2": 0.13453727786040282,
+            "n": 30
+          },
+          "Random Forest": {
+            "MAE": 174.52700380000655,
+            "RMSE": 211.92114864163835,
+            "sMAPE": 7.8983189034081365,
+            "R2": 0.1256620790595796,
+            "n": 30
+          },
+          "XGBoost": {
+            "MAE": 174.60460747612845,
+            "RMSE": 209.28045106008818,
+            "sMAPE": 7.91741934317862,
+            "R2": 0.14731614205002008,
+            "n": 30
+          },
+          "SARIMA": {
+            "MAE": 141.00488493412266,
+            "RMSE": 187.1925259806862,
+            "sMAPE": 6.34840423324941,
+            "R2": 0.31780626679270785,
+            "n": 30
+          }
+        },
+        "test": {
+          "Naive": {
+            "MAE": 119.40208333333335,
+            "RMSE": 157.60769058629234,
+            "sMAPE": 6.153347151959411,
+            "R2": 0.2592110740805037,
+            "n": 32
+          },
+          "Random Forest": {
+            "MAE": 133.3384766437918,
+            "RMSE": 167.8864549897031,
+            "sMAPE": 6.8633649700768125,
+            "R2": 0.1594356082437951,
+            "n": 32
+          },
+          "XGBoost": {
+            "MAE": 120.18523356119792,
+            "RMSE": 157.54673838429562,
+            "sMAPE": 6.203576031340375,
+            "R2": 0.25978393933909094,
+            "n": 32
+          },
+          "SARIMA": {
+            "MAE": 114.39532714779304,
+            "RMSE": 148.47855548683276,
+            "sMAPE": 5.845570128982552,
+            "R2": 0.3425433263402655,
+            "n": 32
+          }
+        },
+        "direction": {
+          "validation": {
+            "Naive": {
+              "n": 30,
+              "increase": 12,
+              "decrease": 18,
+              "unchanged_excluded": 0,
+              "missing_excluded": 0,
+              "predicted_unchanged": 30,
+              "Accuracy": 0.6,
+              "Precision": null,
+              "Recall": 0.0,
+              "F1": 0.0,
+              "ROC_AUC": 0.5
+            },
+            "Random Forest": {
+              "n": 30,
+              "increase": 12,
+              "decrease": 18,
+              "unchanged_excluded": 0,
+              "missing_excluded": 0,
+              "predicted_unchanged": 0,
+              "Accuracy": 0.6333333333333333,
+              "Precision": 0.5714285714285714,
+              "Recall": 0.3333333333333333,
+              "F1": 0.42105263157894735,
+              "ROC_AUC": 0.7777777777777778
+            },
+            "XGBoost": {
+              "n": 30,
+              "increase": 12,
+              "decrease": 18,
+              "unchanged_excluded": 0,
+              "missing_excluded": 0,
+              "predicted_unchanged": 0,
+              "Accuracy": 0.6333333333333333,
+              "Precision": 0.5555555555555556,
+              "Recall": 0.4166666666666667,
+              "F1": 0.47619047619047616,
+              "ROC_AUC": 0.7314814814814815
+            },
+            "SARIMA": {
+              "n": 30,
+              "increase": 12,
+              "decrease": 18,
+              "unchanged_excluded": 0,
+              "missing_excluded": 0,
+              "predicted_unchanged": 0,
+              "Accuracy": 0.6666666666666666,
+              "Precision": 0.5833333333333334,
+              "Recall": 0.5833333333333334,
+              "F1": 0.5833333333333334,
+              "ROC_AUC": 0.7361111111111112
+            }
+          },
+          "test": {
+            "Naive": {
+              "n": 32,
+              "increase": 15,
+              "decrease": 17,
+              "unchanged_excluded": 0,
+              "missing_excluded": 0,
+              "predicted_unchanged": 32,
+              "Accuracy": 0.53125,
+              "Precision": null,
+              "Recall": 0.0,
+              "F1": 0.0,
+              "ROC_AUC": 0.5
+            },
+            "Random Forest": {
+              "n": 32,
+              "increase": 15,
+              "decrease": 17,
+              "unchanged_excluded": 0,
+              "missing_excluded": 0,
+              "predicted_unchanged": 0,
+              "Accuracy": 0.46875,
+              "Precision": 0.4444444444444444,
+              "Recall": 0.5333333333333333,
+              "F1": 0.48484848484848486,
+              "ROC_AUC": 0.588235294117647
+            },
+            "XGBoost": {
+              "n": 32,
+              "increase": 15,
+              "decrease": 17,
+              "unchanged_excluded": 0,
+              "missing_excluded": 0,
+              "predicted_unchanged": 0,
+              "Accuracy": 0.59375,
+              "Precision": 0.5555555555555556,
+              "Recall": 0.6666666666666666,
+              "F1": 0.6060606060606061,
+              "ROC_AUC": 0.6235294117647059
+            },
+            "SARIMA": {
+              "n": 32,
+              "increase": 15,
+              "decrease": 17,
+              "unchanged_excluded": 0,
+              "missing_excluded": 0,
+              "predicted_unchanged": 0,
+              "Accuracy": 0.5625,
+              "Precision": 0.5263157894736842,
+              "Recall": 0.6666666666666666,
+              "F1": 0.5882352941176471,
+              "ROC_AUC": 0.6431372549019607
+            }
+          }
+        },
+        "all_predictions": {
+          "Naive": [
+            {
+              "origin": "2024-10-07",
+              "week": "2024-10-21",
+              "current": 2271.0,
+              "actual": 1872.6,
+              "predicted": 2271.0
+            },
+            {
+              "origin": "2024-10-14",
+              "week": "2024-10-28",
+              "current": 1868.6666666666667,
+              "actual": 1763.0,
+              "predicted": 1868.6666666666667
+            },
+            {
+              "origin": "2024-10-21",
+              "week": "2024-11-04",
+              "current": 1872.6,
+              "actual": 2140.3333333333335,
+              "predicted": 1872.6
+            },
+            {
+              "origin": "2024-10-28",
+              "week": "2024-11-11",
+              "current": 1763.0,
+              "actual": 2110.8333333333335,
+              "predicted": 1763.0
+            },
+            {
+              "origin": "2024-11-04",
+              "week": "2024-11-18",
+              "current": 2140.3333333333335,
+              "actual": 2144.0,
+              "predicted": 2140.3333333333335
+            },
+            {
+              "origin": "2024-11-11",
+              "week": "2024-11-25",
+              "current": 2110.8333333333335,
+              "actual": 1970.2,
+              "predicted": 2110.8333333333335
+            },
+            {
+              "origin": "2024-11-18",
+              "week": "2024-12-02",
+              "current": 2144.0,
+              "actual": 2116.5,
+              "predicted": 2144.0
+            },
+            {
+              "origin": "2024-11-25",
+              "week": "2024-12-09",
+              "current": 1970.2,
+              "actual": 2067.8,
+              "predicted": 1970.2
+            },
+            {
+              "origin": "2024-12-02",
+              "week": "2024-12-16",
+              "current": 2116.5,
+              "actual": 2142.75,
+              "predicted": 2116.5
+            },
+            {
+              "origin": "2024-12-09",
+              "week": "2024-12-23",
+              "current": 2067.8,
+              "actual": 2104.5,
+              "predicted": 2067.8
+            },
+            {
+              "origin": "2024-12-16",
+              "week": "2024-12-30",
+              "current": 2142.75,
+              "actual": 2213.4,
+              "predicted": 2142.75
+            },
+            {
+              "origin": "2024-12-23",
+              "week": "2025-01-06",
+              "current": 2104.5,
+              "actual": 2202.0,
+              "predicted": 2104.5
+            },
+            {
+              "origin": "2024-12-30",
+              "week": "2025-01-13",
+              "current": 2213.4,
+              "actual": 2224.5,
+              "predicted": 2213.4
+            },
+            {
+              "origin": "2025-01-06",
+              "week": "2025-01-20",
+              "current": 2202.0,
+              "actual": 2079.25,
+              "predicted": 2202.0
+            },
+            {
+              "origin": "2025-01-13",
+              "week": "2025-01-27",
+              "current": 2224.5,
+              "actual": 2054.6666666666665,
+              "predicted": 2224.5
+            },
+            {
+              "origin": "2025-01-20",
+              "week": "2025-02-03",
+              "current": 2079.25,
+              "actual": 2116.75,
+              "predicted": 2079.25
+            },
+            {
+              "origin": "2025-01-27",
+              "week": "2025-02-10",
+              "current": 2054.6666666666665,
+              "actual": 2016.0,
+              "predicted": 2054.6666666666665
+            },
+            {
+              "origin": "2025-02-03",
+              "week": "2025-02-17",
+              "current": 2116.75,
+              "actual": 2041.2,
+              "predicted": 2116.75
+            },
+            {
+              "origin": "2025-02-10",
+              "week": "2025-02-24",
+              "current": 2016.0,
+              "actual": 2050.0,
+              "predicted": 2016.0
+            },
+            {
+              "origin": "2025-12-15",
+              "week": "2025-12-29",
+              "current": 2150.0,
+              "actual": 1975.0,
+              "predicted": 2150.0
+            },
+            {
+              "origin": "2025-12-29",
+              "week": "2026-01-12",
+              "current": 1975.0,
+              "actual": 1837.5,
+              "predicted": 1975.0
+            },
+            {
+              "origin": "2026-01-05",
+              "week": "2026-01-19",
+              "current": 1975.0,
+              "actual": 1858.0,
+              "predicted": 1975.0
+            },
+            {
+              "origin": "2026-01-12",
+              "week": "2026-01-26",
+              "current": 1837.5,
+              "actual": 2057.5,
+              "predicted": 1837.5
+            },
+            {
+              "origin": "2026-01-19",
+              "week": "2026-02-02",
+              "current": 1858.0,
+              "actual": 1842.0,
+              "predicted": 1858.0
+            },
+            {
+              "origin": "2026-01-26",
+              "week": "2026-02-09",
+              "current": 2057.5,
+              "actual": 1700.0,
+              "predicted": 2057.5
+            },
+            {
+              "origin": "2026-02-02",
+              "week": "2026-02-16",
+              "current": 1842.0,
+              "actual": 1709.6666666666667,
+              "predicted": 1842.0
+            },
+            {
+              "origin": "2026-02-09",
+              "week": "2026-02-23",
+              "current": 1700.0,
+              "actual": 1727.0,
+              "predicted": 1700.0
+            },
+            {
+              "origin": "2026-02-23",
+              "week": "2026-03-09",
+              "current": 1727.0,
+              "actual": 1707.5,
+              "predicted": 1727.0
+            },
+            {
+              "origin": "2026-03-09",
+              "week": "2026-03-23",
+              "current": 1707.5,
+              "actual": 1600.0,
+              "predicted": 1707.5
+            },
+            {
+              "origin": "2026-03-16",
+              "week": "2026-03-30",
+              "current": 1583.0,
+              "actual": 1790.5,
+              "predicted": 1583.0
+            },
+            {
+              "origin": "2026-03-23",
+              "week": "2026-04-06",
+              "current": 1600.0,
+              "actual": 1704.0,
+              "predicted": 1600.0
+            },
+            {
+              "origin": "2026-03-30",
+              "week": "2026-04-13",
+              "current": 1790.5,
+              "actual": 1700.0,
+              "predicted": 1790.5
+            }
+          ],
+          "Random Forest": [
+            {
+              "origin": "2024-10-07",
+              "week": "2024-10-21",
+              "current": 2271.0,
+              "actual": 1872.6,
+              "predicted": 2334.359959760589
+            },
+            {
+              "origin": "2024-10-14",
+              "week": "2024-10-28",
+              "current": 1868.6666666666667,
+              "actual": 1763.0,
+              "predicted": 2073.727474052919
+            },
+            {
+              "origin": "2024-10-21",
+              "week": "2024-11-04",
+              "current": 1872.6,
+              "actual": 2140.3333333333335,
+              "predicted": 2061.888622276247
+            },
+            {
+              "origin": "2024-10-28",
+              "week": "2024-11-11",
+              "current": 1763.0,
+              "actual": 2110.8333333333335,
+              "predicted": 2011.707190789585
+            },
+            {
+              "origin": "2024-11-04",
+              "week": "2024-11-18",
+              "current": 2140.3333333333335,
+              "actual": 2144.0,
+              "predicted": 1990.091842716254
+            },
+            {
+              "origin": "2024-11-11",
+              "week": "2024-11-25",
+              "current": 2110.8333333333335,
+              "actual": 1970.2,
+              "predicted": 2050.5574304261127
+            },
+            {
+              "origin": "2024-11-18",
+              "week": "2024-12-02",
+              "current": 2144.0,
+              "actual": 2116.5,
+              "predicted": 2041.9513321994891
+            },
+            {
+              "origin": "2024-11-25",
+              "week": "2024-12-09",
+              "current": 1970.2,
+              "actual": 2067.8,
+              "predicted": 2051.6074296652273
+            },
+            {
+              "origin": "2024-12-02",
+              "week": "2024-12-16",
+              "current": 2116.5,
+              "actual": 2142.75,
+              "predicted": 2060.3658208219317
+            },
+            {
+              "origin": "2024-12-09",
+              "week": "2024-12-23",
+              "current": 2067.8,
+              "actual": 2104.5,
+              "predicted": 2057.6647701465367
+            },
+            {
+              "origin": "2024-12-16",
+              "week": "2024-12-30",
+              "current": 2142.75,
+              "actual": 2213.4,
+              "predicted": 2063.181535687936
+            },
+            {
+              "origin": "2024-12-23",
+              "week": "2025-01-06",
+              "current": 2104.5,
+              "actual": 2202.0,
+              "predicted": 2058.5051634233705
+            },
+            {
+              "origin": "2024-12-30",
+              "week": "2025-01-13",
+              "current": 2213.4,
+              "actual": 2224.5,
+              "predicted": 2083.4415011747046
+            },
+            {
+              "origin": "2025-01-06",
+              "week": "2025-01-20",
+              "current": 2202.0,
+              "actual": 2079.25,
+              "predicted": 2073.760201146766
+            },
+            {
+              "origin": "2025-01-13",
+              "week": "2025-01-27",
+              "current": 2224.5,
+              "actual": 2054.6666666666665,
+              "predicted": 2092.559500161019
+            },
+            {
+              "origin": "2025-01-20",
+              "week": "2025-02-03",
+              "current": 2079.25,
+              "actual": 2116.75,
+              "predicted": 2037.287174577472
+            },
+            {
+              "origin": "2025-01-27",
+              "week": "2025-02-10",
+              "current": 2054.6666666666665,
+              "actual": 2016.0,
+              "predicted": 2063.11681685233
+            },
+            {
+              "origin": "2025-02-03",
+              "week": "2025-02-17",
+              "current": 2116.75,
+              "actual": 2041.2,
+              "predicted": 2066.7712453652657
+            },
+            {
+              "origin": "2025-02-10",
+              "week": "2025-02-24",
+              "current": 2016.0,
+              "actual": 2050.0,
+              "predicted": 2059.196260724823
+            },
+            {
+              "origin": "2025-12-15",
+              "week": "2025-12-29",
+              "current": 2150.0,
+              "actual": 1975.0,
+              "predicted": 2017.8323599159169
+            },
+            {
+              "origin": "2025-12-29",
+              "week": "2026-01-12",
+              "current": 1975.0,
+              "actual": 1837.5,
+              "predicted": 2029.5187856126383
+            },
+            {
+              "origin": "2026-01-05",
+              "week": "2026-01-19",
+              "current": 1975.0,
+              "actual": 1858.0,
+              "predicted": 2043.2350933142473
+            },
+            {
+              "origin": "2026-01-12",
+              "week": "2026-01-26",
+              "current": 1837.5,
+              "actual": 2057.5,
+              "predicted": 1981.1201044382203
+            },
+            {
+              "origin": "2026-01-19",
+              "week": "2026-02-02",
+              "current": 1858.0,
+              "actual": 1842.0,
+              "predicted": 1952.6870253010836
+            },
+            {
+              "origin": "2026-01-26",
+              "week": "2026-02-09",
+              "current": 2057.5,
+              "actual": 1700.0,
+              "predicted": 2007.0075877210327
+            },
+            {
+              "origin": "2026-02-02",
+              "week": "2026-02-16",
+              "current": 1842.0,
+              "actual": 1709.6666666666667,
+              "predicted": 1950.6580135640752
+            },
+            {
+              "origin": "2026-02-09",
+              "week": "2026-02-23",
+              "current": 1700.0,
+              "actual": 1727.0,
+              "predicted": 1922.5480095253074
+            },
+            {
+              "origin": "2026-02-23",
+              "week": "2026-03-09",
+              "current": 1727.0,
+              "actual": 1707.5,
+              "predicted": 1888.6305847628048
+            },
+            {
+              "origin": "2026-03-09",
+              "week": "2026-03-23",
+              "current": 1707.5,
+              "actual": 1600.0,
+              "predicted": 1889.485250166977
+            },
+            {
+              "origin": "2026-03-16",
+              "week": "2026-03-30",
+              "current": 1583.0,
+              "actual": 1790.5,
+              "predicted": 1865.203981580072
+            },
+            {
+              "origin": "2026-03-23",
+              "week": "2026-04-06",
+              "current": 1600.0,
+              "actual": 1704.0,
+              "predicted": 1875.251600359687
+            },
+            {
+              "origin": "2026-03-30",
+              "week": "2026-04-13",
+              "current": 1790.5,
+              "actual": 1700.0,
+              "predicted": 1855.7736291648432
+            }
+          ],
+          "XGBoost": [
+            {
+              "origin": "2024-10-07",
+              "week": "2024-10-21",
+              "current": 2271.0,
+              "actual": 1872.6,
+              "predicted": 2217.518798828125
+            },
+            {
+              "origin": "2024-10-14",
+              "week": "2024-10-28",
+              "current": 1868.6666666666667,
+              "actual": 1763.0,
+              "predicted": 2061.765625
+            },
+            {
+              "origin": "2024-10-21",
+              "week": "2024-11-04",
+              "current": 1872.6,
+              "actual": 2140.3333333333335,
+              "predicted": 2061.04150390625
+            },
+            {
+              "origin": "2024-10-28",
+              "week": "2024-11-11",
+              "current": 1763.0,
+              "actual": 2110.8333333333335,
+              "predicted": 2028.380615234375
+            },
+            {
+              "origin": "2024-11-04",
+              "week": "2024-11-18",
+              "current": 2140.3333333333335,
+              "actual": 2144.0,
+              "predicted": 1941.4139404296875
+            },
+            {
+              "origin": "2024-11-11",
+              "week": "2024-11-25",
+              "current": 2110.8333333333335,
+              "actual": 1970.2,
+              "predicted": 2095.371337890625
+            },
+            {
+              "origin": "2024-11-18",
+              "week": "2024-12-02",
+              "current": 2144.0,
+              "actual": 2116.5,
+              "predicted": 2115.6005859375
+            },
+            {
+              "origin": "2024-11-25",
+              "week": "2024-12-09",
+              "current": 1970.2,
+              "actual": 2067.8,
+              "predicted": 2117.271484375
+            },
+            {
+              "origin": "2024-12-02",
+              "week": "2024-12-16",
+              "current": 2116.5,
+              "actual": 2142.75,
+              "predicted": 2131.957763671875
+            },
+            {
+              "origin": "2024-12-09",
+              "week": "2024-12-23",
+              "current": 2067.8,
+              "actual": 2104.5,
+              "predicted": 2113.37353515625
+            },
+            {
+              "origin": "2024-12-16",
+              "week": "2024-12-30",
+              "current": 2142.75,
+              "actual": 2213.4,
+              "predicted": 2116.34619140625
+            },
+            {
+              "origin": "2024-12-23",
+              "week": "2025-01-06",
+              "current": 2104.5,
+              "actual": 2202.0,
+              "predicted": 2056.717529296875
+            },
+            {
+              "origin": "2024-12-30",
+              "week": "2025-01-13",
+              "current": 2213.4,
+              "actual": 2224.5,
+              "predicted": 2080.208740234375
+            },
+            {
+              "origin": "2025-01-06",
+              "week": "2025-01-20",
+              "current": 2202.0,
+              "actual": 2079.25,
+              "predicted": 2043.4588623046875
+            },
+            {
+              "origin": "2025-01-13",
+              "week": "2025-01-27",
+              "current": 2224.5,
+              "actual": 2054.6666666666665,
+              "predicted": 2097.87451171875
+            },
+            {
+              "origin": "2025-01-20",
+              "week": "2025-02-03",
+              "current": 2079.25,
+              "actual": 2116.75,
+              "predicted": 2019.1768798828125
+            },
+            {
+              "origin": "2025-01-27",
+              "week": "2025-02-10",
+              "current": 2054.6666666666665,
+              "actual": 2016.0,
+              "predicted": 2011.8187255859375
+            },
+            {
+              "origin": "2025-02-03",
+              "week": "2025-02-17",
+              "current": 2116.75,
+              "actual": 2041.2,
+              "predicted": 2048.531494140625
+            },
+            {
+              "origin": "2025-02-10",
+              "week": "2025-02-24",
+              "current": 2016.0,
+              "actual": 2050.0,
+              "predicted": 2044.978271484375
+            },
+            {
+              "origin": "2025-12-15",
+              "week": "2025-12-29",
+              "current": 2150.0,
+              "actual": 1975.0,
+              "predicted": 2003.5859375
+            },
+            {
+              "origin": "2025-12-29",
+              "week": "2026-01-12",
+              "current": 1975.0,
+              "actual": 1837.5,
+              "predicted": 2074.734619140625
+            },
+            {
+              "origin": "2026-01-05",
+              "week": "2026-01-19",
+              "current": 1975.0,
+              "actual": 1858.0,
+              "predicted": 2095.944580078125
+            },
+            {
+              "origin": "2026-01-12",
+              "week": "2026-01-26",
+              "current": 1837.5,
+              "actual": 2057.5,
+              "predicted": 1956.5592041015625
+            },
+            {
+              "origin": "2026-01-19",
+              "week": "2026-02-02",
+              "current": 1858.0,
+              "actual": 1842.0,
+              "predicted": 1890.9400634765625
+            },
+            {
+              "origin": "2026-01-26",
+              "week": "2026-02-09",
+              "current": 2057.5,
+              "actual": 1700.0,
+              "predicted": 2038.84765625
+            },
+            {
+              "origin": "2026-02-02",
+              "week": "2026-02-16",
+              "current": 1842.0,
+              "actual": 1709.6666666666667,
+              "predicted": 1943.2325439453125
+            },
+            {
+              "origin": "2026-02-09",
+              "week": "2026-02-23",
+              "current": 1700.0,
+              "actual": 1727.0,
+              "predicted": 1914.8035888671875
+            },
+            {
+              "origin": "2026-02-23",
+              "week": "2026-03-09",
+              "current": 1727.0,
+              "actual": 1707.5,
+              "predicted": 1837.6553955078125
+            },
+            {
+              "origin": "2026-03-09",
+              "week": "2026-03-23",
+              "current": 1707.5,
+              "actual": 1600.0,
+              "predicted": 1865.7406005859375
+            },
+            {
+              "origin": "2026-03-16",
+              "week": "2026-03-30",
+              "current": 1583.0,
+              "actual": 1790.5,
+              "predicted": 1796.7738037109375
+            },
+            {
+              "origin": "2026-03-23",
+              "week": "2026-04-06",
+              "current": 1600.0,
+              "actual": 1704.0,
+              "predicted": 1812.2222900390625
+            },
+            {
+              "origin": "2026-03-30",
+              "week": "2026-04-13",
+              "current": 1790.5,
+              "actual": 1700.0,
+              "predicted": 1838.715087890625
+            }
+          ],
+          "SARIMA": [
+            {
+              "origin": "2024-10-07",
+              "week": "2024-10-21",
+              "current": 2271.0,
+              "actual": 1872.6,
+              "predicted": 2334.6981997986545
+            },
+            {
+              "origin": "2024-10-14",
+              "week": "2024-10-28",
+              "current": 1868.6666666666667,
+              "actual": 1763.0,
+              "predicted": 2069.7338342661515
+            },
+            {
+              "origin": "2024-10-21",
+              "week": "2024-11-04",
+              "current": 1872.6,
+              "actual": 2140.3333333333335,
+              "predicted": 2005.4981730524948
+            },
+            {
+              "origin": "2024-10-28",
+              "week": "2024-11-11",
+              "current": 1763.0,
+              "actual": 2110.8333333333335,
+              "predicted": 1895.4396296144398
+            },
+            {
+              "origin": "2024-11-04",
+              "week": "2024-11-18",
+              "current": 2140.3333333333335,
+              "actual": 2144.0,
+              "predicted": 2069.1730411796443
+            },
+            {
+              "origin": "2024-11-11",
+              "week": "2024-11-25",
+              "current": 2110.8333333333335,
+              "actual": 1970.2,
+              "predicted": 2075.154682846866
+            },
+            {
+              "origin": "2024-11-18",
+              "week": "2024-12-02",
+              "current": 2144.0,
+              "actual": 2116.5,
+              "predicted": 2105.198155547477
+            },
+            {
+              "origin": "2024-11-25",
+              "week": "2024-12-09",
+              "current": 1970.2,
+              "actual": 2067.8,
+              "predicted": 2017.629772716896
+            },
+            {
+              "origin": "2024-12-02",
+              "week": "2024-12-16",
+              "current": 2116.5,
+              "actual": 2142.75,
+              "predicted": 2086.0212228657924
+            },
+            {
+              "origin": "2024-12-09",
+              "week": "2024-12-23",
+              "current": 2067.8,
+              "actual": 2104.5,
+              "predicted": 2068.0312700375644
+            },
+            {
+              "origin": "2024-12-16",
+              "week": "2024-12-30",
+              "current": 2142.75,
+              "actual": 2213.4,
+              "predicted": 2110.4674180368042
+            },
+            {
+              "origin": "2024-12-23",
+              "week": "2025-01-06",
+              "current": 2104.5,
+              "actual": 2202.0,
+              "predicted": 2099.027750828419
+            },
+            {
+              "origin": "2024-12-30",
+              "week": "2025-01-13",
+              "current": 2213.4,
+              "actual": 2224.5,
+              "predicted": 2162.2440677573636
+            },
+            {
+              "origin": "2025-01-06",
+              "week": "2025-01-20",
+              "current": 2202.0,
+              "actual": 2079.25,
+              "predicted": 2172.0613581570947
+            },
+            {
+              "origin": "2025-01-13",
+              "week": "2025-01-27",
+              "current": 2224.5,
+              "actual": 2054.6666666666665,
+              "predicted": 2194.3201822165724
+            },
+            {
+              "origin": "2025-01-20",
+              "week": "2025-02-03",
+              "current": 2079.25,
+              "actual": 2116.75,
+              "predicted": 2120.470300730384
+            },
+            {
+              "origin": "2025-01-27",
+              "week": "2025-02-10",
+              "current": 2054.6666666666665,
+              "actual": 2016.0,
+              "predicted": 2092.9205378150923
+            },
+            {
+              "origin": "2025-02-03",
+              "week": "2025-02-17",
+              "current": 2116.75,
+              "actual": 2041.2,
+              "predicted": 2116.3304174091554
+            },
+            {
+              "origin": "2025-02-10",
+              "week": "2025-02-24",
+              "current": 2016.0,
+              "actual": 2050.0,
+              "predicted": 2058.2747751701504
+            },
+            {
+              "origin": "2025-12-15",
+              "week": "2025-12-29",
+              "current": 2150.0,
+              "actual": 1975.0,
+              "predicted": 2061.7896086232618
+            },
+            {
+              "origin": "2025-12-29",
+              "week": "2026-01-12",
+              "current": 1975.0,
+              "actual": 1837.5,
+              "predicted": 1993.4483824712854
+            },
+            {
+              "origin": "2026-01-05",
+              "week": "2026-01-19",
+              "current": 1975.0,
+              "actual": 1858.0,
+              "predicted": 1987.370785598343
+            },
+            {
+              "origin": "2026-01-12",
+              "week": "2026-01-26",
+              "current": 1837.5,
+              "actual": 2057.5,
+              "predicted": 1902.4124067053124
+            },
+            {
+              "origin": "2026-01-19",
+              "week": "2026-02-02",
+              "current": 1858.0,
+              "actual": 1842.0,
+              "predicted": 1893.2782727792269
+            },
+            {
+              "origin": "2026-01-26",
+              "week": "2026-02-09",
+              "current": 2057.5,
+              "actual": 1700.0,
+              "predicted": 1995.1295369775783
+            },
+            {
+              "origin": "2026-02-02",
+              "week": "2026-02-16",
+              "current": 1842.0,
+              "actual": 1709.6666666666667,
+              "predicted": 1891.2952294659297
+            },
+            {
+              "origin": "2026-02-09",
+              "week": "2026-02-23",
+              "current": 1700.0,
+              "actual": 1727.0,
+              "predicted": 1791.2552553797473
+            },
+            {
+              "origin": "2026-02-23",
+              "week": "2026-03-09",
+              "current": 1727.0,
+              "actual": 1707.5,
+              "predicted": 1758.7139035132238
+            },
+            {
+              "origin": "2026-03-09",
+              "week": "2026-03-23",
+              "current": 1707.5,
+              "actual": 1600.0,
+              "predicted": 1730.2069646305006
+            },
+            {
+              "origin": "2026-03-16",
+              "week": "2026-03-30",
+              "current": 1583.0,
+              "actual": 1790.5,
+              "predicted": 1649.0364954176391
+            },
+            {
+              "origin": "2026-03-23",
+              "week": "2026-04-06",
+              "current": 1600.0,
+              "actual": 1704.0,
+              "predicted": 1637.482926296913
+            },
+            {
+              "origin": "2026-03-30",
+              "week": "2026-04-13",
+              "current": 1790.5,
+              "actual": 1700.0,
+              "predicted": 1733.577237603586
+            }
+          ]
+        },
+        "tuning": {
+          "Naive": {
+            "selected_config": {},
+            "candidate_validation": [
+              {
+                "config": {},
+                "MAE": 161.8038888888889,
+                "RMSE": 210.84282431426215,
+                "sMAPE": 7.24631033524318,
+                "R2": 0.13453727786040282,
+                "n": 30
+              }
+            ],
+            "objective": "Validation MAE, RMSE tie-break; no test selection"
+          },
+          "Random Forest": {
+            "selected_config": {
+              "depth": 3,
+              "window": 0
+            },
+            "candidate_validation": [
+              {
+                "config": {
+                  "depth": 3,
+                  "window": 0
+                },
+                "MAE": 174.52700380000655,
+                "RMSE": 211.92114864163835,
+                "sMAPE": 7.8983189034081365,
+                "R2": 0.1256620790595796,
+                "n": 30
+              },
+              {
+                "config": {
+                  "depth": 5,
+                  "window": 0
+                },
+                "MAE": 176.66452566399948,
+                "RMSE": 211.34197566865387,
+                "sMAPE": 8.011202620713153,
+                "R2": 0.1304346175193728,
+                "n": 30
+              },
+              {
+                "config": {
+                  "depth": 3,
+                  "window": 156
+                },
+                "MAE": 174.5270038000066,
+                "RMSE": 211.92114864163844,
+                "sMAPE": 7.898318903408139,
+                "R2": 0.12566207905957916,
+                "n": 30
+              }
+            ],
+            "objective": "Validation MAE, RMSE tie-break; no test selection"
+          },
+          "XGBoost": {
+            "selected_config": {
+              "depth": 3,
+              "window": 0
+            },
+            "candidate_validation": [
+              {
+                "config": {
+                  "depth": 3,
+                  "window": 0
+                },
+                "MAE": 174.60460747612845,
+                "RMSE": 209.28045106008818,
+                "sMAPE": 7.91741934317862,
+                "R2": 0.14731614205002008,
+                "n": 30
+              },
+              {
+                "config": {
+                  "depth": 5,
+                  "window": 0
+                },
+                "MAE": 178.95828857421876,
+                "RMSE": 212.14180561031327,
+                "sMAPE": 8.145273441037473,
+                "R2": 0.12384037134135872,
+                "n": 30
+              },
+              {
+                "config": {
+                  "depth": 3,
+                  "window": 156
+                },
+                "MAE": 174.60460747612845,
+                "RMSE": 209.28045106008818,
+                "sMAPE": 7.91741934317862,
+                "R2": 0.14731614205002008,
+                "n": 30
+              }
+            ],
+            "objective": "Validation MAE, RMSE tie-break; no test selection"
+          },
+          "SARIMA": {
+            "selected_config": {
+              "order": [
+                1,
+                1,
+                1
+              ],
+              "window": 0
+            },
+            "candidate_validation": [
+              {
+                "config": {
+                  "order": [
+                    1,
+                    1,
+                    1
+                  ],
+                  "window": 0
+                },
+                "MAE": 141.00488493412266,
+                "RMSE": 187.1925259806862,
+                "sMAPE": 6.34840423324941,
+                "R2": 0.31780626679270785,
+                "n": 30
+              },
+              {
+                "config": {
+                  "order": [
+                    2,
+                    1,
+                    0
+                  ],
+                  "window": 0
+                },
+                "MAE": 150.09308486182974,
+                "RMSE": 199.44479646362564,
+                "sMAPE": 6.76597823510143,
+                "R2": 0.22558075659029542,
+                "n": 30
+              },
+              {
+                "config": {
+                  "order": [
+                    0,
+                    1,
+                    1
+                  ],
+                  "window": 0
+                },
+                "MAE": 149.87587133618678,
+                "RMSE": 198.87963975187165,
+                "sMAPE": 6.7470920521684405,
+                "R2": 0.22996340423634676,
+                "n": 30
+              }
+            ],
+            "objective": "Validation MAE, RMSE tie-break; no test selection"
+          }
+        },
+        "failures": {},
+        "samples": {
+          "train": 93,
+          "validation": 30,
+          "test": 32
+        },
+        "evaluation_periods": {
+          "test_origins": [
+            "2024-10-07",
+            "2026-03-30"
+          ],
+          "test_targets": [
+            "2024-10-21",
+            "2026-04-13"
+          ]
+        },
+        "selected": "SARIMA",
+        "selection_reason": "Validation-only tuned MAE; final test never used for selection.",
+        "baseline_beaten": true
+      },
+      "4": {
+        "status": "trained",
+        "horizon_weeks": 4,
+        "horizon_days": 28,
+        "validation": {
+          "Naive": {
+            "MAE": 193.7471264367815,
+            "RMSE": 231.18953934693556,
+            "sMAPE": 8.612411656771569,
+            "R2": 0.08305594313606002,
+            "n": 29
+          },
+          "Random Forest": {
+            "MAE": 194.3896358479976,
+            "RMSE": 247.48176551271186,
+            "sMAPE": 8.685783246700385,
+            "R2": -0.05073425730332248,
+            "n": 29
+          },
+          "XGBoost": {
+            "MAE": 187.74684862158762,
+            "RMSE": 248.9054590880969,
+            "sMAPE": 8.352855418003708,
+            "R2": -0.06285819236671553,
+            "n": 29
+          },
+          "SARIMA": {
+            "MAE": 158.3857576205229,
+            "RMSE": 217.21295154231592,
+            "sMAPE": 7.075615180338455,
+            "R2": 0.19057257585516751,
+            "n": 29
+          }
+        },
+        "test": {
+          "Naive": {
+            "MAE": 121.8982142857143,
+            "RMSE": 151.55308845758225,
+            "sMAPE": 6.247743658542296,
+            "R2": 0.4305244263297173,
+            "n": 28
+          },
+          "Random Forest": {
+            "MAE": 116.2967585899376,
+            "RMSE": 153.27437920695326,
+            "sMAPE": 6.161831189538633,
+            "R2": 0.41751512864802065,
+            "n": 28
+          },
+          "XGBoost": {
+            "MAE": 129.95094313848585,
+            "RMSE": 159.767017681719,
+            "sMAPE": 6.813865213333928,
+            "R2": 0.3671223260518538,
+            "n": 28
+          },
+          "SARIMA": {
+            "MAE": 108.57006666482586,
+            "RMSE": 129.07241849051252,
+            "sMAPE": 5.582588520585235,
+            "R2": 0.5869406912963355,
+            "n": 28
+          }
+        },
+        "direction": {
+          "validation": {
+            "Naive": {
+              "n": 29,
+              "increase": 14,
+              "decrease": 15,
+              "unchanged_excluded": 0,
+              "missing_excluded": 0,
+              "predicted_unchanged": 29,
+              "Accuracy": 0.5172413793103449,
+              "Precision": null,
+              "Recall": 0.0,
+              "F1": 0.0,
+              "ROC_AUC": 0.5
+            },
+            "Random Forest": {
+              "n": 29,
+              "increase": 14,
+              "decrease": 15,
+              "unchanged_excluded": 0,
+              "missing_excluded": 0,
+              "predicted_unchanged": 0,
+              "Accuracy": 0.6896551724137931,
+              "Precision": 1.0,
+              "Recall": 0.35714285714285715,
+              "F1": 0.5263157894736842,
+              "ROC_AUC": 0.8238095238095238
+            },
+            "XGBoost": {
+              "n": 29,
+              "increase": 14,
+              "decrease": 15,
+              "unchanged_excluded": 0,
+              "missing_excluded": 0,
+              "predicted_unchanged": 0,
+              "Accuracy": 0.7241379310344828,
+              "Precision": 0.875,
+              "Recall": 0.5,
+              "F1": 0.6363636363636364,
+              "ROC_AUC": 0.8142857142857143
+            },
+            "SARIMA": {
+              "n": 29,
+              "increase": 14,
+              "decrease": 15,
+              "unchanged_excluded": 0,
+              "missing_excluded": 0,
+              "predicted_unchanged": 0,
+              "Accuracy": 0.6551724137931034,
+              "Precision": 0.7,
+              "Recall": 0.5,
+              "F1": 0.5833333333333334,
+              "ROC_AUC": 0.7523809523809524
+            }
+          },
+          "test": {
+            "Naive": {
+              "n": 28,
+              "increase": 10,
+              "decrease": 18,
+              "unchanged_excluded": 0,
+              "missing_excluded": 0,
+              "predicted_unchanged": 28,
+              "Accuracy": 0.6428571428571429,
+              "Precision": null,
+              "Recall": 0.0,
+              "F1": 0.0,
+              "ROC_AUC": 0.5
+            },
+            "Random Forest": {
+              "n": 28,
+              "increase": 10,
+              "decrease": 18,
+              "unchanged_excluded": 0,
+              "missing_excluded": 0,
+              "predicted_unchanged": 0,
+              "Accuracy": 0.6428571428571429,
+              "Precision": 0.5,
+              "Recall": 0.8,
+              "F1": 0.6153846153846154,
+              "ROC_AUC": 0.7888888888888889
+            },
+            "XGBoost": {
+              "n": 28,
+              "increase": 10,
+              "decrease": 18,
+              "unchanged_excluded": 0,
+              "missing_excluded": 0,
+              "predicted_unchanged": 0,
+              "Accuracy": 0.5714285714285714,
+              "Precision": 0.4375,
+              "Recall": 0.7,
+              "F1": 0.5384615384615384,
+              "ROC_AUC": 0.75
+            },
+            "SARIMA": {
+              "n": 28,
+              "increase": 10,
+              "decrease": 18,
+              "unchanged_excluded": 0,
+              "missing_excluded": 0,
+              "predicted_unchanged": 0,
+              "Accuracy": 0.6071428571428571,
+              "Precision": 0.47058823529411764,
+              "Recall": 0.8,
+              "F1": 0.5925925925925926,
+              "ROC_AUC": 0.7555555555555555
+            }
+          }
+        },
+        "all_predictions": {
+          "Naive": [
+            {
+              "origin": "2024-10-07",
+              "week": "2024-11-04",
+              "current": 2271.0,
+              "actual": 2140.3333333333335,
+              "predicted": 2271.0
+            },
+            {
+              "origin": "2024-10-14",
+              "week": "2024-11-11",
+              "current": 1868.6666666666667,
+              "actual": 2110.8333333333335,
+              "predicted": 1868.6666666666667
+            },
+            {
+              "origin": "2024-10-21",
+              "week": "2024-11-18",
+              "current": 1872.6,
+              "actual": 2144.0,
+              "predicted": 1872.6
+            },
+            {
+              "origin": "2024-10-28",
+              "week": "2024-11-25",
+              "current": 1763.0,
+              "actual": 1970.2,
+              "predicted": 1763.0
+            },
+            {
+              "origin": "2024-11-04",
+              "week": "2024-12-02",
+              "current": 2140.3333333333335,
+              "actual": 2116.5,
+              "predicted": 2140.3333333333335
+            },
+            {
+              "origin": "2024-11-11",
+              "week": "2024-12-09",
+              "current": 2110.8333333333335,
+              "actual": 2067.8,
+              "predicted": 2110.8333333333335
+            },
+            {
+              "origin": "2024-11-18",
+              "week": "2024-12-16",
+              "current": 2144.0,
+              "actual": 2142.75,
+              "predicted": 2144.0
+            },
+            {
+              "origin": "2024-11-25",
+              "week": "2024-12-23",
+              "current": 1970.2,
+              "actual": 2104.5,
+              "predicted": 1970.2
+            },
+            {
+              "origin": "2024-12-02",
+              "week": "2024-12-30",
+              "current": 2116.5,
+              "actual": 2213.4,
+              "predicted": 2116.5
+            },
+            {
+              "origin": "2024-12-09",
+              "week": "2025-01-06",
+              "current": 2067.8,
+              "actual": 2202.0,
+              "predicted": 2067.8
+            },
+            {
+              "origin": "2024-12-16",
+              "week": "2025-01-13",
+              "current": 2142.75,
+              "actual": 2224.5,
+              "predicted": 2142.75
+            },
+            {
+              "origin": "2024-12-23",
+              "week": "2025-01-20",
+              "current": 2104.5,
+              "actual": 2079.25,
+              "predicted": 2104.5
+            },
+            {
+              "origin": "2024-12-30",
+              "week": "2025-01-27",
+              "current": 2213.4,
+              "actual": 2054.6666666666665,
+              "predicted": 2213.4
+            },
+            {
+              "origin": "2025-01-06",
+              "week": "2025-02-03",
+              "current": 2202.0,
+              "actual": 2116.75,
+              "predicted": 2202.0
+            },
+            {
+              "origin": "2025-01-13",
+              "week": "2025-02-10",
+              "current": 2224.5,
+              "actual": 2016.0,
+              "predicted": 2224.5
+            },
+            {
+              "origin": "2025-01-20",
+              "week": "2025-02-17",
+              "current": 2079.25,
+              "actual": 2041.2,
+              "predicted": 2079.25
+            },
+            {
+              "origin": "2025-01-27",
+              "week": "2025-02-24",
+              "current": 2054.6666666666665,
+              "actual": 2050.0,
+              "predicted": 2054.6666666666665
+            },
+            {
+              "origin": "2025-12-15",
+              "week": "2026-01-12",
+              "current": 2150.0,
+              "actual": 1837.5,
+              "predicted": 2150.0
+            },
+            {
+              "origin": "2025-12-29",
+              "week": "2026-01-26",
+              "current": 1975.0,
+              "actual": 2057.5,
+              "predicted": 1975.0
+            },
+            {
+              "origin": "2026-01-05",
+              "week": "2026-02-02",
+              "current": 1975.0,
+              "actual": 1842.0,
+              "predicted": 1975.0
+            },
+            {
+              "origin": "2026-01-12",
+              "week": "2026-02-09",
+              "current": 1837.5,
+              "actual": 1700.0,
+              "predicted": 1837.5
+            },
+            {
+              "origin": "2026-01-19",
+              "week": "2026-02-16",
+              "current": 1858.0,
+              "actual": 1709.6666666666667,
+              "predicted": 1858.0
+            },
+            {
+              "origin": "2026-01-26",
+              "week": "2026-02-23",
+              "current": 2057.5,
+              "actual": 1727.0,
+              "predicted": 2057.5
+            },
+            {
+              "origin": "2026-02-09",
+              "week": "2026-03-09",
+              "current": 1700.0,
+              "actual": 1707.5,
+              "predicted": 1700.0
+            },
+            {
+              "origin": "2026-02-16",
+              "week": "2026-03-16",
+              "current": 1709.6666666666667,
+              "actual": 1583.0,
+              "predicted": 1709.6666666666667
+            },
+            {
+              "origin": "2026-02-23",
+              "week": "2026-03-23",
+              "current": 1727.0,
+              "actual": 1600.0,
+              "predicted": 1727.0
+            },
+            {
+              "origin": "2026-03-09",
+              "week": "2026-04-06",
+              "current": 1707.5,
+              "actual": 1704.0,
+              "predicted": 1707.5
+            },
+            {
+              "origin": "2026-03-16",
+              "week": "2026-04-13",
+              "current": 1583.0,
+              "actual": 1700.0,
+              "predicted": 1583.0
+            }
+          ],
+          "Random Forest": [
+            {
+              "origin": "2024-10-07",
+              "week": "2024-11-04",
+              "current": 2271.0,
+              "actual": 2140.3333333333335,
+              "predicted": 2131.3933905134936
+            },
+            {
+              "origin": "2024-10-14",
+              "week": "2024-11-11",
+              "current": 1868.6666666666667,
+              "actual": 2110.8333333333335,
+              "predicted": 2123.5409454830396
+            },
+            {
+              "origin": "2024-10-21",
+              "week": "2024-11-18",
+              "current": 1872.6,
+              "actual": 2144.0,
+              "predicted": 2141.0004782774267
+            },
+            {
+              "origin": "2024-10-28",
+              "week": "2024-11-25",
+              "current": 1763.0,
+              "actual": 1970.2,
+              "predicted": 2067.9758024815173
+            },
+            {
+              "origin": "2024-11-04",
+              "week": "2024-12-02",
+              "current": 2140.3333333333335,
+              "actual": 2116.5,
+              "predicted": 2077.3009624552365
+            },
+            {
+              "origin": "2024-11-11",
+              "week": "2024-12-09",
+              "current": 2110.8333333333335,
+              "actual": 2067.8,
+              "predicted": 2132.68355884543
+            },
+            {
+              "origin": "2024-11-18",
+              "week": "2024-12-16",
+              "current": 2144.0,
+              "actual": 2142.75,
+              "predicted": 2161.237877539197
+            },
+            {
+              "origin": "2024-11-25",
+              "week": "2024-12-23",
+              "current": 1970.2,
+              "actual": 2104.5,
+              "predicted": 2091.4851034183766
+            },
+            {
+              "origin": "2024-12-02",
+              "week": "2024-12-30",
+              "current": 2116.5,
+              "actual": 2213.4,
+              "predicted": 2083.1001184507395
+            },
+            {
+              "origin": "2024-12-09",
+              "week": "2025-01-06",
+              "current": 2067.8,
+              "actual": 2202.0,
+              "predicted": 2094.888298154657
+            },
+            {
+              "origin": "2024-12-16",
+              "week": "2025-01-13",
+              "current": 2142.75,
+              "actual": 2224.5,
+              "predicted": 2106.356084067963
+            },
+            {
+              "origin": "2024-12-23",
+              "week": "2025-01-20",
+              "current": 2104.5,
+              "actual": 2079.25,
+              "predicted": 2085.396235040769
+            },
+            {
+              "origin": "2024-12-30",
+              "week": "2025-01-27",
+              "current": 2213.4,
+              "actual": 2054.6666666666665,
+              "predicted": 2049.6890507956746
+            },
+            {
+              "origin": "2025-01-06",
+              "week": "2025-02-03",
+              "current": 2202.0,
+              "actual": 2116.75,
+              "predicted": 2012.4359026243833
+            },
+            {
+              "origin": "2025-01-13",
+              "week": "2025-02-10",
+              "current": 2224.5,
+              "actual": 2016.0,
+              "predicted": 2025.273658526326
+            },
+            {
+              "origin": "2025-01-20",
+              "week": "2025-02-17",
+              "current": 2079.25,
+              "actual": 2041.2,
+              "predicted": 2001.7275926479872
+            },
+            {
+              "origin": "2025-01-27",
+              "week": "2025-02-24",
+              "current": 2054.6666666666665,
+              "actual": 2050.0,
+              "predicted": 2027.8266058033632
+            },
+            {
+              "origin": "2025-12-15",
+              "week": "2026-01-12",
+              "current": 2150.0,
+              "actual": 1837.5,
+              "predicted": 2018.052983568115
+            },
+            {
+              "origin": "2025-12-29",
+              "week": "2026-01-26",
+              "current": 1975.0,
+              "actual": 2057.5,
+              "predicted": 1985.9033126028112
+            },
+            {
+              "origin": "2026-01-05",
+              "week": "2026-02-02",
+              "current": 1975.0,
+              "actual": 1842.0,
+              "predicted": 2076.1844959783857
+            },
+            {
+              "origin": "2026-01-12",
+              "week": "2026-02-09",
+              "current": 1837.5,
+              "actual": 1700.0,
+              "predicted": 1940.4661045371106
+            },
+            {
+              "origin": "2026-01-19",
+              "week": "2026-02-16",
+              "current": 1858.0,
+              "actual": 1709.6666666666667,
+              "predicted": 1915.3090319943108
+            },
+            {
+              "origin": "2026-01-26",
+              "week": "2026-02-23",
+              "current": 2057.5,
+              "actual": 1727.0,
+              "predicted": 1956.6439374001384
+            },
+            {
+              "origin": "2026-02-09",
+              "week": "2026-03-09",
+              "current": 1700.0,
+              "actual": 1707.5,
+              "predicted": 1926.635702654636
+            },
+            {
+              "origin": "2026-02-16",
+              "week": "2026-03-16",
+              "current": 1709.6666666666667,
+              "actual": 1583.0,
+              "predicted": 1887.8387982712977
+            },
+            {
+              "origin": "2026-02-23",
+              "week": "2026-03-23",
+              "current": 1727.0,
+              "actual": 1600.0,
+              "predicted": 1893.7711203935485
+            },
+            {
+              "origin": "2026-03-09",
+              "week": "2026-04-06",
+              "current": 1707.5,
+              "actual": 1704.0,
+              "predicted": 1946.143436799917
+            },
+            {
+              "origin": "2026-03-16",
+              "week": "2026-04-13",
+              "current": 1583.0,
+              "actual": 1700.0,
+              "predicted": 1934.4124508166265
+            }
+          ],
+          "XGBoost": [
+            {
+              "origin": "2024-10-07",
+              "week": "2024-11-04",
+              "current": 2271.0,
+              "actual": 2140.3333333333335,
+              "predicted": 2081.30322265625
+            },
+            {
+              "origin": "2024-10-14",
+              "week": "2024-11-11",
+              "current": 1868.6666666666667,
+              "actual": 2110.8333333333335,
+              "predicted": 2094.80419921875
+            },
+            {
+              "origin": "2024-10-21",
+              "week": "2024-11-18",
+              "current": 1872.6,
+              "actual": 2144.0,
+              "predicted": 2092.2685546875
+            },
+            {
+              "origin": "2024-10-28",
+              "week": "2024-11-25",
+              "current": 1763.0,
+              "actual": 1970.2,
+              "predicted": 2151.889892578125
+            },
+            {
+              "origin": "2024-11-04",
+              "week": "2024-12-02",
+              "current": 2140.3333333333335,
+              "actual": 2116.5,
+              "predicted": 2109.6943359375
+            },
+            {
+              "origin": "2024-11-11",
+              "week": "2024-12-09",
+              "current": 2110.8333333333335,
+              "actual": 2067.8,
+              "predicted": 2190.575927734375
+            },
+            {
+              "origin": "2024-11-18",
+              "week": "2024-12-16",
+              "current": 2144.0,
+              "actual": 2142.75,
+              "predicted": 2165.089599609375
+            },
+            {
+              "origin": "2024-11-25",
+              "week": "2024-12-23",
+              "current": 1970.2,
+              "actual": 2104.5,
+              "predicted": 2114.825927734375
+            },
+            {
+              "origin": "2024-12-02",
+              "week": "2024-12-30",
+              "current": 2116.5,
+              "actual": 2213.4,
+              "predicted": 2080.5712890625
+            },
+            {
+              "origin": "2024-12-09",
+              "week": "2025-01-06",
+              "current": 2067.8,
+              "actual": 2202.0,
+              "predicted": 2078.5595703125
+            },
+            {
+              "origin": "2024-12-16",
+              "week": "2025-01-13",
+              "current": 2142.75,
+              "actual": 2224.5,
+              "predicted": 2119.30517578125
+            },
+            {
+              "origin": "2024-12-23",
+              "week": "2025-01-20",
+              "current": 2104.5,
+              "actual": 2079.25,
+              "predicted": 2110.99853515625
+            },
+            {
+              "origin": "2024-12-30",
+              "week": "2025-01-27",
+              "current": 2213.4,
+              "actual": 2054.6666666666665,
+              "predicted": 2031.981689453125
+            },
+            {
+              "origin": "2025-01-06",
+              "week": "2025-02-03",
+              "current": 2202.0,
+              "actual": 2116.75,
+              "predicted": 1997.8270263671875
+            },
+            {
+              "origin": "2025-01-13",
+              "week": "2025-02-10",
+              "current": 2224.5,
+              "actual": 2016.0,
+              "predicted": 1988.4371337890625
+            },
+            {
+              "origin": "2025-01-20",
+              "week": "2025-02-17",
+              "current": 2079.25,
+              "actual": 2041.2,
+              "predicted": 1956.5487060546875
+            },
+            {
+              "origin": "2025-01-27",
+              "week": "2025-02-24",
+              "current": 2054.6666666666665,
+              "actual": 2050.0,
+              "predicted": 2027.8524169921875
+            },
+            {
+              "origin": "2025-12-15",
+              "week": "2026-01-12",
+              "current": 2150.0,
+              "actual": 1837.5,
+              "predicted": 2009.2611083984375
+            },
+            {
+              "origin": "2025-12-29",
+              "week": "2026-01-26",
+              "current": 1975.0,
+              "actual": 2057.5,
+              "predicted": 1893.8594970703125
+            },
+            {
+              "origin": "2026-01-05",
+              "week": "2026-02-02",
+              "current": 1975.0,
+              "actual": 1842.0,
+              "predicted": 2113.89501953125
+            },
+            {
+              "origin": "2026-01-12",
+              "week": "2026-02-09",
+              "current": 1837.5,
+              "actual": 1700.0,
+              "predicted": 1946.1297607421875
+            },
+            {
+              "origin": "2026-01-19",
+              "week": "2026-02-16",
+              "current": 1858.0,
+              "actual": 1709.6666666666667,
+              "predicted": 1885.48974609375
+            },
+            {
+              "origin": "2026-01-26",
+              "week": "2026-02-23",
+              "current": 2057.5,
+              "actual": 1727.0,
+              "predicted": 1925.7828369140625
+            },
+            {
+              "origin": "2026-02-09",
+              "week": "2026-03-09",
+              "current": 1700.0,
+              "actual": 1707.5,
+              "predicted": 1891.31201171875
+            },
+            {
+              "origin": "2026-02-16",
+              "week": "2026-03-16",
+              "current": 1709.6666666666667,
+              "actual": 1583.0,
+              "predicted": 1876.23876953125
+            },
+            {
+              "origin": "2026-02-23",
+              "week": "2026-03-23",
+              "current": 1727.0,
+              "actual": 1600.0,
+              "predicted": 1883.9156494140625
+            },
+            {
+              "origin": "2026-03-09",
+              "week": "2026-04-06",
+              "current": 1707.5,
+              "actual": 1704.0,
+              "predicted": 1955.27490234375
+            },
+            {
+              "origin": "2026-03-16",
+              "week": "2026-04-13",
+              "current": 1583.0,
+              "actual": 1700.0,
+              "predicted": 1958.44287109375
+            }
+          ],
+          "SARIMA": [
+            {
+              "origin": "2024-10-07",
+              "week": "2024-11-04",
+              "current": 2271.0,
+              "actual": 2140.3333333333335,
+              "predicted": 2343.3989195128106
+            },
+            {
+              "origin": "2024-10-14",
+              "week": "2024-11-11",
+              "current": 1868.6666666666667,
+              "actual": 2110.8333333333335,
+              "predicted": 2098.337373384825
+            },
+            {
+              "origin": "2024-10-21",
+              "week": "2024-11-18",
+              "current": 1872.6,
+              "actual": 2144.0,
+              "predicted": 2024.0457292504138
+            },
+            {
+              "origin": "2024-10-28",
+              "week": "2024-11-25",
+              "current": 1763.0,
+              "actual": 1970.2,
+              "predicted": 1913.9618048887467
+            },
+            {
+              "origin": "2024-11-04",
+              "week": "2024-12-02",
+              "current": 2140.3333333333335,
+              "actual": 2116.5,
+              "predicted": 2059.8034483676415
+            },
+            {
+              "origin": "2024-11-11",
+              "week": "2024-12-09",
+              "current": 2110.8333333333335,
+              "actual": 2067.8,
+              "predicted": 2070.4111958814124
+            },
+            {
+              "origin": "2024-11-18",
+              "week": "2024-12-16",
+              "current": 2144.0,
+              "actual": 2142.75,
+              "predicted": 2100.0365460127127
+            },
+            {
+              "origin": "2024-11-25",
+              "week": "2024-12-23",
+              "current": 1970.2,
+              "actual": 2104.5,
+              "predicted": 2024.0943521798204
+            },
+            {
+              "origin": "2024-12-02",
+              "week": "2024-12-30",
+              "current": 2116.5,
+              "actual": 2213.4,
+              "predicted": 2081.9518370571404
+            },
+            {
+              "origin": "2024-12-09",
+              "week": "2025-01-06",
+              "current": 2067.8,
+              "actual": 2202.0,
+              "predicted": 2068.058796622061
+            },
+            {
+              "origin": "2024-12-16",
+              "week": "2025-01-13",
+              "current": 2142.75,
+              "actual": 2224.5,
+              "predicted": 2106.16669598178
+            },
+            {
+              "origin": "2024-12-23",
+              "week": "2025-01-20",
+              "current": 2104.5,
+              "actual": 2079.25,
+              "predicted": 2098.281052146666
+            },
+            {
+              "origin": "2024-12-30",
+              "week": "2025-01-27",
+              "current": 2213.4,
+              "actual": 2054.6666666666665,
+              "predicted": 2155.4669576369083
+            },
+            {
+              "origin": "2025-01-06",
+              "week": "2025-02-03",
+              "current": 2202.0,
+              "actual": 2116.75,
+              "predicted": 2168.0664588601276
+            },
+            {
+              "origin": "2025-01-13",
+              "week": "2025-02-10",
+              "current": 2224.5,
+              "actual": 2016.0,
+              "predicted": 2190.3058907824184
+            },
+            {
+              "origin": "2025-01-20",
+              "week": "2025-02-17",
+              "current": 2079.25,
+              "actual": 2041.2,
+              "predicted": 2126.0970455161128
+            },
+            {
+              "origin": "2025-01-27",
+              "week": "2025-02-24",
+              "current": 2054.6666666666665,
+              "actual": 2050.0,
+              "predicted": 2098.124999067653
+            },
+            {
+              "origin": "2025-12-15",
+              "week": "2026-01-12",
+              "current": 2150.0,
+              "actual": 1837.5,
+              "predicted": 2050.2217874668167
+            },
+            {
+              "origin": "2025-12-29",
+              "week": "2026-01-26",
+              "current": 1975.0,
+              "actual": 2057.5,
+              "predicted": 1995.958700057745
+            },
+            {
+              "origin": "2026-01-05",
+              "week": "2026-02-02",
+              "current": 1975.0,
+              "actual": 1842.0,
+              "predicted": 1989.031830895658
+            },
+            {
+              "origin": "2026-01-12",
+              "week": "2026-02-09",
+              "current": 1837.5,
+              "actual": 1700.0,
+              "predicted": 1911.3050018528993
+            },
+            {
+              "origin": "2026-01-19",
+              "week": "2026-02-16",
+              "current": 1858.0,
+              "actual": 1709.6666666666667,
+              "predicted": 1898.0759063715502
+            },
+            {
+              "origin": "2026-01-26",
+              "week": "2026-02-23",
+              "current": 2057.5,
+              "actual": 1727.0,
+              "predicted": 1986.8937789075972
+            },
+            {
+              "origin": "2026-02-09",
+              "week": "2026-03-09",
+              "current": 1700.0,
+              "actual": 1707.5,
+              "predicted": 1803.8789645523575
+            },
+            {
+              "origin": "2026-02-16",
+              "week": "2026-03-16",
+              "current": 1709.6666666666667,
+              "actual": 1583.0,
+              "predicted": 1775.11603145488
+            },
+            {
+              "origin": "2026-02-23",
+              "week": "2026-03-23",
+              "current": 1727.0,
+              "actual": 1600.0,
+              "predicted": 1763.0177607207434
+            },
+            {
+              "origin": "2026-03-09",
+              "week": "2026-04-06",
+              "current": 1707.5,
+              "actual": 1704.0,
+              "predicted": 1733.2799627280083
+            },
+            {
+              "origin": "2026-03-16",
+              "week": "2026-04-13",
+              "current": 1583.0,
+              "actual": 1700.0,
+              "predicted": 1658.1130606032752
+            }
+          ]
+        },
+        "tuning": {
+          "Naive": {
+            "selected_config": {},
+            "candidate_validation": [
+              {
+                "config": {},
+                "MAE": 193.7471264367815,
+                "RMSE": 231.18953934693556,
+                "sMAPE": 8.612411656771569,
+                "R2": 0.08305594313606002,
+                "n": 29
+              }
+            ],
+            "objective": "Validation MAE, RMSE tie-break; no test selection"
+          },
+          "Random Forest": {
+            "selected_config": {
+              "depth": 5,
+              "window": 0
+            },
+            "candidate_validation": [
+              {
+                "config": {
+                  "depth": 3,
+                  "window": 0
+                },
+                "MAE": 196.17074119486315,
+                "RMSE": 248.42293253058352,
+                "sMAPE": 8.769996074992564,
+                "R2": -0.0587412863286394,
+                "n": 29
+              },
+              {
+                "config": {
+                  "depth": 5,
+                  "window": 0
+                },
+                "MAE": 194.3896358479976,
+                "RMSE": 247.48176551271186,
+                "sMAPE": 8.685783246700385,
+                "R2": -0.05073425730332248,
+                "n": 29
+              },
+              {
+                "config": {
+                  "depth": 3,
+                  "window": 156
+                },
+                "MAE": 196.17074119486315,
+                "RMSE": 248.42293253058347,
+                "sMAPE": 8.769996074992564,
+                "R2": -0.05874128632863895,
+                "n": 29
+              }
+            ],
+            "objective": "Validation MAE, RMSE tie-break; no test selection"
+          },
+          "XGBoost": {
+            "selected_config": {
+              "depth": 5,
+              "window": 0
+            },
+            "candidate_validation": [
+              {
+                "config": {
+                  "depth": 3,
+                  "window": 0
+                },
+                "MAE": 193.67978992681392,
+                "RMSE": 248.8805175762192,
+                "sMAPE": 8.661331637032825,
+                "R2": -0.06264519613796438,
+                "n": 29
+              },
+              {
+                "config": {
+                  "depth": 5,
+                  "window": 0
+                },
+                "MAE": 187.74684862158762,
+                "RMSE": 248.9054590880969,
+                "sMAPE": 8.352855418003708,
+                "R2": -0.06285819236671553,
+                "n": 29
+              },
+              {
+                "config": {
+                  "depth": 3,
+                  "window": 156
+                },
+                "MAE": 193.67978992681392,
+                "RMSE": 248.8805175762192,
+                "sMAPE": 8.661331637032825,
+                "R2": -0.06264519613796438,
+                "n": 29
+              }
+            ],
+            "objective": "Validation MAE, RMSE tie-break; no test selection"
+          },
+          "SARIMA": {
+            "selected_config": {
+              "order": [
+                1,
+                1,
+                1
+              ],
+              "window": 0
+            },
+            "candidate_validation": [
+              {
+                "config": {
+                  "order": [
+                    1,
+                    1,
+                    1
+                  ],
+                  "window": 0
+                },
+                "MAE": 158.3857576205229,
+                "RMSE": 217.21295154231592,
+                "sMAPE": 7.075615180338455,
+                "R2": 0.19057257585516751,
+                "n": 29
+              },
+              {
+                "config": {
+                  "order": [
+                    2,
+                    1,
+                    0
+                  ],
+                  "window": 0
+                },
+                "MAE": 184.62046136752554,
+                "RMSE": 229.32103309933927,
+                "sMAPE": 8.192085510884151,
+                "R2": 0.09781778811404718,
+                "n": 29
+              },
+              {
+                "config": {
+                  "order": [
+                    0,
+                    1,
+                    1
+                  ],
+                  "window": 0
+                },
+                "MAE": 182.86702656540194,
+                "RMSE": 227.17094196628688,
+                "sMAPE": 8.11846178104001,
+                "R2": 0.11465602038981282,
+                "n": 29
+              }
+            ],
+            "objective": "Validation MAE, RMSE tie-break; no test selection"
+          }
+        },
+        "failures": {},
+        "samples": {
+          "train": 91,
+          "validation": 29,
+          "test": 28
+        },
+        "evaluation_periods": {
+          "test_origins": [
+            "2024-10-07",
+            "2026-03-16"
+          ],
+          "test_targets": [
+            "2024-11-04",
+            "2026-04-13"
+          ]
+        },
+        "selected": "SARIMA",
+        "selection_reason": "Validation-only tuned MAE; final test never used for selection.",
+        "baseline_beaten": true
+      }
+    },
+    "history": [
+      {
+        "week": "2020-12-28",
+        "price": 1316.5
+      },
+      {
+        "week": "2021-01-04",
+        "price": 1330.8
+      },
+      {
+        "week": "2021-01-11",
+        "price": 1252.67
+      },
+      {
+        "week": "2021-01-18",
+        "price": 1264.0
+      },
+      {
+        "week": "2021-01-25",
+        "price": 1321.0
+      },
+      {
+        "week": "2021-02-01",
+        "price": 1319.5
+      },
+      {
+        "week": "2021-02-08",
+        "price": 1301.0
+      },
+      {
+        "week": "2021-02-15",
+        "price": 1348.25
+      },
+      {
+        "week": "2021-02-22",
+        "price": 1337.0
+      },
+      {
+        "week": "2021-03-01",
+        "price": 1382.25
+      },
+      {
+        "week": "2021-03-08",
+        "price": 1376.0
+      },
+      {
+        "week": "2021-03-15",
+        "price": 1421.0
+      },
+      {
+        "week": "2021-03-22",
+        "price": 1365.5
+      },
+      {
+        "week": "2021-03-29",
+        "price": 1482.5
+      },
+      {
+        "week": "2021-04-05",
+        "price": 1445.0
+      },
+      {
+        "week": "2021-04-12",
+        "price": 1429.0
+      },
+      {
+        "week": "2021-04-19",
+        "price": 1538.4
+      },
+      {
+        "week": "2021-04-26",
+        "price": 1470.67
+      },
+      {
+        "week": "2021-05-03",
+        "price": 1522.0
+      },
+      {
+        "week": "2021-05-10",
+        "price": 1518.33
+      },
+      {
+        "week": "2021-05-17",
+        "price": 1436.0
+      },
+      {
+        "week": "2021-05-24",
+        "price": null
+      },
+      {
+        "week": "2021-05-31",
+        "price": null
+      },
+      {
+        "week": "2021-06-07",
+        "price": 1185.0
+      },
+      {
+        "week": "2021-06-14",
+        "price": 1567.0
+      },
+      {
+        "week": "2021-06-21",
+        "price": 1728.67
+      },
+      {
+        "week": "2021-06-28",
+        "price": null
+      },
+      {
+        "week": "2021-07-05",
+        "price": 1640.0
+      },
+      {
+        "week": "2021-07-12",
+        "price": 1359.0
+      },
+      {
+        "week": "2021-07-19",
+        "price": null
+      },
+      {
+        "week": "2021-07-26",
+        "price": 1730.0
+      },
+      {
+        "week": "2021-08-02",
+        "price": 1830.0
+      },
+      {
+        "week": "2021-08-09",
+        "price": null
+      },
+      {
+        "week": "2021-08-16",
+        "price": null
+      },
+      {
+        "week": "2021-08-23",
+        "price": null
+      },
+      {
+        "week": "2021-08-30",
+        "price": 1740.0
+      },
+      {
+        "week": "2021-09-06",
+        "price": null
+      },
+      {
+        "week": "2021-09-13",
+        "price": null
+      },
+      {
+        "week": "2021-09-20",
+        "price": 1664.25
+      },
+      {
+        "week": "2021-09-27",
+        "price": null
+      },
+      {
+        "week": "2021-10-04",
+        "price": 1263.67
+      },
+      {
+        "week": "2021-10-11",
+        "price": 1253.0
+      },
+      {
+        "week": "2021-10-18",
+        "price": 1356.5
+      },
+      {
+        "week": "2021-10-25",
+        "price": 1110.75
+      },
+      {
+        "week": "2021-11-01",
+        "price": 1459.5
+      },
+      {
+        "week": "2021-11-08",
+        "price": 1508.0
+      },
+      {
+        "week": "2021-11-15",
+        "price": 1573.8
+      },
+      {
+        "week": "2021-11-22",
+        "price": 1468.4
+      },
+      {
+        "week": "2021-11-29",
+        "price": 1531.5
+      },
+      {
+        "week": "2021-12-06",
+        "price": 1604.67
+      },
+      {
+        "week": "2021-12-13",
+        "price": 1551.5
+      },
+      {
+        "week": "2021-12-20",
+        "price": 1530.8
+      },
+      {
+        "week": "2021-12-27",
+        "price": 1583.33
+      },
+      {
+        "week": "2022-01-03",
+        "price": 1613.5
+      },
+      {
+        "week": "2022-01-10",
+        "price": 1587.25
+      },
+      {
+        "week": "2022-01-17",
+        "price": 1732.25
+      },
+      {
+        "week": "2022-01-24",
+        "price": 1710.25
+      },
+      {
+        "week": "2022-01-31",
+        "price": 1776.25
+      },
+      {
+        "week": "2022-02-07",
+        "price": 1795.4
+      },
+      {
+        "week": "2022-02-14",
+        "price": 1799.67
+      },
+      {
+        "week": "2022-02-21",
+        "price": 1811.0
+      },
+      {
+        "week": "2022-02-28",
+        "price": 1961.0
+      },
+      {
+        "week": "2022-03-07",
+        "price": 2042.5
+      },
+      {
+        "week": "2022-03-14",
+        "price": 2129.8
+      },
+      {
+        "week": "2022-03-21",
+        "price": 1965.75
+      },
+      {
+        "week": "2022-03-28",
+        "price": 2103.0
+      },
+      {
+        "week": "2022-04-04",
+        "price": 1999.8
+      },
+      {
+        "week": "2022-04-11",
+        "price": 1933.0
+      },
+      {
+        "week": "2022-04-18",
+        "price": 1834.0
+      },
+      {
+        "week": "2022-04-25",
+        "price": 2224.0
+      },
+      {
+        "week": "2022-05-02",
+        "price": 2136.5
+      },
+      {
+        "week": "2022-05-09",
+        "price": 1871.6
+      },
+      {
+        "week": "2022-05-16",
+        "price": 1797.67
+      },
+      {
+        "week": "2022-05-23",
+        "price": 1870.5
+      },
+      {
+        "week": "2022-05-30",
+        "price": 2059.67
+      },
+      {
+        "week": "2022-06-06",
+        "price": 1686.0
+      },
+      {
+        "week": "2022-06-13",
+        "price": 1997.0
+      },
+      {
+        "week": "2022-06-20",
+        "price": 1867.0
+      },
+      {
+        "week": "2022-06-27",
+        "price": 2038.0
+      },
+      {
+        "week": "2022-07-04",
+        "price": null
+      },
+      {
+        "week": "2022-07-11",
+        "price": null
+      },
+      {
+        "week": "2022-07-18",
+        "price": 2162.0
+      },
+      {
+        "week": "2022-07-25",
+        "price": 1862.67
+      },
+      {
+        "week": "2022-08-01",
+        "price": 2069.67
+      },
+      {
+        "week": "2022-08-08",
+        "price": 2082.33
+      },
+      {
+        "week": "2022-08-15",
+        "price": 2239.0
+      },
+      {
+        "week": "2022-08-22",
+        "price": 2085.67
+      },
+      {
+        "week": "2022-08-29",
+        "price": 1569.0
+      },
+      {
+        "week": "2022-09-05",
+        "price": 1709.0
+      },
+      {
+        "week": "2022-09-12",
+        "price": 1989.67
+      },
+      {
+        "week": "2022-09-19",
+        "price": null
+      },
+      {
+        "week": "2022-09-26",
+        "price": 1770.0
+      },
+      {
+        "week": "2022-10-03",
+        "price": 1809.0
+      },
+      {
+        "week": "2022-10-10",
+        "price": 1916.0
+      },
+      {
+        "week": "2022-10-17",
+        "price": 1761.5
+      },
+      {
+        "week": "2022-10-24",
+        "price": null
+      },
+      {
+        "week": "2022-10-31",
+        "price": 1968.0
+      },
+      {
+        "week": "2022-11-07",
+        "price": 1998.0
+      },
+      {
+        "week": "2022-11-14",
+        "price": 2008.67
+      },
+      {
+        "week": "2022-11-21",
+        "price": 2084.0
+      },
+      {
+        "week": "2022-11-28",
+        "price": 2098.2
+      },
+      {
+        "week": "2022-12-05",
+        "price": 2052.25
+      },
+      {
+        "week": "2022-12-12",
+        "price": 2201.8
+      },
+      {
+        "week": "2022-12-19",
+        "price": 2196.33
+      },
+      {
+        "week": "2022-12-26",
+        "price": 2113.33
+      },
+      {
+        "week": "2023-01-02",
+        "price": 2072.8
+      },
+      {
+        "week": "2023-01-09",
+        "price": 2090.0
+      },
+      {
+        "week": "2023-01-16",
+        "price": 2063.75
+      },
+      {
+        "week": "2023-01-23",
+        "price": 1946.25
+      },
+      {
+        "week": "2023-01-30",
+        "price": 2025.5
+      },
+      {
+        "week": "2023-02-06",
+        "price": 1928.67
+      },
+      {
+        "week": "2023-02-13",
+        "price": 2035.25
+      },
+      {
+        "week": "2023-02-20",
+        "price": 1950.4
+      },
+      {
+        "week": "2023-02-27",
+        "price": 2068.0
+      },
+      {
+        "week": "2023-03-06",
+        "price": 1969.25
+      },
+      {
+        "week": "2023-03-13",
+        "price": 1852.67
+      },
+      {
+        "week": "2023-03-20",
+        "price": 1960.5
+      },
+      {
+        "week": "2023-03-27",
+        "price": 1978.0
+      },
+      {
+        "week": "2023-04-03",
+        "price": 2049.75
+      },
+      {
+        "week": "2023-04-10",
+        "price": 1870.4
+      },
+      {
+        "week": "2023-04-17",
+        "price": 1670.25
+      },
+      {
+        "week": "2023-04-24",
+        "price": 1768.5
+      },
+      {
+        "week": "2023-05-01",
+        "price": 1790.2
+      },
+      {
+        "week": "2023-05-08",
+        "price": 1776.0
+      },
+      {
+        "week": "2023-05-15",
+        "price": 1852.2
+      },
+      {
+        "week": "2023-05-22",
+        "price": 1854.5
+      },
+      {
+        "week": "2023-05-29",
+        "price": 1810.0
+      },
+      {
+        "week": "2023-06-05",
+        "price": 1851.33
+      },
+      {
+        "week": "2023-06-12",
+        "price": 1830.0
+      },
+      {
+        "week": "2023-06-19",
+        "price": 1999.67
+      },
+      {
+        "week": "2023-06-26",
+        "price": 2086.0
+      },
+      {
+        "week": "2023-07-03",
+        "price": 2444.5
+      },
+      {
+        "week": "2023-07-10",
+        "price": 2141.0
+      },
+      {
+        "week": "2023-07-17",
+        "price": 2121.0
+      },
+      {
+        "week": "2023-07-24",
+        "price": 1910.0
+      },
+      {
+        "week": "2023-07-31",
+        "price": 1929.5
+      },
+      {
+        "week": "2023-08-07",
+        "price": 2201.0
+      },
+      {
+        "week": "2023-08-14",
+        "price": 2152.67
+      },
+      {
+        "week": "2023-08-21",
+        "price": 2242.33
+      },
+      {
+        "week": "2023-08-28",
+        "price": 2282.5
+      },
+      {
+        "week": "2023-09-04",
+        "price": 2330.0
+      },
+      {
+        "week": "2023-09-11",
+        "price": 2412.0
+      },
+      {
+        "week": "2023-09-18",
+        "price": 2539.0
+      },
+      {
+        "week": "2023-09-25",
+        "price": 2484.0
+      },
+      {
+        "week": "2023-10-02",
+        "price": 2180.0
+      },
+      {
+        "week": "2023-10-09",
+        "price": 2013.67
+      },
+      {
+        "week": "2023-10-16",
+        "price": 2067.5
+      },
+      {
+        "week": "2023-10-23",
+        "price": 2110.33
+      },
+      {
+        "week": "2023-10-30",
+        "price": 2064.0
+      },
+      {
+        "week": "2023-11-06",
+        "price": 2043.5
+      },
+      {
+        "week": "2023-11-13",
+        "price": 2054.67
+      },
+      {
+        "week": "2023-11-20",
+        "price": 2074.5
+      },
+      {
+        "week": "2023-11-27",
+        "price": 2110.0
+      },
+      {
+        "week": "2023-12-04",
+        "price": 2035.83
+      },
+      {
+        "week": "2023-12-11",
+        "price": 2101.0
+      },
+      {
+        "week": "2023-12-18",
+        "price": 2064.83
+      },
+      {
+        "week": "2023-12-25",
+        "price": 2030.0
+      },
+      {
+        "week": "2024-01-01",
+        "price": 2148.5
+      },
+      {
+        "week": "2024-01-08",
+        "price": 2049.0
+      },
+      {
+        "week": "2024-01-15",
+        "price": 2180.0
+      },
+      {
+        "week": "2024-01-22",
+        "price": 2156.67
+      },
+      {
+        "week": "2024-01-29",
+        "price": 2164.0
+      },
+      {
+        "week": "2024-02-05",
+        "price": 2215.0
+      },
+      {
+        "week": "2024-02-12",
+        "price": 2102.0
+      },
+      {
+        "week": "2024-02-19",
+        "price": 1989.25
+      },
+      {
+        "week": "2024-02-26",
+        "price": 1990.6
+      },
+      {
+        "week": "2024-03-04",
+        "price": 1935.0
+      },
+      {
+        "week": "2024-03-11",
+        "price": 1817.17
+      },
+      {
+        "week": "2024-03-18",
+        "price": 2147.17
+      },
+      {
+        "week": "2024-03-25",
+        "price": 2161.0
+      },
+      {
+        "week": "2024-04-01",
+        "price": 2103.33
+      },
+      {
+        "week": "2024-04-08",
+        "price": null
+      },
+      {
+        "week": "2024-04-15",
+        "price": 2073.33
+      },
+      {
+        "week": "2024-04-22",
+        "price": 2171.25
+      },
+      {
+        "week": "2024-04-29",
+        "price": 2219.6
+      },
+      {
+        "week": "2024-05-06",
+        "price": 2113.0
+      },
+      {
+        "week": "2024-05-13",
+        "price": 2182.0
+      },
+      {
+        "week": "2024-05-20",
+        "price": 2117.75
+      },
+      {
+        "week": "2024-05-27",
+        "price": 2072.33
+      },
+      {
+        "week": "2024-06-03",
+        "price": 2169.0
+      },
+      {
+        "week": "2024-06-10",
+        "price": 1933.67
+      },
+      {
+        "week": "2024-06-17",
+        "price": 1981.0
+      },
+      {
+        "week": "2024-06-24",
+        "price": 2210.5
+      },
+      {
+        "week": "2024-07-01",
+        "price": 2500.0
+      },
+      {
+        "week": "2024-07-08",
+        "price": 2569.5
+      },
+      {
+        "week": "2024-07-15",
+        "price": null
+      },
+      {
+        "week": "2024-07-22",
+        "price": 2636.33
+      },
+      {
+        "week": "2024-07-29",
+        "price": 2770.0
+      },
+      {
+        "week": "2024-08-05",
+        "price": 2270.0
+      },
+      {
+        "week": "2024-08-12",
+        "price": 2619.5
+      },
+      {
+        "week": "2024-08-19",
+        "price": 2419.5
+      },
+      {
+        "week": "2024-08-26",
+        "price": 2539.0
+      },
+      {
+        "week": "2024-09-02",
+        "price": 2369.67
+      },
+      {
+        "week": "2024-09-09",
+        "price": null
+      },
+      {
+        "week": "2024-09-16",
+        "price": 2710.0
+      },
+      {
+        "week": "2024-09-23",
+        "price": 2379.5
+      },
+      {
+        "week": "2024-09-30",
+        "price": 2280.0
+      },
+      {
+        "week": "2024-10-07",
+        "price": 2271.0
+      },
+      {
+        "week": "2024-10-14",
+        "price": 1868.67
+      },
+      {
+        "week": "2024-10-21",
+        "price": 1872.6
+      },
+      {
+        "week": "2024-10-28",
+        "price": 1763.0
+      },
+      {
+        "week": "2024-11-04",
+        "price": 2140.33
+      },
+      {
+        "week": "2024-11-11",
+        "price": 2110.83
+      },
+      {
+        "week": "2024-11-18",
+        "price": 2144.0
+      },
+      {
+        "week": "2024-11-25",
+        "price": 1970.2
+      },
+      {
+        "week": "2024-12-02",
+        "price": 2116.5
+      },
+      {
+        "week": "2024-12-09",
+        "price": 2067.8
+      },
+      {
+        "week": "2024-12-16",
+        "price": 2142.75
+      },
+      {
+        "week": "2024-12-23",
+        "price": 2104.5
+      },
+      {
+        "week": "2024-12-30",
+        "price": 2213.4
+      },
+      {
+        "week": "2025-01-06",
+        "price": 2202.0
+      },
+      {
+        "week": "2025-01-13",
+        "price": 2224.5
+      },
+      {
+        "week": "2025-01-20",
+        "price": 2079.25
+      },
+      {
+        "week": "2025-01-27",
+        "price": 2054.67
+      },
+      {
+        "week": "2025-02-03",
+        "price": 2116.75
+      },
+      {
+        "week": "2025-02-10",
+        "price": 2016.0
+      },
+      {
+        "week": "2025-02-17",
+        "price": 2041.2
+      },
+      {
+        "week": "2025-02-24",
+        "price": 2050.0
+      },
+      {
+        "week": "2025-03-03",
+        "price": null
+      },
+      {
+        "week": "2025-03-10",
+        "price": null
+      },
+      {
+        "week": "2025-03-17",
+        "price": null
+      },
+      {
+        "week": "2025-03-24",
+        "price": null
+      },
+      {
+        "week": "2025-03-31",
+        "price": null
+      },
+      {
+        "week": "2025-04-07",
+        "price": null
+      },
+      {
+        "week": "2025-04-14",
+        "price": null
+      },
+      {
+        "week": "2025-04-21",
+        "price": null
+      },
+      {
+        "week": "2025-04-28",
+        "price": null
+      },
+      {
+        "week": "2025-05-05",
+        "price": null
+      },
+      {
+        "week": "2025-05-12",
+        "price": null
+      },
+      {
+        "week": "2025-05-19",
+        "price": null
+      },
+      {
+        "week": "2025-05-26",
+        "price": null
+      },
+      {
+        "week": "2025-06-02",
+        "price": null
+      },
+      {
+        "week": "2025-06-09",
+        "price": null
+      },
+      {
+        "week": "2025-06-16",
+        "price": null
+      },
+      {
+        "week": "2025-06-23",
+        "price": null
+      },
+      {
+        "week": "2025-06-30",
+        "price": null
+      },
+      {
+        "week": "2025-07-07",
+        "price": null
+      },
+      {
+        "week": "2025-07-14",
+        "price": null
+      },
+      {
+        "week": "2025-07-21",
+        "price": null
+      },
+      {
+        "week": "2025-07-28",
+        "price": null
+      },
+      {
+        "week": "2025-08-04",
+        "price": null
+      },
+      {
+        "week": "2025-08-11",
+        "price": null
+      },
+      {
+        "week": "2025-08-18",
+        "price": null
+      },
+      {
+        "week": "2025-08-25",
+        "price": null
+      },
+      {
+        "week": "2025-09-01",
+        "price": null
+      },
+      {
+        "week": "2025-09-08",
+        "price": null
+      },
+      {
+        "week": "2025-09-15",
+        "price": null
+      },
+      {
+        "week": "2025-09-22",
+        "price": null
+      },
+      {
+        "week": "2025-09-29",
+        "price": null
+      },
+      {
+        "week": "2025-10-06",
+        "price": null
+      },
+      {
+        "week": "2025-10-13",
+        "price": null
+      },
+      {
+        "week": "2025-10-20",
+        "price": null
+      },
+      {
+        "week": "2025-10-27",
+        "price": null
+      },
+      {
+        "week": "2025-11-03",
+        "price": null
+      },
+      {
+        "week": "2025-11-10",
+        "price": null
+      },
+      {
+        "week": "2025-11-17",
+        "price": null
+      },
+      {
+        "week": "2025-11-24",
+        "price": null
+      },
+      {
+        "week": "2025-12-01",
+        "price": 1864.0
+      },
+      {
+        "week": "2025-12-08",
+        "price": null
+      },
+      {
+        "week": "2025-12-15",
+        "price": 2150.0
+      },
+      {
+        "week": "2025-12-22",
+        "price": null
+      },
+      {
+        "week": "2025-12-29",
+        "price": 1975.0
+      },
+      {
+        "week": "2026-01-05",
+        "price": 1975.0
+      },
+      {
+        "week": "2026-01-12",
+        "price": 1837.5
+      },
+      {
+        "week": "2026-01-19",
+        "price": 1858.0
+      },
+      {
+        "week": "2026-01-26",
+        "price": 2057.5
+      },
+      {
+        "week": "2026-02-02",
+        "price": 1842.0
+      },
+      {
+        "week": "2026-02-09",
+        "price": 1700.0
+      },
+      {
+        "week": "2026-02-16",
+        "price": 1709.67
+      },
+      {
+        "week": "2026-02-23",
+        "price": 1727.0
+      },
+      {
+        "week": "2026-03-02",
+        "price": null
+      },
+      {
+        "week": "2026-03-09",
+        "price": 1707.5
+      },
+      {
+        "week": "2026-03-16",
+        "price": 1583.0
+      },
+      {
+        "week": "2026-03-23",
+        "price": 1600.0
+      },
+      {
+        "week": "2026-03-30",
+        "price": 1790.5
+      },
+      {
+        "week": "2026-04-06",
+        "price": 1704.0
+      },
+      {
+        "week": "2026-04-13",
+        "price": 1700.0
+      }
+    ],
+    "trained_at": "2026-11-13T03:58:38.085084+00:00",
+    "training_seconds": 279.06582662799997,
+    "artifact_sha256": "770e19cc9b1000a249b0e0583004b45bb4f5afface5f9559e06fc689e21bb903",
+    "artifact_load_verified": true,
+    "previous_experiment": "23f4fd41ac5843a99814cdbf2157a661",
+    "direction_method": "Increase is positive; actual unchanged targets are excluded. Predicted change > 0 is increase, otherwise decrease/non-increase. ROC-AUC uses continuous predicted price minus observed origin price. Undefined metrics are null. Identical origins per model; validation selection never uses test.",
+    "methodology": "Same original chronological boundaries and genuine weekly observations. Each tree refits at every origin on targets strictly before it. Hyperparameters and expanding/156-week windows chosen by purged walk-forward validation MAE only. ARIMA/SARIMA orders chosen on validation, parameters refit before test and past-filtered. Actual ties excluded only for binary metrics; continuous price-change scores for AUC. No class resampling: regression forecasts preserve the observed balanced test distribution. Weekly 7/14/28 are historical, never 30-day or current inference.",
+    "optimization": {
+      "accuracy_target": 0.85,
+      "models": [
+        "Naive",
+        "Random Forest",
+        "XGBoost",
+        "SARIMA"
+      ],
+      "previous_experiment": "academic-direction-2026-11-12T201908329509+0000",
+      "source_checksums": {
+        "mandi_daily_2021.parquet": "5eae40f34178db1777860723ebe7d6aa34aaafd2f504b43324958dd3acd5df4f",
+        "mandi_daily_2022.parquet": "5b20a545407c919683105f094813e69ed78fa87aec71ba0390338dbf9bef675a",
+        "mandi_daily_2023.parquet": "0b76d03b08f2d3b21bc38e2829a4a5a6c5c58e71cc4aeba4ea1d03b0dd88998f",
+        "mandi_daily_2024.parquet": "74430fe70839da147fc316563a48a68b477516ce770a1d5c2597d8d13b3e281c",
+        "mandi_daily_2025.parquet": "65a848dfc4be3f84a911e5375abfa5d67481cf547c6a9ae382932d9166bb5e93",
+        "mandi_daily_2026.parquet": "3f768db13bf083749611bc12d4766cf04ab4b307e30429f05794552ad6ea8fe2"
+      }
+    }
+  }
+}

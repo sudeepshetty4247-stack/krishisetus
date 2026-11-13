@@ -5,7 +5,7 @@ import {useKrishi} from '../krishisetu-provider';
 // Nationwide catalogue/coverage/ticker are precomputed after every sync (agri_summary) so pages load instantly.
 async function summary<T>(key:string){const {data,error}=await supabase.from('agri_summary').select('value,updated_at').eq('key',key).maybeSingle();if(error)throw error;return (data?.value??null) as T|null;}
 export function useCatalog(){return useQuery({queryKey:['f-catalog'],staleTime:300000,queryFn:async()=>(await summary<Catalog>('catalog'))??{states:[],districts:[],markets:[],commodities:[],varieties:[],sources:[]}});}
-export function useCoverageAll(){return useQuery({queryKey:['f-coverage'],staleTime:300000,queryFn:async()=>(await summary<Coverage>('coverage')) as Coverage});}
+export function useCoverageAll(){return useQuery({queryKey:['f-coverage'],staleTime:30000,refetchInterval:30000,queryFn:async()=>(await summary<Coverage>('coverage')) as Coverage});}
 export function useLatest(limit=200){const {user}=useKrishi();return useQuery({queryKey:['f-latest',user,limit],queryFn:async()=>{const {data,error}=await supabase.from('agri_reports').select('*').order('date',{ascending:false}).limit(limit);if(error)throw error;return (data||[]) as unknown as Report[];}});}
 export function useCropReports(crop:string){const {user}=useKrishi();return useQuery({enabled:!!crop,queryKey:['f-crop',user,crop],queryFn:async()=>{const {data,error}=await supabase.from('agri_reports').select('*').eq('commodity',crop).order('date',{ascending:false}).limit(5000);if(error)throw error;return (data||[]) as unknown as Report[];}});}
 export function useMarketReports(market:string){const {user}=useKrishi();return useQuery({enabled:!!market,queryKey:['f-market',user,market],queryFn:async()=>{const {data,error}=await supabase.from('agri_reports').select('*').eq('market',market).order('date',{ascending:false}).limit(3000);if(error)throw error;return (data||[]) as unknown as Report[];}});}
@@ -28,7 +28,7 @@ export function useModelRuns(all=false){return useQuery({queryKey:['ml-runs',all
  if(all)return (data||[]) as unknown as ModelRun[];
  // Keep only the newest run per group.
  const seen=new Set<string>();return ((data||[]) as unknown as ModelRun[]).filter(r=>{const k=[r.state,r.district,r.market,r.commodity,r.variety].join('|');if(seen.has(k))return false;seen.add(k);return true;});}});}
-export function useSourceRuns(){return useQuery({queryKey:['source-runs'],staleTime:60000,queryFn:async()=>{const {data,error}=await supabase.from('agri_source_runs').select('*').order('started_at',{ascending:false}).limit(20);if(error)throw error;return data||[];}});}
+export function useSourceRuns(){return useQuery({queryKey:['source-runs'],staleTime:30000,refetchInterval:30000,queryFn:async()=>{const {data,error}=await supabase.from('agri_source_runs').select('*').order('started_at',{ascending:false}).limit(20);if(error)throw error;return data||[];}});}
 export type MarketLocation={state:string;district:string;market:string;latitude:number;longitude:number;match_quality:string;formatted_address:string|null};
 export function useMarketLocations(){return useQuery({queryKey:['market-locations'],staleTime:3600000,queryFn:async()=>{const {data,error}=await supabase.from('market_locations').select('state,district,market,latitude,longitude,match_quality,formatted_address').limit(5000);if(error)throw error;return (data||[]) as MarketLocation[];}});}
 export const marketBase=(m:string)=>m.replace(/\s*APMC$/,'').replace(/^APMC\s+/,'').trim();

@@ -1,0 +1,12 @@
+import {useSourceRuns,useCoverageAll,DAILY_SOURCE} from './data';
+import {istTimestamp,reportedDate} from '@/lib/price-time';
+import {useState} from 'react';
+import {useServerFn} from '@tanstack/react-start';
+import {refreshDailyPrices} from '@/lib/mandi-sync.functions';
+import {useKrishi} from '../krishisetu-provider';
+import {Button} from '@/components/ui/button';
+import {RefreshCw} from 'lucide-react';
+export function MarketDataStatus(){
+ const q=useSourceRuns(),coverage=useCoverageAll();const {user}=useKrishi();const call=useServerFn(refreshDailyPrices);const [busy,setBusy]=useState(false),[message,setMessage]=useState('');const fetchLatest=async()=>{setBusy(true);try{const r=await call();setMessage(r.message);await q.refetch();await coverage.refetch();}catch{setMessage('Retrieval failed. No new report is claimed.');}finally{setBusy(false);}};const daily=(q.data||[]).filter(r=>r.source===DAILY_SOURCE);const latest=daily[0];const success=daily.find(r=>r.status==='success'&&r.stored>0);
+ return <section className="ks-section" aria-label="Market Data Status"><h2>Market Data Status</h2><p className="ks-fine">Latest published mandi reports — not second-by-second live prices.</p><dl className="mc-context"><div><dt>Last successful data fetch</dt><dd>{istTimestamp(success?.finished_at)}</dd></div><div><dt>Latest market reporting date</dt><dd>{coverage.data?.latest?reportedDate(coverage.data.latest):'Not available'}</dd></div><div><dt>Data source</dt><dd>{latest?.source||'Not available'}</dd></div><div><dt>Latest retrieval</dt><dd>{latest?.status||'Not available'} · {istTimestamp(latest?.finished_at)}</dd></div><div><dt>Reports fetched / persisted</dt><dd>{latest?`${latest.received.toLocaleString('en-IN')} / ${latest.stored.toLocaleString('en-IN')}`:'Not available'}</dd><small>Persisted counts include existing reports rechecked; new-only count is not recorded.</small></div></dl>{user&&<Button variant="outline" disabled={busy} onClick={()=>void fetchLatest()}><RefreshCw size={16}/>{busy?'Retrieving reports…':'Fetch latest reports'}</Button>}{message&&<p role="status">{message}</p>}{q.error&&<p role="alert">Market status could not be refreshed; previous evidence is retained.</p>}</section>;
+}

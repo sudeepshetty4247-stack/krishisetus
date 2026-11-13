@@ -1,5 +1,6 @@
 """Preserve a new genuine optimized experiment without overwriting past results."""
 import json, hashlib, uuid, warnings
+import os,time
 from pathlib import Path
 from datetime import datetime, timezone
 import duckdb, joblib
@@ -7,6 +8,7 @@ from ml_engine.weekly import weekly_series
 from ml_engine.optimization import optimize
 
 def main():
+    started=time.monotonic(); focused=os.environ.get('KRISHI_THREE_MODELS')=='1'
     warnings.filterwarnings('ignore')
     root = Path(__file__).resolve().parent
     previous = json.loads((root.parent/'src/data/academic-comparison.json').read_text())
@@ -31,7 +33,7 @@ def main():
     series,daily,raw = weekly_series(frame,previous['report']['group'])
     if len(raw) != 758 or series.notna().sum() != 218:
         raise ValueError('Genuine history does not reconcile with the preserved experiment')
-    entries,artifacts,features = optimize(series)
+    entries,artifacts,features = optimize(series,('Naive','Random Forest','XGBoost','SARIMA')) if focused else optimize(series)
     out = root/'runtime/optimization'; out.mkdir(parents=True,exist_ok=True)
     run_id = str(uuid.uuid4()); path = out/(run_id+'.joblib')
     joblib.dump(artifacts,path); loaded=joblib.load(path)
@@ -44,15 +46,15 @@ def main():
             elif name in ('ARIMA','SARIMA'): assert len(model.forecast(h)) == h
             else: assert len(model.predict(X[-1:])) == 1
     stamp=datetime.now(timezone.utc).isoformat()
-    report={**previous['report'],'horizons':entries,'features':features,'trained_at':stamp,
+    report={**previous['report'],'horizons':entries,'features':features,'trained_at':stamp,'training_seconds':time.monotonic()-started,
             'artifact_sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'artifact_load_verified':True,
             'methodology':'Same original chronological boundaries and genuine weekly observations. Each tree refits at every origin on targets strictly before it. Hyperparameters and expanding/156-week windows chosen by purged walk-forward validation MAE only. ARIMA/SARIMA orders chosen on validation, parameters refit before test and past-filtered. Actual ties excluded only for binary metrics; continuous price-change scores for AUC. No class resampling: regression forecasts preserve the observed balanced test distribution. Weekly 7/14/28 are historical, never 30-day or current inference.',
             'optimization':{'accuracy_target':.85,'models':list(loaded[1]),'previous_experiment':previous['id'],'source_checksums':json.loads((out/'raw/checksums.json').read_text())}}
-    run={**previous,'id':run_id,'created_at':stamp,'run_version':'optimized-walk-forward-v1','artifact_path':str(path.relative_to(root)), 'report':report}
+    run={**previous,'id':run_id,'created_at':stamp,'run_version':'focused-three-model-v1' if focused else 'optimized-walk-forward-v1','artifact_path':str(path.relative_to(root)), 'report':report}
     (out/(run_id+'.json')).write_text(json.dumps(run,indent=2,allow_nan=False))
     (out/'latest.json').write_text(json.dumps(run,allow_nan=False))
     # Retain executed evidence across sandbox restarts; the dashboard still reads Cloud, not this file.
-    (root.parent/'src/data/optimized-comparison.json').write_text(json.dumps(run,indent=2,allow_nan=False))
+    (root.parent/('src/data/three-model-comparison.json' if focused else 'src/data/optimized-comparison.json')).write_text(json.dumps(run,indent=2,allow_nan=False))
     print(json.dumps({'id':run_id,'artifact_load_verified':True,'horizons':{h:{'selected':v['selected'],'test':v['test'],'direction':v['direction']['test']} for h,v in entries.items()}},indent=2))
 
 if __name__ == '__main__':main()

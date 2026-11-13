@@ -1,5 +1,11 @@
 # KRISHISETU
 
+## Final focused simplification
+- [ ] Reduce research navigation to Model Performance & Comparison; preserve legacy pages and backend.
+- [ ] Retrain Random Forest, XGBoost and SARIMA with Naive reference; publish genuine metrics and safe aggregate/individual comparison.
+- [ ] Verify ingestion schedules, real provider retrieval/persistence, retries and duplicates; add automatically refreshed public Market Data Status.
+- [ ] Test public filters, freshness, location and mobile; identify CEDA/hosting/source blockers honestly.
+
 ## New workspace integrations
 - [x] Google Maps Platform freshly connected in the new workspace; confirmed linked. Live Google provider checks require an authorized origin.
 - [ ] CEDA Agricultural Data setup declined; remains unlinked. User must complete the connection card when ready; old workspace references are invalid.
