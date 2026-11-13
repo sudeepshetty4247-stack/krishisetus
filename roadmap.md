@@ -1,5 +1,11 @@
 # KRISHISETU
 
+## Model optimization and reliability — 13 November
+- [ ] Re-execute eight model candidates on preserved genuine historical observations; tune only on chronological validation, retain prior experiments, save/load artifacts and report actual test metrics against the 85% target.
+- [ ] Publish verified evaluation records and update dynamic charts, independent winners and recommendations without replacing farmer features.
+- [ ] Run model, application, location, selling, isolation, ingestion and recovery tests; verify populated desktop/mobile comparison and farmer flows.
+- [ ] External completion: persistent HTTPS Python host/access and matching secure service token, durable national history transfer, eligible recent daily series and authoritative nationwide yard directory remain required; do not claim deployment or current forecasts without them.
+
 ## Dynamic academic comparison follow-up
 - [x] Remove the comparison table; retain eight readable charts and independent metric winners.
 - [x] Replace bundled default results with online preserved evaluations; add URL-backed crop, variety, geography, algorithm, dataset and horizon filters and verified refresh.

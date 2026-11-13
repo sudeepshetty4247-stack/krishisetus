@@ -11,6 +11,8 @@ duckdb==1.4.3
 scikit-learn>=1.6,<2
 statsmodels>=0.14,<1
 xgboost>=2.1,<4
+lightgbm>=4.0,<5
+catboost>=1.2,<2
 joblib>=1.4,<2
 shap>=0.46,<1
 openpyxl>=3.1,<4

@@ -1,5 +1,5 @@
 import {expect,it} from 'vitest';
-import {metricWinners,directionWinners,evaluationRows,filterExperiments,comparisonOptions,type EvaluationRow} from '@/lib/model-comparison';
+import {evaluatedAlgorithms,metricWinners,directionWinners,evaluationRows,filterExperiments,comparisonOptions,type EvaluationRow} from '@/lib/model-comparison';
 import evidence from '@/data/academic-comparison.json';
 import type {ModelRun} from '@/components/farmer/data';
 const rows=[{algorithm:'Naive',validation:{MAE:140,RMSE:145,sMAPE:5,R2:.47,n:30},test:{MAE:94.30,RMSE:136.4,sMAPE:4.83,R2:.47,n:30}},{algorithm:'SARIMA',validation:{MAE:130.7476,RMSE:141,sMAPE:4.9,R2:.48,n:30},test:{MAE:97.29,RMSE:134.64,sMAPE:4.98,R2:.483,n:30}}] as EvaluationRow[];
@@ -32,4 +32,10 @@ it('filters actual experiments by crop, variety, location and dataset without bo
 it('derives variety options from saved evaluations for the selected crop',()=>{
  const maize=evidence as unknown as ModelRun;
  expect(comparisonOptions([maize,{...maize,commodity:'Onion',variety:'Puna'}],{commodity:'Maize'},'variety')).toEqual(['Local']);
+});
+it('includes optional algorithms only when actual evaluations contain them',()=>{
+ const old=evidence as unknown as ModelRun;const h=old.report.horizons['1'];if(!h)throw new Error('Missing genuine horizon');
+ const extended={...old,report:{...old.report,horizons:{'1':{...h,test:{...h.test,LightGBM:h.test['Naive'],CatBoost:h.test['Naive']}}}}} as ModelRun;
+ expect(evaluatedAlgorithms(old)).toHaveLength(6);expect(evaluatedAlgorithms(extended)).toEqual(['Naive','Seasonal naive','Random Forest','XGBoost','ARIMA','SARIMA','LightGBM','CatBoost']);
+ expect(evaluationRows([extended])).toHaveLength(8);
 });

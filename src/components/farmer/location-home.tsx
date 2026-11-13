@@ -25,7 +25,7 @@ export function LocationHome(){
  const [busy,setBusy]=useState(false),[error,setError]=useState(''),[crop,setCrop]=useState(''),[variety,setVariety]=useState(''),[qty,setQty]=useState('20'),[radius,setRadius]=useState(50),[picked,setPicked]=useState<string[]>([]);
  const generation=useRef(0);
  useEffect(()=>{const seq=++generation.current;setPlaces([]);setBusy(false);if(text.trim().length<3||origin?.label===text)return;const timer=setTimeout(async()=>{setBusy(true);try{const r=await search({data:{query:text,language:lang}});if(seq!==generation.current)return;setPlaces(r.places);setError(r.available?'':lc.error);}catch{if(seq===generation.current)setError(lc.error);}finally{if(seq===generation.current)setBusy(false);}},450);return()=>clearTimeout(timer);},[text,lang,origin?.label,search,lc.error]);
- const near=useMemo(()=>origin?(locations.data||[]).filter(l=>distanceKm(origin,l)<=radius):[],[origin,locations.data,radius]);
+ const near=useMemo(()=>origin?(locations.data||[]).filter(l=>verifiedYard(l)&&distanceKm(origin,l)<=radius):[],[origin,locations.data,radius]);
  const prices=useQuery({enabled:!!origin&&!!crop,queryKey:['home-location-prices',origin,crop,near.map(m=>marketKey(m)).join('|')],queryFn:async()=>{
   if(!origin)return [] as Report[];
   let q=supabase.from('agri_reports').select('*').eq('official',true).eq('suspicious',false).eq('commodity',crop).order('date',{ascending:false}).limit(1000);
@@ -41,6 +41,9 @@ export function LocationHome(){
   const point={latitude:p.coords.latitude,longitude:p.coords.longitude};setText('');setPicked([]);setOrigin({...point,label:lc.location,state:'',district:'',gps:true});
   try{const place=await identify({data:point});if(place.available)setOrigin({...point,label:[place.name,place.district].filter(Boolean).join(' · '),state:place.state,district:place.district,gps:true});}catch{/* retain actual GPS point without guessing an address */}finally{setBusy(false);}
  },()=>{setBusy(false);setError(lc.denied);},{timeout:15000,maximumAge:300000,enableHighAccuracy:true});}
+ // Auto-locate only after a previously granted permission; never prompt on page load.
+ const locateRef=useRef(locate);locateRef.current=locate;
+ useEffect(()=>{let active=true;if(navigator.permissions)void navigator.permissions.query({name:'geolocation'}).then(permission=>{if(active&&permission.state==='granted')locateRef.current();}).catch(()=>{});return()=>{active=false;};},[]);
  return <>
   <section className="ks-hero ks-location-hero"><img src={hero} className="ks-hero-img" alt=""/><div className="ks-wrap ks-location-intro"><h1>KRISHISETU</h1><p>{c.homeIntro}</p>
    <div className="ks-home-location"><Button variant="harvest" size="lg" disabled={busy} onClick={locate}><Navigation/>{lc.locate}</Button><label className="ks-home-search">{lc.manual}<input type="search" role="combobox" aria-label={lc.manual} aria-expanded={places.length>0} value={text} autoComplete="off" placeholder={lang==='en'?'Enter your village, town or district':lc.manual} onChange={e=>{setText(e.target.value);setOrigin(null);setPicked([]);}}/>
