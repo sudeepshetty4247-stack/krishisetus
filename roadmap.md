@@ -1,5 +1,12 @@
 # KRISHISETU
 
+## Nationwide model coverage and Python-service reconnection
+- [x] Tell the user where to find the Python HTTPS service URL and shared token; do not request or expose them in chat. Deployment records indicate the prior service was never deployed, so an existing URL may not exist.
+- [ ] Reconnect and verify the existing persistent Python history service once its HTTPS URL and matching token are securely supplied; confirm the nationwide dataset checksum, coverage and dates before training.
+- [ ] Retrain only Random Forest, XGBoost and SARIMA with Naive baseline on genuine eligible crop/variety/market series, using purged chronological validation and saved aligned predictions; report measured results without promising 85% accuracy.
+- [x] Show honest saved-evaluation coverage and latest data cutoff on Model Performance & Comparison; make the missing nationwide Python connection explicit.
+- [ ] Reconnect the external Python service: workspace URL/token are absent; the user needs the provider-hosted HTTPS URL and the matching token from that same deployed service.
+
 ## Crop search and nearby prices
 - [x] Close crop panel on outside pointer clicks and Escape; outside-click browser check passed.
 - [x] Extend distance choices to 300/500/1000 km, nearest verified yards first, including across state borders; bounded to 150 yards and 24 visible results.

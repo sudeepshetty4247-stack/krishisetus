@@ -1,5 +1,5 @@
 import {expect,it} from 'vitest';
-import {evaluatedAlgorithms,metricWinners,directionWinners,evaluationRows,filterExperiments,comparisonOptions,type EvaluationRow} from '@/lib/model-comparison';
+import {evaluatedAlgorithms,metricWinners,directionWinners,evaluationRows,filterExperiments,comparisonOptions,evaluationCoverage,type EvaluationRow} from '@/lib/model-comparison';
 import evidence from '@/data/academic-comparison.json';
 import optimized from '@/data/optimized-comparison.json';
 import type {ModelRun} from '@/components/farmer/data';
@@ -33,6 +33,10 @@ it('filters actual experiments by crop, variety, location and dataset without bo
 it('derives variety options from saved evaluations for the selected crop',()=>{
  const maize=evidence as unknown as ModelRun;
  expect(comparisonOptions([maize,{...maize,commodity:'Onion',variety:'Puna'}],{commodity:'Maize'},'variety')).toEqual(['Local']);
+});
+it('reports saved regional series and latest data date without counting repeat runs as new series',()=>{
+ const maize=evidence as unknown as ModelRun;const onion={...maize,id:'onion',commodity:'Onion',variety:'Puna',market:'Other',period_end:'2026-04-18'};
+ expect(evaluationCoverage([maize,{...maize,id:'repeat'},onion])).toEqual({evaluations:3,series:2,crops:2,states:['Karnataka'],latestDataDate:'2026-04-18'});
 });
 it('includes optional algorithms only when actual evaluations contain them',()=>{
  const old=evidence as unknown as ModelRun;const h=old.report.horizons['1'];if(!h)throw new Error('Missing genuine horizon');

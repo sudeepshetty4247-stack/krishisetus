@@ -21,6 +21,10 @@ export const algorithmLabel=(name:string)=>name==='Seasonal naive'?'Seasonal Nai
 export type ComparisonFilters=Partial<Record<'commodity'|'variety'|'state'|'district'|'market'|'dataset_version',string>>;
 export function filterExperiments(runs:ModelRun[],filters:ComparisonFilters){return runs.filter(r=>Object.entries(filters).every(([key,value])=>!value||r[key as keyof ComparisonFilters]===value));}
 export function comparisonOptions(runs:ModelRun[],filters:ComparisonFilters,key:keyof ComparisonFilters){const other={...filters};delete other[key];return [...new Set(filterExperiments(runs,other).map(r=>r[key]))].sort();}
+export function evaluationCoverage(runs:ModelRun[]){
+ const series=new Set(runs.map(r=>JSON.stringify([r.state,r.district,r.market,r.commodity,r.variety,r.grade,r.source_name,r.frequency])));
+ return {evaluations:runs.length,series:series.size,crops:new Set(runs.map(r=>r.commodity)).size,states:[...new Set(runs.map(r=>r.state))].sort(),latestDataDate:runs.map(r=>r.period_end).filter(Boolean).sort().at(-1)||null};
+}
 export const modelExplanations:Record<string,string>={
  Naive:'Predicts the latest observed price. A simple baseline every other model must be compared against.',
  'Seasonal naive':'Uses a previous seasonal price pattern. This weekly experiment looks back 52 weeks, with a past-only fallback.',
