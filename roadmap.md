@@ -1,10 +1,12 @@
 # KRISHISETU
 
 ## Final focused simplification
-- [ ] Reduce research navigation to Model Performance & Comparison; preserve legacy pages and backend.
-- [ ] Retrain Random Forest, XGBoost and SARIMA with Naive reference; publish genuine metrics and safe aggregate/individual comparison.
-- [ ] Verify ingestion schedules, real provider retrieval/persistence, retries and duplicates; add automatically refreshed public Market Data Status.
-- [ ] Test public filters, freshness, location and mobile; identify CEDA/hosting/source blockers honestly.
+- [x] Reduced research navigation to Model Performance & Comparison; legacy URLs/services retained, /research redirects.
+- [x] Retrained three models plus Naive; 12 local artifacts loaded. Published full aligned 7-day predictions as 15th experiment; three charts and one eligible aggregate verified. SARIMA accuracy 71.875%, not 85%.
+- [x] Inspected managed schedules and duplicate-safe publication; reduced writes to 25 rows and outbound concurrency to 6. Added 30-second public status. Real refresh failed with provider 530 and stored zero, leaving last success unchanged.
+- [x] 78 website tests, focused 7 Python tests; public refresh/individual/overall, manual Pune/Dharwad, granted GPS and mobile fit checked. Full Python run exceeded timeout, not claimed passing.
+- [ ] Fresh-data persistence blocked: relay HTTP 530; official API key absent/direct endpoint unreachable; CEDA authorization declined. Need authorized working source. Scheduled delivery/new batch persistence unverified.
+- [ ] Python HTTPS host URL/token, recent eligible daily series, national verified yards and multi-combination aggregate remain external blockers.
 
 ## New workspace integrations
 - [x] Google Maps Platform freshly connected in the new workspace; confirmed linked. Live Google provider checks require an authorized origin.
