@@ -52,7 +52,7 @@ use the editor.
 - Analytical history is activated through checksum/count/business-key validation on a persistent Parquet volume and queried with bounded DuckDB pagination; sandbox files alone never establish hosted availability.
 - Selling ranks require matching reporting date, crop, variety, grade, explicit quintal unit and source; uncertain geocoding is excluded from precise yard-distance ranking and road routing.
 - Research imports and training require server-verified roles plus restrictive import policies; no account is promoted automatically.
-- Current daily prices come from data.gov.in resource 9ef84268 (direct API when DATA_GOV_IN_API_KEY exists, else the GODL relay) via `src/lib/mandi-sync.server.ts` every 3 hours; every run is logged in agri_source_runs and success is recorded only when rows are stored.
+- Current published prices come from data.gov.in resource 9ef84268 (direct API when DATA_GOV_IN_API_KEY exists, else the GODL relay) via `src/lib/mandi-sync.server.ts`; the managed schedule attempts retrieval every minute with overlap prevented by a service lease. Every run is logged and success requires stored rows; polling cadence never implies source publication cadence.
 - Long history comes from the GODL variety-wise compilation via `local-system/data_engine/history_import.py`; commodity names are canonicalised (no space before "(") identically in both pipelines.
 - Nationwide historical preparation uses state-partitioned DuckDB aggregation and checksum manifests in `data_engine/nationwide_prepare.py` to keep memory bounded and provenance reproducible.
 - Nationwide catalogue/coverage/ticker are precomputed into agri_summary after each sync because live aggregates exceed the statement timeout.

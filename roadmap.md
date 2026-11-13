@@ -1,8 +1,9 @@
 # KRISHISETU
 
 ## Minute checks and CEDA clarification
-- [ ] Verify authorized CEDA access and distinguish newly published reports from continuous trading prices; no fabricated live feed.
-- [ ] Configure requested minute checks safely after source access is available; current bulk relay is down and direct official connection setup was interrupted.
+- [x] Confirmed relay HTTP 530 and direct official API connection failure. CEDA setup was declined again; no authorized CEDA retrieval can be verified.
+- [x] Changed the existing managed mandi retrieval schedule from three-hourly to every minute; retained authenticated callback and ingestion lease to prevent overlapping downloads. Configuration verified, not successful delivery or new prices.
+- [ ] Restore authorized source access: complete CEDA connection or authorized direct official source setup. No fresh rows claimed while sources remain unavailable; minute checks cannot turn published mandi reports into continuous trading quotes.
 
 ## Final focused simplification
 - [x] Reduced research navigation to Model Performance & Comparison; legacy URLs/services retained, /research redirects.
