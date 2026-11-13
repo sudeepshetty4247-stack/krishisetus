@@ -63,3 +63,4 @@ use the editor.
 - Account alerts use IST creation dates and source/grade snapshots; malformed payloads are skipped. Delivery is in-app only.
 - Daily ingestion uses service-only leases and retryable batches; partial runs allow immediate retry and only complete success advances last_success.
 - Forecast POST requests resolve exact source/market/crop/variety/grade identities in the daily registry; historical weekly artifacts remain separate from current daily inference.
+- Price ingestion prefers the India-hosted proxy in `india-proxy/` (MANDI_PROXY_URL/MANDI_PROXY_TOKEN), then direct data.gov.in, then the relay; data.gov.in rejects non-Indian hosts, and the proxy is outside the app import graph.

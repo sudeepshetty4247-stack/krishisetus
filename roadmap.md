@@ -157,4 +157,4 @@
 - [x] Crop discovery: categories, recent, popular, manual entry with suggestions; custom crops saved without prices.
 - [x] Price alerts (on-device) and live IST clock.
 - [ ] Hosted Python forecasting service (needs an external Python host; Lovable cannot run Python).
-- [ ] Find alternative official price source (CEDA card errors; data.gov.in unreachable from hosted servers)
+- [ ] India-hosted price proxy built and tested locally — needs user to run it in AWS Mumbai and save MANDI_PROXY_URL/MANDI_PROXY_TOKEN

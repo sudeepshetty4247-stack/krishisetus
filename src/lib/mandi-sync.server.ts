@@ -1,5 +1,5 @@
 // Daily AGMARKNET mandi reports published on data.gov.in (resource 9ef84268-d588-465a-a308-a864a43d0070).
-// Direct official API is used when DATA_GOV_IN_API_KEY is configured; otherwise the GODL relay api.dharun.dev,
+// Order: India-hosted proxy (MANDI_PROXY_URL/MANDI_PROXY_TOKEN), then direct official API when DATA_GOV_IN_API_KEY is configured; otherwise the GODL relay api.dharun.dev,
 // which republishes the same resource with its dataset version. Every run is logged; failures never fake success.
 import {z} from 'zod';
 export const DAILY_SOURCE='data.gov.in daily mandi';
@@ -50,6 +50,16 @@ async function fromOfficial(key:string,offset:number,errors:string[]):Promise<{r
   return {rows,dataset:`data.gov.in API ${new Date().toISOString().slice(0,10)} rows ${offset}-${offset+recs.length} of ${total}`,next:nextOfficialOffset(offset,recs.length,total),total};
  }catch(e){errors.push(`data.gov.in API: ${e instanceof Error?e.message:e}`);return null;}
 }
+// India-hosted proxy (AWS Mumbai, see india-proxy/) forwards the same official resource with the key held server-side.
+export function proxyPageUrl(base:string,offset:number){return `${base.replace(/\/+$/,'')}/v1/mandi?limit=${OFFICIAL_PAGE}&offset=${Math.max(0,Math.floor(offset))}`;}
+async function fromProxy(base:string,token:string,offset:number,errors:string[]):Promise<{rows:unknown[];dataset:string;next:number;total:number}|null>{
+ try{
+  const d=await getJson(proxyPageUrl(base,offset),{headers:{authorization:`Bearer ${token}`}},1,9000);
+  if(!Array.isArray(d.records))throw new Error('proxy response has no records array');
+  const total=Number(d.total)||0;const got=Number(d.received)||d.records.length;
+  return {rows:d.records,dataset:`data.gov.in API via India proxy ${String(d.retrieved_at??'').slice(0,10)} rows ${offset}-${offset+got} of ${total}`,next:nextOfficialOffset(offset,got,total),total};
+ }catch(e){errors.push(`India proxy: ${e instanceof Error?e.message:e}`);return null;}
+}
 function toIso(v:unknown){const m=/^(\d{2})\/(\d{2})\/(\d{4})$/.exec(String(v??''));return m?`${m[3]}-${m[2]}-${m[1]}`:String(v??'');}
 async function fromRelay(date:string|undefined,errors:string[]):Promise<{rows:unknown[];dataset:string}>{
  const list=await getJson(`${RELAY}/commodities`);
@@ -85,7 +95,10 @@ async function performDailySync(opts:{date?:string|undefined}){
  const today=new Date(Date.now()+5.5*3600000).toISOString().slice(0,10);
  let fetched:{rows:unknown[];dataset:string;next?:number}|null=null;let startOffset=0;
  const key=process.env['DATA_GOV_IN_API_KEY'];
- if(key&&!opts.date){const {data:st}=await supabaseAdmin.from('agri_sync_state').select('next_offset').eq('source',DAILY_SOURCE).maybeSingle();startOffset=Number(st?.next_offset)||0;fetched=await fromOfficial(key,startOffset,errors);}
+ const proxy=process.env['MANDI_PROXY_URL'],proxyToken=process.env['MANDI_PROXY_TOKEN'];
+ if((proxy&&proxyToken||key)&&!opts.date){const {data:st}=await supabaseAdmin.from('agri_sync_state').select('next_offset').eq('source',DAILY_SOURCE).maybeSingle();startOffset=Number(st?.next_offset)||0;}
+ if(proxy&&proxyToken&&!opts.date)fetched=await fromProxy(proxy,proxyToken,startOffset,errors);
+ if(!fetched&&key&&!opts.date){fetched=await fromOfficial(key,startOffset,errors);}
  if(!fetched){try{fetched=await fromRelay(opts.date,errors);}catch(e){errors.push(`relay: ${e instanceof Error?e.message:e}`);}}
  const received=fetched?.rows.length??0;
  const valid=(fetched?.rows??[]).map(r=>normaliseRecord(r,started,today)).filter((r):r is DailyRecord=>!!r);
