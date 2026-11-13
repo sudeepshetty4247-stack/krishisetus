@@ -12,6 +12,10 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import {
+  attemptModuleLoadRecovery,
+  isModuleLoadError,
+} from "../lib/module-load-recovery";
 import { KrishisetuProvider } from '@/components/krishisetu-provider';
 
 function NotFoundComponent() {
@@ -41,6 +45,16 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
   const router = useRouter();
   useEffect(() => {
     reportLovableError(error, { boundary: "tanstack_root_error_component" });
+    if (!isModuleLoadError(error)) return;
+    try {
+      attemptModuleLoadRecovery(error, {
+        pathname: window.location.pathname,
+        storage: window.sessionStorage,
+        reload: () => window.location.reload(),
+      });
+    } catch {
+      // If storage is blocked, keep the manual retry screen instead of looping reloads.
+    }
   }, [error]);
 
   return (
@@ -55,6 +69,10 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
             onClick={() => {
+              if (isModuleLoadError(error)) {
+                window.location.reload();
+                return;
+              }
               router.invalidate();
               reset();
             }}
