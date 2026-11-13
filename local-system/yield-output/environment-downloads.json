@@ -1,0 +1,569 @@
+[
+  {
+    "year": 1995,
+    "kind": "rain",
+    "file": "rain-1995.nc",
+    "sha256": "ee769ab54c2d02e7f6db23fd440ceef107f4a3d79308ee34d5ad1015df813e0c",
+    "bytes": 25431832
+  },
+  {
+    "year": 1995,
+    "kind": "tmax",
+    "file": "tmax-1995.grd",
+    "sha256": "adb862f37e89c92ead264fabb8fc0d93f168ac755291d25ca34dd337e05e881e",
+    "bytes": 1403060
+  },
+  {
+    "year": 1995,
+    "kind": "tmin",
+    "file": "tmin-1995.grd",
+    "sha256": "f270a7d3b4c9e061f8e5f767ed02d1b14b0a29121c8783b8b8217227e4362cbf",
+    "bytes": 1403060
+  },
+  {
+    "year": 1996,
+    "kind": "rain",
+    "file": "rain-1996.nc",
+    "sha256": "606d5eaa75bf96cf698330ae137a42f244b1e0850178f14460c3f8d3a47ec589",
+    "bytes": 25501500
+  },
+  {
+    "year": 1996,
+    "kind": "tmax",
+    "file": "tmax-1996.grd",
+    "sha256": "19e36d1464b03d53f683edc0eba16a4b1fbf3946502deb95862e34b041ad4217",
+    "bytes": 1406904
+  },
+  {
+    "year": 1996,
+    "kind": "tmin",
+    "file": "tmin-1996.grd",
+    "sha256": "2062e0877a4e24c0f521b33e459359959bd98e9851c95d0e23dfd3555063d602",
+    "bytes": 1406904
+  },
+  {
+    "year": 1997,
+    "kind": "rain",
+    "file": "rain-1997.nc",
+    "sha256": "0edb75fb4fb6f215811e34480d09e1d8d6487d7a0166cedb3d05b38f2e439724",
+    "bytes": 25431832
+  },
+  {
+    "year": 1997,
+    "kind": "tmax",
+    "file": "tmax-1997.grd",
+    "sha256": "afc7d81131af18d0f451877ec6d21bdac2bb39a5344a652dc89f63be9bff4e41",
+    "bytes": 1403060
+  },
+  {
+    "year": 1997,
+    "kind": "tmin",
+    "file": "tmin-1997.grd",
+    "sha256": "5bf751f9cdc83abe4385623f1e9ff7485da01fd5a96a2deab120656fb611ce82",
+    "bytes": 1403060
+  },
+  {
+    "year": 1998,
+    "kind": "rain",
+    "file": "rain-1998.nc",
+    "sha256": "dbcc01ec2d44f22f94d74009da38c7f936920534bf6d7206ea73fc1bf5c0fd7d",
+    "bytes": 25431832
+  },
+  {
+    "year": 1998,
+    "kind": "tmax",
+    "file": "tmax-1998.grd",
+    "sha256": "e0bc505889ccb4049188e94745cef667c6c3b678c890635d9ac2ac2798ffcfaa",
+    "bytes": 1403060
+  },
+  {
+    "year": 1998,
+    "kind": "tmin",
+    "file": "tmin-1998.grd",
+    "sha256": "cfa3a6888eb786524f3edb5047a661968a9a106116c8d90dec0d5efeeb40a68d",
+    "bytes": 1403060
+  },
+  {
+    "year": 1999,
+    "kind": "rain",
+    "file": "rain-1999.nc",
+    "sha256": "636961db4399dbb3c51caba7c815ccfecb361cd271cce767825862e2e6920884",
+    "bytes": 25431832
+  },
+  {
+    "year": 1999,
+    "kind": "tmax",
+    "file": "tmax-1999.grd",
+    "sha256": "eb9c2bcd85c838ff351226b46aadf214c5cee867b3607bdc29737add4739595b",
+    "bytes": 1403060
+  },
+  {
+    "year": 1999,
+    "kind": "tmin",
+    "file": "tmin-1999.grd",
+    "sha256": "5ed063b6ca6a8bbef2021465c7dcd0f13cae1d8b8f23ce9126ecdc928753d6bc",
+    "bytes": 1403060
+  },
+  {
+    "year": 2000,
+    "kind": "rain",
+    "file": "rain-2000.nc",
+    "sha256": "eee32b28de22dee336d1b414a8b6a3f420e3dfcfb7ca6186d56a3a02dd344782",
+    "bytes": 25501500
+  },
+  {
+    "year": 2000,
+    "kind": "tmax",
+    "file": "tmax-2000.grd",
+    "sha256": "9c959ec9129b4edf3952da1b6a9cecdd26bc4307bab88a1e8521494faddd2565",
+    "bytes": 1406904
+  },
+  {
+    "year": 2000,
+    "kind": "tmin",
+    "file": "tmin-2000.grd",
+    "sha256": "d7009431e9fbbb8fa894f6b339ec7745e8e7a743d378724425120186bcb5083f",
+    "bytes": 1406904
+  },
+  {
+    "year": 2001,
+    "kind": "rain",
+    "file": "rain-2001.nc",
+    "sha256": "f3e0536f688908cfbcd5bc8272362c4bf238aac198e607220071867899b7f175",
+    "bytes": 25431832
+  },
+  {
+    "year": 2001,
+    "kind": "tmax",
+    "file": "tmax-2001.grd",
+    "sha256": "e8565453a49fe0741b3159b774724f319680e38411de29a15af40ff6e97759a8",
+    "bytes": 1403060
+  },
+  {
+    "year": 2001,
+    "kind": "tmin",
+    "file": "tmin-2001.grd",
+    "sha256": "182c5a9bd0240abe38326e5d5b5c37482c9e227fa683a3e8fd24d4354af35c01",
+    "bytes": 1403060
+  },
+  {
+    "year": 2002,
+    "kind": "rain",
+    "file": "rain-2002.nc",
+    "sha256": "4c61fdae1ea69b733cdfe2a27ebadbfa79f11aea2ae5ef4cf2e99624f7f1efdb",
+    "bytes": 25431832
+  },
+  {
+    "year": 2002,
+    "kind": "tmax",
+    "file": "tmax-2002.grd",
+    "sha256": "7c5086161618c597f088ae99bd1bdba3e9099216fdd55354513901b467377dd4",
+    "bytes": 1403060
+  },
+  {
+    "year": 2002,
+    "kind": "tmin",
+    "file": "tmin-2002.grd",
+    "sha256": "15cdd934348053aedc8afc8234187f1fc0694fff5e1094c5489f30ceb74b6cd7",
+    "bytes": 1403060
+  },
+  {
+    "year": 2003,
+    "kind": "rain",
+    "file": "rain-2003.nc",
+    "sha256": "f215e6182fb15f1e2b59da09e408fa10d23cca6c3041aea54adb878d784b64d2",
+    "bytes": 25431832
+  },
+  {
+    "year": 2003,
+    "kind": "tmax",
+    "file": "tmax-2003.grd",
+    "sha256": "12ce3042e4809b25fd0267cd3024dcc5c08f97ff4ed5be4732d28c6059c96fbb",
+    "bytes": 1403060
+  },
+  {
+    "year": 2003,
+    "kind": "tmin",
+    "file": "tmin-2003.grd",
+    "sha256": "d7659b4c455545e2187c7f119a4d3f2fd623de7b2a4e4becde529a8c928b9af4",
+    "bytes": 1403060
+  },
+  {
+    "year": 2004,
+    "kind": "rain",
+    "file": "rain-2004.nc",
+    "sha256": "1ab45a65b10277e415dc06965008156637777a79b86367cf45329b2718545935",
+    "bytes": 25501500
+  },
+  {
+    "year": 2004,
+    "kind": "tmax",
+    "file": "tmax-2004.grd",
+    "sha256": "a66a1adad12f5cb6d132a956f70dbd6cdec2d87a7eceff8554c1116540e43d0e",
+    "bytes": 1406904
+  },
+  {
+    "year": 2004,
+    "kind": "tmin",
+    "file": "tmin-2004.grd",
+    "sha256": "22307a1716941c117c9269045ee18b21ba49b97b89027e565e8260687af4a441",
+    "bytes": 1406904
+  },
+  {
+    "year": 2005,
+    "kind": "rain",
+    "file": "rain-2005.nc",
+    "sha256": "c6de4f7b35238f6c9fca22950934390ac8f08f630fe0bfb3c90cc62849f9cc50",
+    "bytes": 25431832
+  },
+  {
+    "year": 2005,
+    "kind": "tmax",
+    "file": "tmax-2005.grd",
+    "sha256": "7b96f31dcb61b7c849a8e503c0bf1ef0e61b360d4f0341e0569fdda18804dde7",
+    "bytes": 1403060
+  },
+  {
+    "year": 2005,
+    "kind": "tmin",
+    "file": "tmin-2005.grd",
+    "sha256": "63f031727cfb59dd8a5f3c180eeb1678b16e1d0d344cd5569f2bf430e45e724c",
+    "bytes": 1403060
+  },
+  {
+    "year": 2006,
+    "kind": "rain",
+    "file": "rain-2006.nc",
+    "sha256": "8caf5b4fa2900a2be070f87b760a84297d686e74ee0dacded6c2944451e1d9f1",
+    "bytes": 25431832
+  },
+  {
+    "year": 2006,
+    "kind": "tmax",
+    "file": "tmax-2006.grd",
+    "sha256": "7926666aae02b20aa1e9bc244d3d5115bd548a0d6df9a94754d4f67d00c41d5c",
+    "bytes": 1403060
+  },
+  {
+    "year": 2006,
+    "kind": "tmin",
+    "file": "tmin-2006.grd",
+    "sha256": "274516511bfc6c2557490b7e7f576935e627af37ff13299af534a9750de41a94",
+    "bytes": 1403060
+  },
+  {
+    "year": 2007,
+    "kind": "rain",
+    "file": "rain-2007.nc",
+    "sha256": "f4430feb443d8f8e8d8882e8c52ebe738f20aefea269bd7a10aa14e5da799ef8",
+    "bytes": 25431832
+  },
+  {
+    "year": 2007,
+    "kind": "tmax",
+    "file": "tmax-2007.grd",
+    "sha256": "1b4a760583bae5a9979f18a4ca82d03f2ea321d21b5035df9cc8de66762fb1a9",
+    "bytes": 1403060
+  },
+  {
+    "year": 2007,
+    "kind": "tmin",
+    "file": "tmin-2007.grd",
+    "sha256": "de96b35cba2c921078b89729720345b9177c8585d1c1eb3441a394c325997239",
+    "bytes": 1403060
+  },
+  {
+    "year": 2008,
+    "kind": "rain",
+    "file": "rain-2008.nc",
+    "sha256": "345079a1a4c84a3d0ca198f46693384767e9639c05f131e40de4d5a649931279",
+    "bytes": 25501500
+  },
+  {
+    "year": 2008,
+    "kind": "tmax",
+    "file": "tmax-2008.grd",
+    "sha256": "a80bfd892b2a471d1044faa24414bc9dc93b491fae51de000c010538d3b4f729",
+    "bytes": 1406904
+  },
+  {
+    "year": 2008,
+    "kind": "tmin",
+    "file": "tmin-2008.grd",
+    "sha256": "a34d248a0df4d6235c51abfc573184ace762f9c8ed12b2e5fb45275722e27442",
+    "bytes": 1406904
+  },
+  {
+    "year": 2009,
+    "kind": "rain",
+    "file": "rain-2009.nc",
+    "sha256": "109c02519016c3e12e248d8032f6baebc4a3635a163dbf13d374b582f43e0486",
+    "bytes": 25431832
+  },
+  {
+    "year": 2009,
+    "kind": "tmax",
+    "file": "tmax-2009.grd",
+    "sha256": "13db294a906e25cbf484b01e294a3c089bae441353cee2b39a5e4dd26ff8bab1",
+    "bytes": 1403060
+  },
+  {
+    "year": 2009,
+    "kind": "tmin",
+    "file": "tmin-2009.grd",
+    "sha256": "1a9a3795b4591ee91920ba72b35ffc48f0f5dc34b3c818eb06cf50eed4035e3f",
+    "bytes": 1403060
+  },
+  {
+    "year": 2010,
+    "kind": "rain",
+    "file": "rain-2010.nc",
+    "sha256": "fe7ea2aba9dab02865684040e9c1abfd1402481feac214c78b5bd94cf881b84b",
+    "bytes": 25431832
+  },
+  {
+    "year": 2010,
+    "kind": "tmax",
+    "file": "tmax-2010.grd",
+    "sha256": "7d82ecb95f82a4606f115c6674b18a34e906a479805f021fc0b324a5b3bd3795",
+    "bytes": 1403060
+  },
+  {
+    "year": 2010,
+    "kind": "tmin",
+    "file": "tmin-2010.grd",
+    "sha256": "55b3e996c652fa5ebd17a920a538dfa3216fcc0c5aaa48e65ba190831bb1de95",
+    "bytes": 1403060
+  },
+  {
+    "year": 2011,
+    "kind": "rain",
+    "file": "rain-2011.nc",
+    "sha256": "925e06db22b6797afd393b781e834ee8016cf8850b2501f73dbb13e6c2c936de",
+    "bytes": 25431832
+  },
+  {
+    "year": 2011,
+    "kind": "tmax",
+    "file": "tmax-2011.grd",
+    "sha256": "642d337d4aa4ab0c4b167d04b923b3ec285a29d79920d5a8d3e5747953b7ccf2",
+    "bytes": 1403060
+  },
+  {
+    "year": 2011,
+    "kind": "tmin",
+    "file": "tmin-2011.grd",
+    "sha256": "72cfc0ffbe88da7c56834d7ad096c8d336620505623e46093d291c9900ebba38",
+    "bytes": 1403060
+  },
+  {
+    "year": 2012,
+    "kind": "rain",
+    "file": "rain-2012.nc",
+    "sha256": "7708a4846e8ef0664962c7042e886f3a5f055af365d536782eff63760dc3f666",
+    "bytes": 25501500
+  },
+  {
+    "year": 2012,
+    "kind": "tmax",
+    "file": "tmax-2012.grd",
+    "sha256": "0f55a48c4ca1b6558e60bbb2047e0a7cfb5ff720c43c7cc39fca892b4754ef3c",
+    "bytes": 1406904
+  },
+  {
+    "year": 2012,
+    "kind": "tmin",
+    "file": "tmin-2012.grd",
+    "sha256": "2d70c8debb4833463e272a60e793538d81e295dcddddb2fc009cf956a1a24668",
+    "bytes": 1406904
+  },
+  {
+    "year": 2013,
+    "kind": "rain",
+    "file": "rain-2013.nc",
+    "sha256": "2042932a2aea8288bbf45482272f65b9225e8aafa9a44cf06c65962007f8bc79",
+    "bytes": 25431832
+  },
+  {
+    "year": 2013,
+    "kind": "tmax",
+    "file": "tmax-2013.grd",
+    "sha256": "80c0e0162343cb6808db7bde56eab3222322a64d69bc493078fe05a9fb38af77",
+    "bytes": 1403060
+  },
+  {
+    "year": 2013,
+    "kind": "tmin",
+    "file": "tmin-2013.grd",
+    "sha256": "e10e2fcc9a8ca6a6de8b8ccb3b20837a076bd4b45fd106175136e3ccbc9f9977",
+    "bytes": 1403060
+  },
+  {
+    "year": 2014,
+    "kind": "rain",
+    "file": "rain-2014.nc",
+    "sha256": "9ecca0e9049f0e6cf366a44420e2e7361bff67bf97ae43c6502999b25da76457",
+    "bytes": 25431832
+  },
+  {
+    "year": 2014,
+    "kind": "tmax",
+    "file": "tmax-2014.grd",
+    "sha256": "68f6b0b7a6e4ed4e12ac13fd3e0884244b5d6b330fedee1ac43a4bd419ec9fd7",
+    "bytes": 1403060
+  },
+  {
+    "year": 2014,
+    "kind": "tmin",
+    "file": "tmin-2014.grd",
+    "sha256": "6fde6cdaf1c53919d32d11326340440cd16feb735b1a34ba0b050c3e67e744e1",
+    "bytes": 1403060
+  },
+  {
+    "year": 2015,
+    "kind": "rain",
+    "file": "rain-2015.nc",
+    "sha256": "c276ce7ebff1d74d79123a7c777d9ef61c3c5765aa3b6db464ff6224b30a3926",
+    "bytes": 25431832
+  },
+  {
+    "year": 2015,
+    "kind": "tmax",
+    "file": "tmax-2015.grd",
+    "sha256": "1f59cb38f0412c31f00ed5b0283ce3c8d4aecb33f7c798037b23eda7a2da1fc9",
+    "bytes": 1403060
+  },
+  {
+    "year": 2015,
+    "kind": "tmin",
+    "file": "tmin-2015.grd",
+    "sha256": "4aab466ad7c3df41d9d78b8f77a305555590959e2963de9e2d37d1dd1ea11e5c",
+    "bytes": 1403060
+  },
+  {
+    "year": 2016,
+    "kind": "rain",
+    "file": "rain-2016.nc",
+    "sha256": "e5b0ba1feb2bf10a3347091867237b1c480a71cbd8087037ef846e4346cbcdef",
+    "bytes": 25501500
+  },
+  {
+    "year": 2016,
+    "kind": "tmax",
+    "file": "tmax-2016.grd",
+    "sha256": "4cb547522de59e6af4a93b5a50810de406004b2553921337270f499db4e0c12e",
+    "bytes": 1406904
+  },
+  {
+    "year": 2016,
+    "kind": "tmin",
+    "file": "tmin-2016.grd",
+    "sha256": "015c455543de61b4ea6aefcecdfd2218c99b8c60d8c3301a024aa63313d7ab7b",
+    "bytes": 1406904
+  },
+  {
+    "year": 2017,
+    "kind": "rain",
+    "file": "rain-2017.nc",
+    "sha256": "49786e2d2b661c5d3bcfb3ffd90385c1133ec27a8a04bf272ff2df5029106a9c",
+    "bytes": 25431832
+  },
+  {
+    "year": 2017,
+    "kind": "tmax",
+    "file": "tmax-2017.grd",
+    "sha256": "ab6f1602d4bf3d2fb72af1c95123135715d03363ffcff2edba290460be348aa2",
+    "bytes": 1403060
+  },
+  {
+    "year": 2017,
+    "kind": "tmin",
+    "file": "tmin-2017.grd",
+    "sha256": "8eba57d8306167936170d952b618681b0bf2d69d2a18b26f92e5ddb371ccf182",
+    "bytes": 1403060
+  },
+  {
+    "year": 2018,
+    "kind": "rain",
+    "file": "rain-2018.nc",
+    "sha256": "26bd53aeb2d6f3f7d39516c41606db005dede474906b33462d1a0caef69cd6ec",
+    "bytes": 25431832
+  },
+  {
+    "year": 2018,
+    "kind": "tmax",
+    "file": "tmax-2018.grd",
+    "sha256": "d3177ec1a2f39235834a7ab5fa5120866bb9106f1fc2c06d8eba0d5bcdf7e555",
+    "bytes": 1403060
+  },
+  {
+    "year": 2018,
+    "kind": "tmin",
+    "file": "tmin-2018.grd",
+    "sha256": "aad48cb4bd39b8f9495b8cce50d228893bac7ef9b55b6f8c7526a82ebe0a2ea9",
+    "bytes": 1403060
+  },
+  {
+    "year": 2019,
+    "kind": "rain",
+    "file": "rain-2019.nc",
+    "sha256": "c551c563b3514d492a2de94c706c1c254d5826656738b4a8e7dbd83841344a5b",
+    "bytes": 25431832
+  },
+  {
+    "year": 2019,
+    "kind": "tmax",
+    "file": "tmax-2019.grd",
+    "sha256": "562086409f4db9ca32b6d554e2cb209926c4caf9892d7b5385195b254e0576ab",
+    "bytes": 1403060
+  },
+  {
+    "year": 2019,
+    "kind": "tmin",
+    "file": "tmin-2019.grd",
+    "sha256": "5c188d132b748c454fda878216fd5d2e2c06e5fa313b7fb2231050c90306c147",
+    "bytes": 1403060
+  },
+  {
+    "year": 2020,
+    "kind": "rain",
+    "file": "rain-2020.nc",
+    "sha256": "2e567f0f71f3a1936ba11d61a0214fc3927c7b969ee5669d14959aa0b6b026dc",
+    "bytes": 25501500
+  },
+  {
+    "year": 2020,
+    "kind": "tmax",
+    "file": "tmax-2020.grd",
+    "sha256": "f77b8b50582c400eca0510a1738050ab10bf628b648f5a7a9e9d3c7842637ba8",
+    "bytes": 1406904
+  },
+  {
+    "year": 2020,
+    "kind": "tmin",
+    "file": "tmin-2020.grd",
+    "sha256": "2f3f6530b06eb24ae54612528011b97e1f6b38cacbe742fc51c1b3a8f3cf6be4",
+    "bytes": 1406904
+  },
+  {
+    "year": 2021,
+    "kind": "rain",
+    "file": "rain-2021.nc",
+    "sha256": "fb0f291fa7e214a7811023a9309cead67233b6b4e0bfcc5b277643f976f68374",
+    "bytes": 25431832
+  },
+  {
+    "year": 2021,
+    "kind": "tmax",
+    "file": "tmax-2021.grd",
+    "sha256": "d869f0277dcc3b2038421f3a20a2ebf82cd7889dd553742577eda8f7603036dc",
+    "bytes": 1403060
+  },
+  {
+    "year": 2021,
+    "kind": "tmin",
+    "file": "tmin-2021.grd",
+    "sha256": "b1f1a4c0246783c56b3f1117353aa167458e6f140c969ee7453b76cec830cd4d",
+    "bytes": 1403060
+  }
+]

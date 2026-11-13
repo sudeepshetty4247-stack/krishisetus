@@ -1,0 +1,890 @@
+[
+  {
+    "state": "Andaman and Nicobar Islands",
+    "district": "Nicobars"
+  },
+  {
+    "state": "Andaman and Nicobar Islands",
+    "district": "North and middle andaman"
+  },
+  {
+    "state": "Andaman and Nicobar Islands",
+    "district": "South andamans"
+  },
+  {
+    "state": "Andhra Pradesh",
+    "district": "Alluri sitharama raju"
+  },
+  {
+    "state": "Andhra Pradesh",
+    "district": "Anakapalli"
+  },
+  {
+    "state": "Andhra Pradesh",
+    "district": "Annamayya"
+  },
+  {
+    "state": "Andhra Pradesh",
+    "district": "Bapatla"
+  },
+  {
+    "state": "Andhra Pradesh",
+    "district": "Eluru"
+  },
+  {
+    "state": "Andhra Pradesh",
+    "district": "Kadapa"
+  },
+  {
+    "state": "Andhra Pradesh",
+    "district": "Kakinada"
+  },
+  {
+    "state": "Andhra Pradesh",
+    "district": "Konaseema"
+  },
+  {
+    "state": "Andhra Pradesh",
+    "district": "Nandyal"
+  },
+  {
+    "state": "Andhra Pradesh",
+    "district": "Ntr"
+  },
+  {
+    "state": "Andhra Pradesh",
+    "district": "Palnadu"
+  },
+  {
+    "state": "Andhra Pradesh",
+    "district": "Parvathipuram manyam"
+  },
+  {
+    "state": "Andhra Pradesh",
+    "district": "Spsr nellore"
+  },
+  {
+    "state": "Andhra Pradesh",
+    "district": "Sri sathya sai"
+  },
+  {
+    "state": "Andhra Pradesh",
+    "district": "Tirupati"
+  },
+  {
+    "state": "Andhra Pradesh",
+    "district": "Visakhapatanam"
+  },
+  {
+    "state": "Arunachal Pradesh",
+    "district": "Kamle"
+  },
+  {
+    "state": "Arunachal Pradesh",
+    "district": "Kra daadi"
+  },
+  {
+    "state": "Arunachal Pradesh",
+    "district": "Leparada"
+  },
+  {
+    "state": "Arunachal Pradesh",
+    "district": "Longding"
+  },
+  {
+    "state": "Arunachal Pradesh",
+    "district": "Lower siang"
+  },
+  {
+    "state": "Arunachal Pradesh",
+    "district": "Namsai"
+  },
+  {
+    "state": "Arunachal Pradesh",
+    "district": "Pakke kessang"
+  },
+  {
+    "state": "Arunachal Pradesh",
+    "district": "Shi yomi"
+  },
+  {
+    "state": "Arunachal Pradesh",
+    "district": "Siang"
+  },
+  {
+    "state": "Assam",
+    "district": "Biswanath"
+  },
+  {
+    "state": "Assam",
+    "district": "Charaideo"
+  },
+  {
+    "state": "Assam",
+    "district": "Hojai"
+  },
+  {
+    "state": "Assam",
+    "district": "Kamrup metro"
+  },
+  {
+    "state": "Assam",
+    "district": "Majuli"
+  },
+  {
+    "state": "Assam",
+    "district": "South salmara mancachar"
+  },
+  {
+    "state": "Assam",
+    "district": "West karbi anglong"
+  },
+  {
+    "state": "Bihar",
+    "district": "Purbi champaran"
+  },
+  {
+    "state": "Chhattisgarh",
+    "district": "Balod"
+  },
+  {
+    "state": "Chhattisgarh",
+    "district": "Baloda bazar"
+  },
+  {
+    "state": "Chhattisgarh",
+    "district": "Balrampur"
+  },
+  {
+    "state": "Chhattisgarh",
+    "district": "Bemetara"
+  },
+  {
+    "state": "Chhattisgarh",
+    "district": "Gariyaband"
+  },
+  {
+    "state": "Chhattisgarh",
+    "district": "Gaurella-pendra-marwahi"
+  },
+  {
+    "state": "Chhattisgarh",
+    "district": "Kabirdham"
+  },
+  {
+    "state": "Chhattisgarh",
+    "district": "Khairgarh chhuikhadan gandai"
+  },
+  {
+    "state": "Chhattisgarh",
+    "district": "Kondagaon"
+  },
+  {
+    "state": "Chhattisgarh",
+    "district": "Korea"
+  },
+  {
+    "state": "Chhattisgarh",
+    "district": "Manendragarh chirimiri bharatpur"
+  },
+  {
+    "state": "Chhattisgarh",
+    "district": "Mohla manpur ambagarh chouki"
+  },
+  {
+    "state": "Chhattisgarh",
+    "district": "Mungeli"
+  },
+  {
+    "state": "Chhattisgarh",
+    "district": "Sakti"
+  },
+  {
+    "state": "Chhattisgarh",
+    "district": "Sarangarh bilaigarh"
+  },
+  {
+    "state": "Chhattisgarh",
+    "district": "Sukma"
+  },
+  {
+    "state": "Chhattisgarh",
+    "district": "Surajpur"
+  },
+  {
+    "state": "Dadra and Nagar Haveli",
+    "district": "Dadra and Nagar Haveli"
+  },
+  {
+    "state": "Daman and Diu",
+    "district": "Daman"
+  },
+  {
+    "state": "Daman and Diu",
+    "district": "Diu"
+  },
+  {
+    "state": "Delhi",
+    "district": "Delhi_Total"
+  },
+  {
+    "state": "Gujarat",
+    "district": "Aravalli"
+  },
+  {
+    "state": "Gujarat",
+    "district": "Botad"
+  },
+  {
+    "state": "Gujarat",
+    "district": "Chhotaudepur"
+  },
+  {
+    "state": "Gujarat",
+    "district": "Dang"
+  },
+  {
+    "state": "Gujarat",
+    "district": "Devbhumi dwarka"
+  },
+  {
+    "state": "Gujarat",
+    "district": "Gir somnath"
+  },
+  {
+    "state": "Gujarat",
+    "district": "Mahisagar"
+  },
+  {
+    "state": "Gujarat",
+    "district": "Morbi"
+  },
+  {
+    "state": "Haryana",
+    "district": "Charki dadri"
+  },
+  {
+    "state": "Himachal Pradesh",
+    "district": "Lahul and spiti"
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "district": "Anantnag"
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "district": "Badgam"
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "district": "Bandipora"
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "district": "Baramulla"
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "district": "Doda"
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "district": "Ganderbal"
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "district": "Jammu"
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "district": "Kargil"
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "district": "Kathua"
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "district": "Kishtwar"
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "district": "Kulgam"
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "district": "Kupwara"
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "district": "Leh ladakh"
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "district": "Poonch"
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "district": "Pulwama"
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "district": "Rajauri"
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "district": "Ramban"
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "district": "Reasi"
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "district": "Samba"
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "district": "Shopian"
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "district": "Srinagar"
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "district": "Udhampur"
+  },
+  {
+    "state": "Jharkhand",
+    "district": "East singhbum"
+  },
+  {
+    "state": "Jharkhand",
+    "district": "Koderma"
+  },
+  {
+    "state": "Jharkhand",
+    "district": "Sahebganj"
+  },
+  {
+    "state": "Jharkhand",
+    "district": "West singhbhum"
+  },
+  {
+    "state": "Karnataka",
+    "district": "Bengaluru urban"
+  },
+  {
+    "state": "Karnataka",
+    "district": "Chikballapur"
+  },
+  {
+    "state": "Karnataka",
+    "district": "Dakshin kannad"
+  },
+  {
+    "state": "Karnataka",
+    "district": "Uttar kannad"
+  },
+  {
+    "state": "Karnataka",
+    "district": "Vijayanagar"
+  },
+  {
+    "state": "Ladakh",
+    "district": "Kargil"
+  },
+  {
+    "state": "Ladakh",
+    "district": "Leh ladakh"
+  },
+  {
+    "state": "Madhya Pradesh",
+    "district": "Agar malwa"
+  },
+  {
+    "state": "Madhya Pradesh",
+    "district": "Khandwa"
+  },
+  {
+    "state": "Madhya Pradesh",
+    "district": "Khargone"
+  },
+  {
+    "state": "Madhya Pradesh",
+    "district": "Narsinghpur"
+  },
+  {
+    "state": "Madhya Pradesh",
+    "district": "Niwari"
+  },
+  {
+    "state": "Maharashtra",
+    "district": "Ahilyanagar"
+  },
+  {
+    "state": "Maharashtra",
+    "district": "Beed"
+  },
+  {
+    "state": "Maharashtra",
+    "district": "Buldhana"
+  },
+  {
+    "state": "Maharashtra",
+    "district": "Chhatrapati Sambhajinagar"
+  },
+  {
+    "state": "Maharashtra",
+    "district": "Dharashiv"
+  },
+  {
+    "state": "Maharashtra",
+    "district": "Gondia"
+  },
+  {
+    "state": "Maharashtra",
+    "district": "Palghar"
+  },
+  {
+    "state": "Maharashtra",
+    "district": "Raigad"
+  },
+  {
+    "state": "Meghalaya",
+    "district": "East jaintia hills"
+  },
+  {
+    "state": "Meghalaya",
+    "district": "North garo hills"
+  },
+  {
+    "state": "Meghalaya",
+    "district": "South west garo hills"
+  },
+  {
+    "state": "Meghalaya",
+    "district": "South west khasi hills"
+  },
+  {
+    "state": "Meghalaya",
+    "district": "West jaintia hills"
+  },
+  {
+    "state": "Mizoram",
+    "district": "Hnahthial"
+  },
+  {
+    "state": "Mizoram",
+    "district": "Khawzawl"
+  },
+  {
+    "state": "Mizoram",
+    "district": "Saitual"
+  },
+  {
+    "state": "Nagaland",
+    "district": "Chumoukedima"
+  },
+  {
+    "state": "Nagaland",
+    "district": "Noklak"
+  },
+  {
+    "state": "Nagaland",
+    "district": "Nuiland"
+  },
+  {
+    "state": "Nagaland",
+    "district": "Shamator"
+  },
+  {
+    "state": "Nagaland",
+    "district": "Tseminyu"
+  },
+  {
+    "state": "Odisha",
+    "district": "Boudh"
+  },
+  {
+    "state": "Odisha",
+    "district": "Deogarh"
+  },
+  {
+    "state": "Odisha",
+    "district": "Nabarangpur"
+  },
+  {
+    "state": "Odisha",
+    "district": "Sonepur"
+  },
+  {
+    "state": "Puducherry",
+    "district": "Pondicherry"
+  },
+  {
+    "state": "Punjab",
+    "district": "Fazilka"
+  },
+  {
+    "state": "Punjab",
+    "district": "Firozepur"
+  },
+  {
+    "state": "Punjab",
+    "district": "Malerkotla"
+  },
+  {
+    "state": "Punjab",
+    "district": "Pathankot"
+  },
+  {
+    "state": "Punjab",
+    "district": "S.a.s nagar"
+  },
+  {
+    "state": "Rajasthan",
+    "district": "Chittorgarh"
+  },
+  {
+    "state": "Rajasthan",
+    "district": "Dholpur"
+  },
+  {
+    "state": "Rajasthan",
+    "district": "Jalore"
+  },
+  {
+    "state": "Rajasthan",
+    "district": "Jhunjhunu"
+  },
+  {
+    "state": "Sikkim",
+    "district": "Gangtok"
+  },
+  {
+    "state": "Sikkim",
+    "district": "Geyzing"
+  },
+  {
+    "state": "Sikkim",
+    "district": "Mangan"
+  },
+  {
+    "state": "Sikkim",
+    "district": "Namchi"
+  },
+  {
+    "state": "Sikkim",
+    "district": "Pakyong"
+  },
+  {
+    "state": "Sikkim",
+    "district": "Soreng"
+  },
+  {
+    "state": "Tamil Nadu",
+    "district": "Chengalpattu"
+  },
+  {
+    "state": "Tamil Nadu",
+    "district": "Kallakurichi"
+  },
+  {
+    "state": "Tamil Nadu",
+    "district": "Kanchipuram"
+  },
+  {
+    "state": "Tamil Nadu",
+    "district": "Mayiladuthurai"
+  },
+  {
+    "state": "Tamil Nadu",
+    "district": "Ranipet"
+  },
+  {
+    "state": "Tamil Nadu",
+    "district": "Thenkasi"
+  },
+  {
+    "state": "Tamil Nadu",
+    "district": "Thoothukudi"
+  },
+  {
+    "state": "Tamil Nadu",
+    "district": "Tirupathur"
+  },
+  {
+    "state": "Tamil Nadu",
+    "district": "Villupuram"
+  },
+  {
+    "state": "Telangana",
+    "district": "Adilabad"
+  },
+  {
+    "state": "Telangana",
+    "district": "Bhadradri"
+  },
+  {
+    "state": "Telangana",
+    "district": "Hanumakonda"
+  },
+  {
+    "state": "Telangana",
+    "district": "Hyderabad"
+  },
+  {
+    "state": "Telangana",
+    "district": "Jagitial"
+  },
+  {
+    "state": "Telangana",
+    "district": "Jangoan"
+  },
+  {
+    "state": "Telangana",
+    "district": "Jayashankar"
+  },
+  {
+    "state": "Telangana",
+    "district": "Jogulamba"
+  },
+  {
+    "state": "Telangana",
+    "district": "Kamareddy"
+  },
+  {
+    "state": "Telangana",
+    "district": "Karimnagar"
+  },
+  {
+    "state": "Telangana",
+    "district": "Khammam"
+  },
+  {
+    "state": "Telangana",
+    "district": "Komaram bheem asifabad"
+  },
+  {
+    "state": "Telangana",
+    "district": "Mahabubabad"
+  },
+  {
+    "state": "Telangana",
+    "district": "Mahbubnagar"
+  },
+  {
+    "state": "Telangana",
+    "district": "Mancherial"
+  },
+  {
+    "state": "Telangana",
+    "district": "Medak"
+  },
+  {
+    "state": "Telangana",
+    "district": "Medchal"
+  },
+  {
+    "state": "Telangana",
+    "district": "Mulugu"
+  },
+  {
+    "state": "Telangana",
+    "district": "Nagarkurnool"
+  },
+  {
+    "state": "Telangana",
+    "district": "Nalgonda"
+  },
+  {
+    "state": "Telangana",
+    "district": "Narayanapet"
+  },
+  {
+    "state": "Telangana",
+    "district": "Nirmal"
+  },
+  {
+    "state": "Telangana",
+    "district": "Nizamabad"
+  },
+  {
+    "state": "Telangana",
+    "district": "Peddapalli"
+  },
+  {
+    "state": "Telangana",
+    "district": "Rajanna"
+  },
+  {
+    "state": "Telangana",
+    "district": "Rangareddi"
+  },
+  {
+    "state": "Telangana",
+    "district": "Sangareddy"
+  },
+  {
+    "state": "Telangana",
+    "district": "Siddipet"
+  },
+  {
+    "state": "Telangana",
+    "district": "Suryapet"
+  },
+  {
+    "state": "Telangana",
+    "district": "Vikarabad"
+  },
+  {
+    "state": "Telangana",
+    "district": "Wanaparthy"
+  },
+  {
+    "state": "Telangana",
+    "district": "Warangal"
+  },
+  {
+    "state": "Telangana",
+    "district": "Yadadri"
+  },
+  {
+    "state": "The Dadra & Nagar Haveli and Daman and Diu",
+    "district": "Dadra and Nagar Haveli"
+  },
+  {
+    "state": "The Dadra & Nagar Haveli and Daman and Diu",
+    "district": "Daman"
+  },
+  {
+    "state": "The Dadra & Nagar Haveli and Daman and Diu",
+    "district": "Diu"
+  },
+  {
+    "state": "Tripura",
+    "district": "Gomati"
+  },
+  {
+    "state": "Tripura",
+    "district": "Khowai"
+  },
+  {
+    "state": "Tripura",
+    "district": "Sepahijala"
+  },
+  {
+    "state": "Tripura",
+    "district": "Unakoti"
+  },
+  {
+    "state": "Uttar Pradesh",
+    "district": "Amethi"
+  },
+  {
+    "state": "Uttar Pradesh",
+    "district": "Amroha"
+  },
+  {
+    "state": "Uttar Pradesh",
+    "district": "Hapur"
+  },
+  {
+    "state": "Uttar Pradesh",
+    "district": "Kasganj"
+  },
+  {
+    "state": "Uttar Pradesh",
+    "district": "Sambhal"
+  },
+  {
+    "state": "Uttar Pradesh",
+    "district": "Sant kabeer nagar"
+  },
+  {
+    "state": "Uttar Pradesh",
+    "district": "Shamli"
+  },
+  {
+    "state": "Uttar Pradesh",
+    "district": "Shravasti"
+  },
+  {
+    "state": "Uttarakhand",
+    "district": "Haridwar"
+  },
+  {
+    "state": "Uttarakhand",
+    "district": "Pauri garhwal"
+  },
+  {
+    "state": "Uttarakhand",
+    "district": "Udam singh nagar"
+  },
+  {
+    "state": "West Bengal",
+    "district": "24 paraganas north"
+  },
+  {
+    "state": "West Bengal",
+    "district": "24 paraganas south"
+  },
+  {
+    "state": "West Bengal",
+    "district": "Alipurduar"
+  },
+  {
+    "state": "West Bengal",
+    "district": "Coochbehar"
+  },
+  {
+    "state": "West Bengal",
+    "district": "Darjeeling"
+  },
+  {
+    "state": "West Bengal",
+    "district": "Dinajpur dakshin"
+  },
+  {
+    "state": "West Bengal",
+    "district": "Dinajpur uttar"
+  },
+  {
+    "state": "West Bengal",
+    "district": "Hooghly"
+  },
+  {
+    "state": "West Bengal",
+    "district": "Howrah"
+  },
+  {
+    "state": "West Bengal",
+    "district": "Jhargram"
+  },
+  {
+    "state": "West Bengal",
+    "district": "Kalimpong"
+  },
+  {
+    "state": "West Bengal",
+    "district": "Medinipur east"
+  },
+  {
+    "state": "West Bengal",
+    "district": "Medinipur west"
+  },
+  {
+    "state": "West Bengal",
+    "district": "Paschim bardhaman"
+  },
+  {
+    "state": "West Bengal",
+    "district": "Purba bardhaman"
+  },
+  {
+    "state": "West Bengal",
+    "district": "Purulia"
+  }
+]
