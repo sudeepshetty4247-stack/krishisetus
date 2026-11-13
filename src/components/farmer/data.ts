@@ -11,6 +11,8 @@ export function useCropReports(crop:string){const {user}=useKrishi();return useQ
 export function useMarketReports(market:string){const {user}=useKrishi();return useQuery({enabled:!!market,queryKey:['f-market',user,market],queryFn:async()=>{const {data,error}=await supabase.from('agri_reports').select('*').eq('market',market).order('date',{ascending:false}).limit(3000);if(error)throw error;return (data||[]) as unknown as Report[];}});}
 export function useSourceChecks(){return useQuery({queryKey:['f-checks'],queryFn:async()=>{const {data,error}=await supabase.from('agri_source_checks').select('*').order('checked_at',{ascending:false}).limit(20);if(error)throw error;return data||[];}});}
 export const DAILY_SOURCE='data.gov.in daily mandi';
+export const AGM2_SOURCE='AGMARKNET 2.0 last-week price';
+export const PRICE_SOURCES=[AGM2_SOURCE,DAILY_SOURCE];
 export const HISTORY_SOURCE='data.gov.in variety-wise history';
 export type TickerRow={state:string;district:string;market:string;commodity:string;variety:string;grade:string;source_name:string;date:string;modal_price:number;retrieved_at:string;prev_date:string;prev_price:number;change:number;pct:number};
 export function useTicker(){return useQuery({queryKey:['f-ticker'],staleTime:300000,queryFn:async()=>(await summary<TickerRow[]>('ticker'))??[]});}

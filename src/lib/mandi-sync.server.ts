@@ -1,12 +1,10 @@
 // Daily AGMARKNET mandi reports published on data.gov.in (resource 9ef84268-d588-465a-a308-a864a43d0070).
-// Order: India-hosted proxy (MANDI_PROXY_URL/MANDI_PROXY_TOKEN), then direct official API when DATA_GOV_IN_API_KEY is configured; otherwise the GODL relay api.dharun.dev,
-// which republishes the same resource with its dataset version. Every run is logged; failures never fake success.
+// Order: India-hosted proxy (MANDI_PROXY_URL/MANDI_PROXY_TOKEN), then direct official API when DATA_GOV_IN_API_KEY is configured. The broken api.dharun.dev relay was removed;
+// AGMARKNET 2.0 (agmarknet2.server.ts) is the primary scheduled source. Every run is logged; failures never fake success.
 import {z} from 'zod';
 export const DAILY_SOURCE='data.gov.in daily mandi';
 export const DAILY_URL='https://www.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070';
-const RELAY='https://api.dharun.dev/v1/mandi';
 const OFFICIAL='https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070';
-const STATES=['Andaman and Nicobar','Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chandigarh','Chattisgarh','Dadra and Nagar Haveli','Daman and Diu','Goa','Gujarat','Haryana','Himachal Pradesh','Jammu and Kashmir','Jharkhand','Karnataka','Keralam','Kerala','Ladakh','Madhya Pradesh','Maharashtra','Manipur','Meghalaya','Mizoram','Nagaland','NCT of Delhi','Odisha','Pondicherry','Punjab','Rajasthan','Sikkim','Tamil Nadu','Telangana','Tripura','Uttar Pradesh','Uttarakhand','Uttrakhand','West Bengal'];
 const text=z.string().trim().min(1).max(200);
 const price=z.coerce.number().positive().max(1e9);
 export const canonicalCommodity=(name:string)=>name.replace(/\s+/g,' ').trim().replace(/\s+\(/g,'(').replace(/\)\s+\(/g,')(');
@@ -33,11 +31,6 @@ async function getJson(url:string,init?:RequestInit,attempts=3,timeoutMs=20000):
  }
  throw new Error(last||'request failed');
 }
-async function pool<T,R>(items:T[],size:number,fn:(t:T)=>Promise<R>):Promise<R[]>{
- const out:R[]=[];let i=0;
- await Promise.all(Array.from({length:Math.min(size,items.length)},async()=>{while(i<items.length){const k=i++;const item=items[k];if(item!==undefined)out[k]=await fn(item);}}));
- return out;
-}
 // Workers are cancelled shortly after the scheduler call, so each run downloads ONE page from the saved offset
 // and the next minute continues; a full national cycle completes over successive runs, then restarts at 0.
 export const OFFICIAL_PAGE=1000;
@@ -61,26 +54,6 @@ async function fromProxy(base:string,token:string,offset:number,errors:string[])
  }catch(e){errors.push(`India proxy: ${e instanceof Error?e.message:e}`);return null;}
 }
 function toIso(v:unknown){const m=/^(\d{2})\/(\d{2})\/(\d{4})$/.exec(String(v??''));return m?`${m[3]}-${m[2]}-${m[1]}`:String(v??'');}
-async function fromRelay(date:string|undefined,errors:string[]):Promise<{rows:unknown[];dataset:string}>{
- const list=await getJson(`${RELAY}/commodities`);
- const names:string[]=(list.data??[]).map((c:any)=>String(c.commodity)).filter(Boolean);
- const version=String(list.meta?.source?.version??'unknown');
- const q=(extra:string)=>`${RELAY}?limit=1000${date?`&date=${date}`:''}${extra}`;
- const rows:unknown[]=[];
- await pool(names,6,async name=>{
-  try{const d=await getJson(q(`&commodity=${encodeURIComponent(name)}`));
-   const recs=d.data??[];
-   if(Number(d.meta?.total)>recs.length){
-    // Keep each commodity's results local until complete; concurrent workers must not splice shared rows.
-    const commodityRows:unknown[]=[];let got=0;
-    for(const s of STATES){const p=await getJson(q(`&commodity=${encodeURIComponent(name)}&state=${encodeURIComponent(s)}`));commodityRows.push(...(p.data??[]));got+=(p.data??[]).length;if(Number(p.meta?.total)>(p.data??[]).length)errors.push(`${name}/${s}: provider limit truncates ${Number(p.meta.total)} rows`);}
-    rows.push(...commodityRows);
-    if(got<Number(d.meta.total))errors.push(`${name}: ${got}/${d.meta.total} rows after state split`);
-   }else rows.push(...recs);
-  }catch(e){errors.push(`${name}: ${e instanceof Error?e.message:e}`);}
- });
- return {rows,dataset:`data.gov.in 9ef84268 via api.dharun.dev relay version ${version}`};
-}
 export async function syncDailyMandi(opts:{date?:string|undefined}={}){
  const {supabaseAdmin}=await import('@/integrations/supabase/client.server');
  const lease=crypto.randomUUID();
@@ -99,7 +72,6 @@ async function performDailySync(opts:{date?:string|undefined}){
  if((proxy&&proxyToken||key)&&!opts.date){const {data:st}=await supabaseAdmin.from('agri_sync_state').select('next_offset').eq('source',DAILY_SOURCE).maybeSingle();startOffset=Number(st?.next_offset)||0;}
  if(proxy&&proxyToken&&!opts.date)fetched=await fromProxy(proxy,proxyToken,startOffset,errors);
  if(!fetched&&key&&!opts.date){fetched=await fromOfficial(key,startOffset,errors);}
- if(!fetched){try{fetched=await fromRelay(opts.date,errors);}catch(e){errors.push(`relay: ${e instanceof Error?e.message:e}`);}}
  const received=fetched?.rows.length??0;
  const valid=(fetched?.rows??[]).map(r=>normaliseRecord(r,started,today)).filter((r):r is DailyRecord=>!!r);
  const unique=new Map<string,DailyRecord>();

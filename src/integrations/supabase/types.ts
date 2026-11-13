@@ -535,6 +535,16 @@ export type Database = {
         Args: { p_lease_id: string; p_source: string }
         Returns: boolean
       }
+      agmarknet2_targets: {
+        Args: { p_limit: number; p_offset: number }
+        Returns: {
+          commodity: string
+          district: string
+          market: string
+          state: string
+          total: number
+        }[]
+      }
       agri_catalog: { Args: { f?: Json }; Returns: Json }
       agri_coverage: { Args: { f?: Json }; Returns: Json }
       agri_ticker: { Args: { p_limit?: number }; Returns: Json }

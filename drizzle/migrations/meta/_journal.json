@@ -78,6 +78,13 @@
       "when": 1794544546875,
       "tag": "0010_short_ingestion_lease",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1794546661632,
+      "tag": "0011_agmarknet2_targets",
+      "breakpoints": true
     }
   ]
 }

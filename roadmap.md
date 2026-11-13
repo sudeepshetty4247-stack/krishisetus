@@ -158,3 +158,4 @@
 - [x] Price alerts (on-device) and live IST clock.
 - [ ] Hosted Python forecasting service (needs an external Python host; Lovable cannot run Python).
 - [ ] India-hosted price proxy built and tested locally — needs user to run it in AWS Mumbai and save MANDI_PROXY_URL/MANDI_PROXY_TOKEN
+- [ ] AGMARKNET 2.0 integration — verified locally with real responses; awaiting first stored scheduled run on the published site
